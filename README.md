@@ -6,7 +6,7 @@ Bug tracker
 
 Have a bug? Please create an issue here on GitHub!
 
-https://github.com/jordeu/onexus/issues
+https://github.com/jordeu/jheatmap/issues
 
 Versioning
 ----------
