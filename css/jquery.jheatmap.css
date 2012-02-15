@@ -140,6 +140,10 @@ table.heatmap tbody tr:hover {
 	opacity: 0.90;
 }
 
+table.heatmap div.col, table.heatmap td.row, table.heatmap th.title {
+     cursor: pointer;   
+}
+
 /* Loader */
 div.heatmap-loader div.background {
 	background-color: #FFF;

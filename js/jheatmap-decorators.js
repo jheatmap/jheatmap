@@ -49,7 +49,7 @@ var heatmapDecorators = {
 				color = 'green';
 			}
 			
-			return "<td style='background-color:" + color + "'>&nbsp;</td>";
+			return "<td style='background-color:" + color + "'></td>";
 		},
 		
 		"sex" : function(value) {
@@ -60,7 +60,7 @@ var heatmapDecorators = {
 				color = "blue";
 			}
 			
-			return "<td style='background-color:" + color + "'>&nbsp;</td>";
+			return "<td style='background-color:" + color + "'></td>";
 		},
 		
 		"median" : function(value) {
@@ -85,8 +85,8 @@ var heatmapDecorators = {
 				g = 204 + Math.round((b / 255) * 51);
 			}
 						
-			var color = new RGBColor(r, g, b);
-			return "<td style='background-color:" + color.toHex() + "'>&nbsp;</td>";
+			var color = (new RGBColor(r, g, b)).toHex();
+			return "<td style='background-color:" + color + "'></td>";
 		},
 
 		"pvalue" : function(value) {
@@ -106,7 +106,8 @@ var heatmapDecorators = {
 				g = (value == 0) ? 0 : Math.round((value / 0.05) * 255);
 				b = 0;
 			}
-			var color = new RGBColor(r, g, b);
-			return "<td style='background-color:" + color.toHex() + "'>&nbsp;</td>";
+			var color = (new RGBColor(r, g, b)).toHex();
+
+			return "<td style='background-color:" + color + "'></td>";
 		}
 	};

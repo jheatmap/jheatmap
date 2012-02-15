@@ -168,23 +168,23 @@
 			this.cols.sort.type = "none";
 			this.cols.sort.field = 0;
 			this.cols.sort.asc = false;
-			
+
 			// Initialize sort rows
 			this.rows.sort.type = "none";
 			this.rows.sort.field = 0;
 			this.rows.sort.asc = false;
-			
+
 			// Initialize decorators & aggregators
 			for ( var f = 0; f < this.cells.header.length; f++) {
 				this.cells.decorators[f] = heatmapDecorators['empty'];
 				this.cells.aggregators[f] = heatmapAggregators['empty'];
 			}
-			
-			for ( var c=0; c < this.cols.header.length; c++) {
+
+			for ( var c = 0; c < this.cols.header.length; c++) {
 				this.cols.decorators[c] = heatmapDecorators['text'];
 			}
-			
-			for ( var r=0; r < this.rows.header.length; r++) {
+
+			for ( var r = 0; r < this.rows.header.length; r++) {
 				this.rows.decorators[r] = heatmapDecorators['text'];
 			}
 
@@ -203,7 +203,7 @@
 			this.rows.sort.asc = asc;
 			this.applyRowsSort();
 		};
-		
+
 		this.sortRowsByCol = function(col, asc) {
 			this.rows.sort.type = "single";
 			this.rows.sort.field = this.cells.selectedValue;
@@ -241,16 +241,16 @@
 					return (v_a == v_b) ? 0 : (v_a > v_b ? val : -val);
 				});
 			} else if (this.rows.sort.type == "single") {
-				
+
 				this.rows.order.sort(function(o_a, o_b) {
 					var pos_a = (o_a * data.cols.values.length) + data.rows.sort.item;
 					var pos_b = (o_b * data.cols.values.length) + data.rows.sort.item;
-					
+
 					var v_a = parseFloat(data.cells.values[pos_a][data.rows.sort.field]);
 					var v_b = parseFloat(data.cells.values[pos_b][data.rows.sort.field]);
-					
+
 					var val = (data.rows.sort.asc ? 1 : -1);
-					return (v_a == v_b) ? 0 : ((v_a > v_b) ? val : -val);					
+					return (v_a == v_b) ? 0 : ((v_a > v_b) ? val : -val);
 				});
 			}
 		};
@@ -261,7 +261,7 @@
 			this.cols.sort.asc = asc;
 			this.applyColsSort();
 		};
-		
+
 		this.sortColsByRow = function(row, asc) {
 			this.cols.sort.type = "single";
 			this.cols.sort.field = this.cells.selectedValue;
@@ -307,7 +307,7 @@
 				});
 
 			} else if (this.cols.sort.type == "single") {
-				
+
 				var pos = this.cols.sort.item * this.cols.values.length;
 				this.cols.order.sort(function(o_a, o_b) {
 					var v_a = parseFloat(data.cells.values[pos + o_a][data.cols.sort.field]);
@@ -412,7 +412,7 @@
 			var table = $("<table>", {
 				"class" : "heatmap"
 			});
-		
+
 			// table header
 			var header = $("<thead>");
 			table.append(header);
@@ -535,9 +535,9 @@
 			// Add filters
 
 			for (filterId in data.filters) {
-				
+
 				var filterDef = data.filters[filterId];
-				
+
 				if (filterDef.fields.indexOf(data.cells.selectedValue) > -1) {
 
 					var checkInput = $('<input type="checkbox">');
@@ -614,66 +614,68 @@
 
 			// Add column headers
 			for ( var c = 0; c < data.cols.order.length; c++) {
-				
+
 				var colHeader = $("<th><div class='col'>" + data.getColValueSelected(c) + "</div></th>");
-				
-				colHeader.dblclick( function() {
+
+				colHeader.click(function() {
 					var col = $(this).parent().children().index($(this)) - 2;
-					data.loading( function() {
+					data.loading(function() {
 						data.sortRowsByCol(col, !data.rows.sort.asc);
 						data.paint(obj);
-					});					
+					});
 				});
 
 				firstRow.append(colHeader);
 			}
-			
+
 			// Add row annotations headers
 			var rowspan = 1 + data.cols.annotations.length;
-			
+
 			if (data.rows.annotations.length > 0) {
-				firstRow.append("<th class='borderRL' rowspan='"+rowspan+"'>&nbsp;</th>");
-			} 
-			
-			for (var a=0; a < data.rows.annotations.length; a++) {
+				firstRow.append("<th class='borderRL' rowspan='" + rowspan + "'>&nbsp;</th>");
+			}
+
+			for ( var a = 0; a < data.rows.annotations.length; a++) {
 				var index = data.rows.annotations[a];
-				var annotationTitle = $("<th rowspan='"+rowspan+"'><div class='col'>" + data.rows.header[index] + "</div></th>");
-				annotationTitle.dblclick( function() {
+				var annotationTitle = $("<th rowspan='" + rowspan + "'><div class='col'>" + data.rows.header[index]
+						+ "</div></th>");
+				annotationTitle.click(function() {
 					var col = $(this).parent().children().index($(this)) - 3 - data.cols.order.length;
 					var a = data.rows.annotations[col];
-					data.loading( function() {
+					data.loading(function() {
 						data.sortRowsByLabel(a, !data.rows.sort.asc);
 						data.paint(obj);
-					});					
-				});			
-				
+					});
+				});
+
 				firstRow.append(annotationTitle);
-			}	
-			
-			firstRow.append("<th class='borderL' rowspan='"+rowspan+"'>&nbsp;</th>");
-			
-			
+			}
+
+			firstRow.append("<th class='borderL' rowspan='" + rowspan + "'>&nbsp;</th>");
+
 			// Add column annotations
 			var lastRow = firstRow;
-			for ( var a=0; a < data.cols.annotations.length; a++) {
+			for ( var a = 0; a < data.cols.annotations.length; a++) {
 				var index = data.cols.annotations[a];
-				lastRow = $("<tr>", { 'class' : 'annotations' });
+				lastRow = $("<tr>", {
+					'class' : 'annotations'
+				});
 				lastRow.append("<th class='border'>");
-				
+
 				var annotationTitle = $("<th class='title'>");
 				annotationTitle.html(data.cols.header[index]);
-				annotationTitle.dblclick( function() {
+				annotationTitle.click(function() {
 					var a = data.cols.annotations[($(this).parent().parent().children().index($(this).parent()) - 2)];
-					data.loading( function() {
+					data.loading(function() {
 						data.sortColsByLabel(a, !data.cols.sort.asc);
 						data.paint(obj);
-					});					
+					});
 				});
 				lastRow.append(annotationTitle);
 
 				for ( var c = 0; c < data.cols.order.length; c++) {
 					var cell = $(data.cols.decorators[index].call(this, data.getColValue(c, index)));
-					
+
 					if (data.tooltip) {
 						var tooltipContent = "";
 						$.each(data.cols.header, function(i, value) {
@@ -681,24 +683,25 @@
 								tooltipContent += "<span style='color:red;'><strong>" + value + "</strong>: "
 										+ data.getColValue(c, i) + "</span><br />";
 							} else {
-								tooltipContent += "<strong>" + value + "</strong>: " + data.getColValue(c, i) + "<br />";
+								tooltipContent += "<strong>" + value + "</strong>: " + data.getColValue(c, i)
+										+ "<br />";
 							}
 						});
-						
+
 						cell.qtip({
 							content : tooltipContent,
 							position : {
 								my : 'top left',
-								at : 'bottom left'							
-							}					
+								at : 'bottom left'
+							}
 						});
 					}
-				
-					lastRow.append(cell);				
+
+					lastRow.append(cell);
 				}
 				header.append(lastRow);
 			}
-			
+
 			// Table body
 			var body = $("<tbody>");
 			table.append(body);
@@ -716,13 +719,13 @@
 				var cell = $("<td>", {
 					"class" : "row"
 				}).append($("<div>").html(data.getRowValueSelected(r)));
-				
-				cell.dblclick( function() {
+
+				cell.click(function() {
 					var row = $(this).parent().parent().children().index($(this).parent());
-					data.loading( function() {
+					data.loading(function() {
 						data.sortColsByRow(row, !data.cols.sort.asc);
 						data.paint(obj);
-					});					
+					});
 				});
 
 				tableRow.append(cell);
@@ -756,19 +759,18 @@
 
 					tableRow.append(cell);
 				}
-				
-				
+
 				if (data.rows.annotations.length > 0) {
 					tableRow.append("<td class='borderRL'>&nbsp;</td>");
-				} 
-				
+				}
+
 				// Add row annotations
-				for (var a=0; a < data.rows.annotations.length; a++) {
+				for ( var a = 0; a < data.rows.annotations.length; a++) {
 					var index = data.rows.annotations[a];
-					
+
 					var cell = $(data.rows.decorators[index].call(this, data.getRowValue(r, index)));
 					cell.attr("class", "ra");
-					
+
 					if (data.tooltip) {
 						var tooltipContent = "";
 						$.each(data.rows.header, function(i, value) {
@@ -776,7 +778,8 @@
 								tooltipContent += "<span style='color:red;'><strong>" + value + "</strong>: "
 										+ data.getRowValue(r, i) + "</span><br />";
 							} else {
-								tooltipContent += "<strong>" + value + "</strong>: " + data.getRowValue(r, i) + "<br />";
+								tooltipContent += "<strong>" + value + "</strong>: " + data.getRowValue(r, i)
+										+ "<br />";
 							}
 
 						});
@@ -788,24 +791,24 @@
 							}
 						});
 					}
-					
-					tableRow.append(cell);					
+
+					tableRow.append(cell);
 				}
-				
+
 				tableRow.append("<td class='borderL'>&nbsp;</td>");
-				
+
 				body.append(tableRow);
 			}
-			
+
 			// Add last border row
 			var endRow = $('<tr>');
 			endRow.append("<td class='border'></td>");
-			endRow.append("<td class='borderT' colspan='"+ (data.cols.order.length+1)+"'></td>");
+			endRow.append("<td class='borderT' colspan='" + (data.cols.order.length + 1) + "'></td>");
 			endRow.append("<td class='border'></td>");
 			if (data.rows.annotations.length > 0) {
-				endRow.append("<td class='borderT' colspan='"+ (data.rows.annotations.length)+"'></td>");
+				endRow.append("<td class='borderT' colspan='" + (data.rows.annotations.length) + "'></td>");
 			}
-			body.append(endRow); 
+			body.append(endRow);
 
 			obj.append(table);
 
