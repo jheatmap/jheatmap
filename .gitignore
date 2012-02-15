@@ -1,0 +1,14 @@
+
+# Intellij IDEA files
+.idea
+*.iml
+*.ipr
+*.iws
+
+# Eclipse files
+.classpath
+.project
+.settings/
+
+# Maven files
+target/
