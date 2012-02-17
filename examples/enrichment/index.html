@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>jHeatmap</title>
+
+<link rel="stylesheet" href="../../css/jheatmap.css" type="text/css" />
+
+<script type="text/javascript"
+	src="http://code.jquery.com/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="../../js/jheatmap-filters.js"></script>
+<script type="text/javascript" src="../../js/jheatmap-aggregators.js"></script>
+<script type="text/javascript" src="../../js/jheatmap-decorators.js"></script>
+<script type="text/javascript" src="../../js/jheatmap.js"></script>
+
+<script>
+        $(document).ready(function() {
+                $('#heatmap').heatmap(
+                		 
+                		{
+                			data : {
+                				type : 'raw',
+                				rows : 'analysis-rows.tsv',
+                        		cols : 'analysis-columns.tsv',
+                        		values : 'analysis-results.tsv',
+                			},
+                			
+                			init : function(heatmap) {
+                				
+                				// Default cell value
+                				heatmap.cells.selectedValue = 8;
+                				
+                				// Configure decorators and aggregators
+                				$.each( [8, 9, 10, 11, 12, 13], function(pos, value) {
+                					heatmap.cells.decorators[value] = heatmapDecorators['pvalue'];
+                    				heatmap.cells.aggregators[value] = heatmapAggregators['pvalue'];
+                				});
+                				
+                				// Column annotations
+                				heatmap.cols.decorators[1] = heatmapDecorators['test'];
+                				heatmap.cols.decorators[2] = heatmapDecorators['sex'];
+                				heatmap.cols.annotations = [1, 2];
+                				
+                				// Row annotations
+                				heatmap.rows.decorators[1] = heatmapDecorators['pvalue'];
+                				heatmap.rows.annotations = [1];
+                				
+                				// Setup default zoom 
+                				heatmap.cols.zoom = 12;
+                				heatmap.rows.zoom = 12;
+                				
+                				// Add filters
+                				heatmap.filters = {
+                						'non-significant-rows' : {
+                							title : "Hide non-significant rows",
+                							filter : heatmapFilters['non-significant'],
+                							options : { level : 0.05 },
+                							fields : [8, 9, 10, 11, 12, 13]
+                						}
+                				}
+                				
+                				heatmap.addRowsFilter('non-significant-rows');
+                				heatmap.applyFilters();
+                				
+                				// Default sorting
+                				heatmap.rows.sort.type = "value";
+								heatmap.rows.sort.field = 8;
+								heatmap.rows.sort.asc = false;
+								heatmap.cols.sort.type = "value";
+								heatmap.cols.sort.field = 8;
+								heatmap.cols.sort.asc = false;                				
+                				heatmap.applySort();
+                				
+                			}
+                		}
+                );
+        });
+        </script>
+</head>
+<body>
+
+	<div id="heatmap"></div>
+
+</body>
+</html>

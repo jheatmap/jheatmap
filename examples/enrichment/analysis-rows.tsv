@@ -1,0 +1,154 @@
+Pathway	"p-value"
+"ABC transporters"	0.9444550740053083
+"Acute myeloid leukemia"	0.13153397865216968
+"Adherens junction"	0.733150467342288
+"Adipocytokine signaling pathway"	0.7899173515792575
+"Alanine"	0.8810696965819429
+"Allograft rejection"	0.25125361580028205
+"Alzheimer's disease"	0.3800181051597613
+"Aminoacyl-tRNA biosynthesis"	0.9360002306910462
+"Amino sugar and nucleotide sugar metabolism"	0.9195783297203813
+"Amyotrophic lateral sclerosis (ALS)"	0.3389614720193603
+"Androgen and estrogen metabolism"	0.30025063052194323
+"Antigen processing and presentation"	0.6318457489267624
+"Apoptosis"	0.6467768363085084
+"Arachidonic acid metabolism"	0.3350222326633186
+"Arginine and proline metabolism"	0.46502199155693014
+"Arrhythmogenic right ventricular cardiomyopathy (ARVC)"	0.5318588915232264
+"Asthma"	0.8834140101981929
+"Autoimmune thyroid disease"	0.7079508536283556
+"Axon guidance"	0.7978694043309615
+"Basal cell carcinoma"	0.5475253204936072
+"Basal transcription factors"	0.9331318514644928
+"Base excision repair"	0.8413995747751778
+"B cell receptor signaling pathway"	0.8137171614598573
+"beta-Alanine metabolism"	0.8579259144830582
+"Biosynthesis of unsaturated fatty acids"	0.14640405004997614
+"Bladder cancer"	0.7882519721270697
+"Butanoate metabolism"	0.25278947377676986
+"Calcium signaling pathway"	0.9165545560560359
+"Cardiac muscle contraction"	0.15443057806084876
+"Cell adhesion molecules (CAMs)"	0.25235360884329994
+"Cell cycle"	0.8372480522663415
+"Chemokine signaling pathway"	0.15927155272429783
+"Chronic myeloid leukemia"	0.9587858775934258
+"Citrate cycle (TCA cycle)"	0.5764085582435698
+"Colorectal cancer"	0.9189247132476261
+"Complement and coagulation cascades"	0.8504562794233498
+"Cysteine and methionine metabolism"	0.7322884618401183
+"Cytokine-cytokine receptor interaction"	0.9847734966536043
+"Cytosolic DNA-sensing pathway"	0.791847043020954
+"Dilated cardiomyopathy"	0.26919801726243087
+"DNA replication"	0.9948391860676158
+"Drug metabolism - cytochrome P450"	0.8571543356072353
+"Drug metabolism - other enzymes"	0.6905745152516027
+"ECM-receptor interaction"	0.7240031795752039
+"Endocytosis"	0.35150901338902635
+"Endometrial cancer"	0.368474391458012
+"Epithelial cell signaling in Helicobacter pylori infection"	0.028151669725876786
+"ErbB signaling pathway"	0.7447551950038076
+"Ether lipid metabolism"	0.5098159534031982
+"Fatty acid metabolism"	0.16210570305993277
+"Fc epsilon RI signaling pathway"	0.4443252346135888
+"Fc gamma R-mediated phagocytosis"	0.577215037494791
+"Focal adhesion"	0.9247143341005585
+"Fructose and mannose metabolism"	0.4298811693744252
+"Galactose metabolism"	0.8162284459904855
+"Gap junction"	0.9635898373841266
+"Glioma"	0.7513389531926148
+"Glutathione metabolism"	0.9225150406752081
+"Glycerolipid metabolism"	0.8004295538550141
+"Glycerophospholipid metabolism"	0.04017942523133366
+"Glycine"	0.5807411629748506
+"Glycolysis / Gluconeogenesis"	0.13145695762689036
+"Glycosaminoglycan degradation"	0.03243260464966065
+"Glycosphingolipid biosynthesis - lacto and neolacto series"	0.08595209867114252
+"GnRH signaling pathway"	0.43025900080442775
+"Graft-versus-host disease"	0.6351948911141988
+"Hedgehog signaling pathway"	0.03946141774530818
+"Hematopoietic cell lineage"	0.5313874082650641
+"Heparan sulfate biosynthesis"	0.9929634092385895
+"Histidine metabolism"	0.19255158775212816
+"Homologous recombination"	0.2010802994178003
+"Huntington's disease"	0.1102975477286362
+"Hypertrophic cardiomyopathy (HCM)"	0.20844967361062983
+"Inositol phosphate metabolism"	0.48356017139735585
+"Insulin signaling pathway"	0.9450659773642995
+"Jak-STAT signaling pathway"	0.3997640967522118
+"Leukocyte transendothelial migration"	0.938299075505296
+"Linoleic acid metabolism"	0.5921156338358808
+"Long-term depression"	0.4827938120781343
+"Long-term potentiation"	0.06707291903895021
+"Lysine degradation"	0.9961458398942831
+"Lysosome"	0.7487813997321038
+"MAPK signaling pathway"	0.3955815013000562
+"Melanogenesis"	0.9007641397933419
+"Melanoma"	0.9996414230408047
+"Metabolic pathways"	0.9958348695459861
+"Metabolism of xenobiotics by cytochrome P450"	0.5675153494470868
+"Mismatch repair"	0.5306741192616153
+"mTOR signaling pathway"	0.99996026700003
+"Natural killer cell mediated cytotoxicity"	0.4666266682863983
+"Neuroactive ligand-receptor interaction"	0.7623418196296491
+"Neurotrophin signaling pathway"	0.7534902659704144
+"N-Glycan biosynthesis"	0.6059919681228427
+"Nitrogen metabolism"	0.4461276151713269
+"NOD-like receptor signaling pathway"	0.2704311599628191
+"Non-small cell lung cancer"	0.6620649191888908
+"Notch signaling pathway"	0.9444868170967564
+"Nucleotide excision repair"	0.20731134267114115
+"O-Glycan biosynthesis"	0.9680893225963478
+"Olfactory transduction"	0.7320708508680587
+"Oocyte meiosis"	0.2306893959976847
+"Oxidative phosphorylation"	0.9999930965155559
+"p53 signaling pathway"	0.9840446380998115
+"Pancreatic cancer"	0.9996906507609775
+"Parkinson's disease"	0.9508651540735635
+"Pathogenic Escherichia coli infection"	0.9019307552625425
+"Pathways in cancer"	0.9999993098565886
+"Pentose phosphate pathway"	0.9999999979780998
+"Phenylalanine metabolism"	0.9999877164255351
+"Phosphatidylinositol signaling system"	0.7734518879318119
+"Porphyrin and chlorophyll metabolism"	0.9999999970897822
+"PPAR signaling pathway"	0.977698382453005
+"Primary immunodeficiency"	0.9996726420583082
+"Prion diseases"	0.7540579601078244
+"Progesterone-mediated oocyte maturation"	0.9347829262046218
+"Propanoate metabolism"	0.999999260137602
+"Prostate cancer"	0.787365746826747
+"Proteasome"	0.9999999999884244
+"Purine metabolism"	0.9833921334683731
+"Pyrimidine metabolism"	0.991163259901486
+"Pyruvate metabolism"	0.5475431911056332
+"Regulation of actin cytoskeleton"	0.7682766464128616
+"Regulation of autophagy"	0.037109683805197045
+"Renal cell carcinoma"	0.06851348671599344
+"Retinol metabolism"	0.034320800699712
+"Ribosome"	0.09859555412140056
+"RIG-I-like receptor signaling pathway"	0.2258607958704049
+"RNA degradation"	0.08453027448610298
+"RNA polymerase"	0.27232359683157725
+"Selenoamino acid metabolism"	0.26712050741409865
+"Small cell lung cancer"	0.5750339240976898
+"SNARE interactions in vesicular transport"	0.4684662275100998
+"Sphingolipid metabolism"	0.20881546348735622
+"Spliceosome"	0.4341532721024333
+"Starch and sucrose metabolism"	0.24871684696879112
+"Systemic lupus erythematosus"	0.14204493893847292
+"Taste transduction"	0.16755519706418245
+"T cell receptor signaling pathway"	0.1519311297563925
+"TGF-beta signaling pathway"	0.25162724254851904
+"Thyroid cancer"	0.06787737257672274
+"Tight junction"	0.2659416358378218
+"Toll-like receptor signaling pathway"	0.9316290416701677
+"Tryptophan metabolism"	0.01544258373932542
+"Type I diabetes mellitus"	0.5634645939823413
+"Type II diabetes mellitus"	0.7870447625870776
+"Tyrosine metabolism"	0.976779268655828
+"Ubiquitin mediated proteolysis"	0.9881155905616179
+"Valine"	0.35589948320711623
+"Vascular smooth muscle contraction"	0.011233294486799838
+"VEGF signaling pathway"	0.3649098121021258
+"Vibrio cholerae infection"	0.34715519792055294
+"Viral myocarditis"	0.6678274256554424
+"Wnt signaling pathway"	0.256843299981402

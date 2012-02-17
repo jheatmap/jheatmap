@@ -4,11 +4,25 @@
  * Credit to jquerycsvtotable. http://code.google.com/p/jquerycsvtotable/
  * splitCSV: credit goes to Brian Huisman. http://www.greywyvern.com/?post=258
  */
+
+var scripts = document.getElementsByTagName("script");
+var basePath = scripts[scripts.length-1].src.replace("js/jheatmap.js", "");
+
 (function($) {
 
 	function Heatmap() {
 
 		this.tooltip = true;
+		
+		this.size = { 
+			width : 800,
+			height : 800 
+		},
+		
+		this.offset = {
+				top: 0,
+				left: 0
+		},
 
 		this.sync = false;
 
@@ -84,7 +98,7 @@
 
 				this.rows.order = [];
 				for ( var r = 0; r < this.rows.values.length; r++) {
-					this.rows.order.push(r);
+					this.rows.order[this.rows.order.length] = r;
 				}
 				return;
 			}
@@ -99,7 +113,7 @@
 					var values = [];
 					for ( var c = 0; c < this.cols.values.length; c++) {
 						var pos = r * cl + c;
-						values.push(this.cells.values[pos][field]);
+						values[values.length] = this.cells.values[pos][field];
 					}
 
 					// Filters
@@ -113,7 +127,7 @@
 
 				}
 
-				this.rows.order.push(r);
+				this.rows.order[this.rows.order.length] = r;
 			}
 
 			this.applyRowsSort();
@@ -127,7 +141,13 @@
 			var cl = this.cols.values.length;
 			var pos = this.rows.order[row] * cl + this.cols.order[col];
 
-			return this.cells.values[pos][field];
+			var value = this.cells.values[pos];
+
+			if (value == null) {
+				return null;
+			}
+
+			return value[field];
 		};
 
 		this.getCellValueSelected = function(row, col) {
@@ -155,13 +175,13 @@
 			// Initialize rows order
 			this.rows.order = [];
 			for ( var r = 0; r < this.rows.values.length; r++) {
-				this.rows.order.push(r);
+				this.rows.order[this.rows.order.length] = r;
 			}
 
 			// Initialize cols order
 			this.cols.order = [];
 			for ( var c = 0; c < this.cols.values.length; c++) {
-				this.cols.order.push(c);
+				this.cols.order[this.cols.order.length] = c;
 			}
 
 			// Initialize sort columns
@@ -213,6 +233,9 @@
 		};
 
 		this.applyRowsSort = function() {
+			console.log("jHeatmap: .applyRowsSort()");
+			var start = (new Date).getTime();
+
 			if (this.rows.sort.type == "label") {
 				this.rows.order.sort(function(o_a, o_b) {
 					v_a = data.rows.values[o_a][data.rows.sort.field].toLowerCase();
@@ -228,8 +251,11 @@
 					var sum = 0;
 					for ( var c = 0; c < this.cols.order.length; c++) {
 						var pos = this.rows.order[r] * cl + this.cols.order[c];
-						var value = this.cells.values[pos][this.rows.sort.field];
-						sum = this.cells.aggregators[this.rows.sort.field].call(this, sum, value);
+						var value = this.cells.values[pos];
+						if (value != null) {
+							sum = this.cells.aggregators[this.rows.sort.field].call(this, sum,
+									value[this.rows.sort.field]);
+						}
 					}
 					aggregation[this.rows.order[r]] = sum;
 				}
@@ -246,13 +272,19 @@
 					var pos_a = (o_a * data.cols.values.length) + data.rows.sort.item;
 					var pos_b = (o_b * data.cols.values.length) + data.rows.sort.item;
 
-					var v_a = parseFloat(data.cells.values[pos_a][data.rows.sort.field]);
-					var v_b = parseFloat(data.cells.values[pos_b][data.rows.sort.field]);
+					var value_a = data.cells.values[pos_a];
+					var value_b = data.cells.values[pos_b];
+
+					var v_a = (value_a == null ? null : parseFloat(value_a[data.rows.sort.field]));
+					var v_b = (value_b == null ? null : parseFloat(value_b[data.rows.sort.field]));
 
 					var val = (data.rows.sort.asc ? 1 : -1);
 					return (v_a == v_b) ? 0 : ((v_a > v_b) ? val : -val);
 				});
 			}
+
+			var diff = (new Date).getTime() - start;
+			console.log("jHeatmap: .applyRowsSort() - end - " + diff + "ms");
 		};
 
 		this.sortColsByLabel = function(f, asc) {
@@ -278,6 +310,9 @@
 		};
 
 		this.applyColsSort = function() {
+			console.log("jHeatmap: .applyColsSort() - start");
+			var start = (new Date).getTime();
+
 			if (this.cols.sort.type == "label") {
 				this.cols.order.sort(function(o_a, o_b) {
 					var v_a = data.cols.values[o_a][data.cols.sort.field].toLowerCase();
@@ -293,8 +328,11 @@
 					var sum = 0;
 					for ( var r = 0; r < this.rows.order.length; r++) {
 						var pos = this.rows.order[r] * cl + this.cols.order[c];
-						var value = this.cells.values[pos][this.cols.sort.field];
-						sum = this.cells.aggregators[this.cells.selectedValue].call(this, sum, value);
+						var value = this.cells.values[pos];
+						if (value != null) {
+							sum = this.cells.aggregators[this.cells.selectedValue].call(this, sum,
+									value[this.cols.sort.field]);
+						}
 					}
 					aggregation[this.cols.order[c]] = sum;
 				}
@@ -310,13 +348,18 @@
 
 				var pos = this.cols.sort.item * this.cols.values.length;
 				this.cols.order.sort(function(o_a, o_b) {
-					var v_a = parseFloat(data.cells.values[pos + o_a][data.cols.sort.field]);
-					var v_b = parseFloat(data.cells.values[pos + o_b][data.cols.sort.field]);
+					var value_a = data.cells.values[pos + o_a];
+					var value_b = data.cells.values[pos + o_b];
+					var v_a = (value_a==null?null:parseFloat(value_a[data.cols.sort.field]));
+					var v_b = (value_b==null?null:parseFloat(value_b[data.cols.sort.field]));
 					var val = (data.cols.sort.asc ? 1 : -1);
 					var result = (v_a == v_b) ? 0 : ((v_a > v_b) ? val : -val);
 					return result;
 				});
 			}
+
+			var diff = (new Date).getTime() - start;
+			console.log("jHeatmap: .applyColsSort() - end - " + diff + "ms");
 		};
 
 		this.applySort = function() {
@@ -332,82 +375,99 @@
 				window.clearInterval(interval);
 			}, 1);
 		};
-
-		this.zoom = function() {
-
-			// Zoom columns
-			var cols = $('table.heatmap th div.col');
-			var cz = this.cols.zoom;
-			cz = cz < 1 ? 1 : cz;
-			cz = cz > 32 ? 32 : cz;
-			this.cols.zoom = cz;
-
-			var cf = Math.round(((cz - 1) / 3) + 8);
-			cf = cf > 12 ? 12 : cf;
-
-			cols.css('width', cz);
-			cols.css('font-size', cf);
-
-			// Zoom rows
-			var rows = $('table.heatmap td');
-			var rz = this.rows.zoom;
-			rz = rz < 1 ? 1 : rz;
-			rz = rz > 32 ? 32 : rz;
-			this.rows.zoom = rz;
-
-			var rf = Math.round(((rz - 1) / 3) + 5);
-			rf = rf > 12 ? 12 : rf;
-
-			rows.css('font-size', rf);
-
-		};
-
+		
 		this.paint = function(obj) {
+			console.log("jHeatmap: .paint() - start");
+			var start = (new Date).getTime();
+
 			var chooseOrderImage = function(type) {
 
 				if (type == "cols_by_label") {
 					if (data.cols.sort.type != "label") {
-						return "images/cln.png";
+						return basePath + "/images/cln.png";
 					} else if (data.cols.sort.field != data.cols.selectedValue) {
-						return "images/cln.png";
+						return basePath + "/images/cln.png";
 					} else {
-						return (data.cols.sort.asc ? "images/cll.png" : "images/clr.png");
+						return basePath + (data.cols.sort.asc ? "/images/cll.png" : "/images/clr.png");
 					}
 				}
 
 				if (type == "rows_by_label") {
 					if (data.rows.sort.type != "label") {
-						return "images/rln.png";
+						return basePath + "/images/rln.png";
 					} else if (data.rows.sort.field != data.rows.selectedValue) {
-						return "images/rln.png";
+						return basePath + "/images/rln.png";
 					} else {
-						return (data.rows.sort.asc ? "images/rlu.png" : "images/rld.png");
+						return basePath + (data.rows.sort.asc ? "/images/rlu.png" : "/images/rld.png");
 					}
 				}
 
 				if (type == "cols_by_value") {
 					if (data.cols.sort.type != "value") {
-						return "images/cvn.png";
+						return basePath + "/images/cvn.png";
 					} else if (data.cols.sort.field != data.cells.selectedValue) {
-						return "images/cvn.png";
+						return basePath + "/images/cvn.png";
 					} else {
-						return (data.cols.sort.asc ? "images/cvr.png" : "images/cvl.png");
+						return basePath + (data.cols.sort.asc ? "/images/cvr.png" : "/images/cvl.png");
 					}
 				}
 
 				if (type == "rows_by_value") {
 					if (data.rows.sort.type != "value") {
-						return "images/rvn.png";
+						return basePath + "/images/rvn.png";
 					} else if (data.rows.sort.field != data.cells.selectedValue) {
-						return "images/rvn.png";
+						return basePath + "/images/rvn.png";
 					} else {
-						return (data.rows.sort.asc ? "images/rvd.png" : "images/rvu.png");
+						return basePath + (data.rows.sort.asc ? "/images/rvd.png" : "/images/rvu.png");
 					}
 				}
 			};
-
+			
+			// Zoom columns
+			var cz = this.cols.zoom;
+			cz = cz < 3 ? 3 : cz;
+			cz = cz > 32 ? 32 : cz;
+			this.cols.zoom = cz;
+			
+			// Zoom rows
+			var rz = this.rows.zoom;
+			rz = rz < 3 ? 3 : rz;
+			rz = rz > 32 ? 32 : rz;
+			this.rows.zoom = rz;
+			
+			// Offsets
+			var maxHeight = 600;
+			
+			var maxCols = Math.min(data.cols.order.length, Math.round(this.size.width / cz) + 1);  
+			var maxRows = Math.min(data.rows.order.length, Math.round(this.size.height / rz) + 1);
+			
+			var top = this.offset.top;
+			if ( top < 0 ) {
+				top = 0;
+			}
+			if ( top > (data.rows.order.length - maxRows)) {
+				top = (data.rows.order.length - maxRows);
+			} 
+			this.offset.top = top;
+			
+			var left = this.offset.left;
+			if (left < 0) {
+				left = 0;
+			}
+			if (left > (data.cols.order.length - maxCols)) {
+				left = (data.cols.order.length - maxCols);
+			}
+			this.offset.left = left;
+			
+			var startRow = this.offset.top;
+			var endRow = Math.min(this.offset.top + maxRows, data.rows.order.length);
+			
+			var startCol = this.offset.left;
+			var endCol = Math.min(this.offset.left + maxCols, data.cols.order.length);
+						
+			// Loader
 			obj
-					.html('<div class="heatmap-loader"><div class="background"></div><div class="progress"><img src="images/loading.gif"></div></div>');
+					.html('<div class="heatmap-loader"><div class="background"></div><div class="progress"><img src="'+basePath+'/images/loading.gif"></div></div>');
 
 			var table = $("<table>", {
 				"class" : "heatmap"
@@ -417,15 +477,19 @@
 			var header = $("<thead>");
 			table.append(header);
 
+			// top border
 			var borderTop = $('<tr>', {
 				'class' : 'border'
 			});
 			borderTop.append($('<td>'));
-
-			var topToolbar = $("<td>", {
-				'colspan' : (this.cols.order.length + 1)
-			});
-
+			
+			
+			/*
+			 * TOP TOOLBAR
+			 */
+			
+			var topToolbar = $("<td>");
+			
 			// Order columns by label
 			topToolbar.append($('<img>', {
 				'src' : chooseOrderImage.call(this, "cols_by_label"),
@@ -450,23 +514,27 @@
 
 			// Separator
 			topToolbar.append($('<img>', {
-				'src' : "images/sep.png"
+				'src' : basePath + "/images/sep.png"
 			}));
 
 			// Zoom cols -
 			topToolbar.append($('<img>', {
-				'src' : "images/z_less.png"
+				'src' : basePath + "/images/z_less.png"
 			}).click(function() {
-				data.cols.zoom = data.cols.zoom - 3;
-				data.zoom();
+				data.loading(function() {
+					data.cols.zoom = data.cols.zoom - 3;
+					data.paint(obj);
+				});
 			}));
 
 			// Zoom cols +
 			topToolbar.append($('<img>', {
-				'src' : "images/z_plus.png"
+				'src' : basePath + "/images/z_plus.png"
 			}).click(function() {
-				data.cols.zoom = data.cols.zoom + 3;
-				data.zoom();
+				data.loading(function() {
+					data.cols.zoom = data.cols.zoom + 3;
+					data.paint(obj);
+				});
 			}));
 
 			borderTop.append(topToolbar);
@@ -475,6 +543,10 @@
 			var firstRow = $("<tr>");
 			header.append(firstRow);
 
+			/*
+			 * LEFT TOOLBAR
+			 */
+			
 			var leftToolbar = $('<th>', {
 				'class' : 'border'
 			});
@@ -506,34 +578,42 @@
 
 			// Separator
 			leftToolbar.append($('<img>', {
-				'src' : "images/sep.png"
+				'src' : basePath + "/images/sep.png"
 			}));
 
 			// Zoom rows -
 			leftToolbar.append($('<img>', {
-				'src' : "images/z_less.png"
+				'src' : basePath + "/images/z_less.png"
 			}).click(function() {
-				data.rows.zoom = data.rows.zoom - 3;
-				data.zoom();
+				data.loading(function() {
+					data.rows.zoom = data.rows.zoom - 3;
+					data.paint(obj);
+				});
 			}));
 			leftToolbar.append($('<br>'));
 
 			// Zoom rows +
 			leftToolbar.append($('<img>', {
-				'src' : "images/z_plus.png"
+				'src' : basePath + "/images/z_plus.png"
 			}).click(function() {
-				data.rows.zoom = data.rows.zoom + 3;
-				data.zoom();
+				data.loading(function() {
+					data.rows.zoom = data.rows.zoom + 3;
+					data.paint(obj);
+				});
 			}));
 			leftToolbar.append($('<br>'));
+			
+			
+			/*
+			 * TOP-LEFT PANEL
+			 */
 
-			var selectors = $("<th>", {
+			var topleftPanel = $("<th>", {
 				"class" : "topleft"
 			});
-			firstRow.append(selectors);
+			firstRow.append(topleftPanel);
 
 			// Add filters
-
 			for (filterId in data.filters) {
 
 				var filterDef = data.filters[filterId];
@@ -555,7 +635,7 @@
 						});
 					});
 
-					selectors.append($('<div>', {
+					topleftPanel.append($('<div>', {
 						'class' : 'filter'
 					}).append(checkInput).append($('<span>').html(filterDef.title)));
 
@@ -570,13 +650,13 @@
 					data.paint(obj);
 				});
 			});
-			selectors.append(selectCol);
+			topleftPanel.append(selectCol);
 			for ( var o = 0; o < this.cols.header.length; o++) {
 				selectCol.append(new Option(this.cols.header[o], o, o == this.cols.selectedValue));
 			}
 			selectCol.val(this.cols.selectedValue);
-			selectors.append($("<span>Columns</span>"));
-			selectors.append($("<br>"));
+			topleftPanel.append($("<span>Columns</span>"));
+			topleftPanel.append($("<br>"));
 
 			// Add row selector
 			var selectRow = $("<select>").change(function() {
@@ -586,9 +666,9 @@
 					data.paint(obj);
 				});
 			});
-			selectors.append(selectRow);
-			selectors.append($("<span>Rows</span>"));
-			selectors.append($("<br>"));
+			topleftPanel.append(selectRow);
+			topleftPanel.append($("<span>Rows</span>"));
+			topleftPanel.append($("<br>"));
 
 			for ( var o = 0; o < this.rows.header.length; o++) {
 				selectRow.append(new Option(this.rows.header[o], o, o == this.rows.selectedValue));
@@ -603,221 +683,222 @@
 					data.paint(obj);
 				});
 			});
-			selectors.append(selectCell);
-			selectors.append($("<span>Cells</span>"));
-			selectors.append($("<br>"));
+			topleftPanel.append(selectCell);
+			topleftPanel.append($("<span>Cells</span>"));
+			topleftPanel.append($("<br>"));
 
 			for ( var o = 0; o < this.cells.header.length; o++) {
 				selectCell.append(new Option(this.cells.header[o], o, o == this.cells.selectedValue));
 			}
 			selectCell.val(this.cells.selectedValue);
+			
+			
+			/*******************************************************************
+			 * COLUMN HEADERS *
+			 ******************************************************************/
 
 			// Add column headers
-			for ( var c = 0; c < data.cols.order.length; c++) {
+			var colHeader = $("<th>");
+			firstRow.append(colHeader);
 
-				var colHeader = $("<th><div class='col'>" + data.getColValueSelected(c) + "</div></th>");
-
-				colHeader.click(function() {
-					var col = $(this).parent().children().index($(this)) - 2;
-					data.loading(function() {
-						data.sortRowsByCol(col, !data.rows.sort.asc);
-						data.paint(obj);
-					});
+			var colCanvas = $("<canvas width='" + (endCol - startCol) * cz + "' height='150'></canvas>");
+			colCanvas.click(function(e) {
+				var col = Math.floor(e.offsetX / cz) + data.offset.left;
+				data.loading(function(e) {
+					data.sortRowsByCol(col, !data.rows.sort.asc);
+					data.paint(obj);
 				});
+			});
+			colHeader.append(colCanvas);
 
-				firstRow.append(colHeader);
+			var colCtx = colCanvas.get()[0].getContext('2d');
+			colCtx.fillStyle = "black";
+			colCtx.textAlign = "right";
+			colCtx.textBaseline = "middle";
+			colCtx.font = (cz > 12 ? 12 : cz) + "px Verdana";
+			
+			for ( var c=startCol; c < endCol; c++) {
+				var value = data.getColValueSelected(c);
+				colCtx.save();
+				colCtx.translate((c - startCol)*cz + (cz/2),150);
+				colCtx.rotate(Math.PI / 2);
+				colCtx.fillText(value, 0, 0);
+				colCtx.restore();				
 			}
-
-			// Add row annotations headers
-			var rowspan = 1 + data.cols.annotations.length;
-
-			if (data.rows.annotations.length > 0) {
-				firstRow.append("<th class='borderRL' rowspan='" + rowspan + "'>&nbsp;</th>");
-			}
-
-			for ( var a = 0; a < data.rows.annotations.length; a++) {
-				var index = data.rows.annotations[a];
-				var annotationTitle = $("<th rowspan='" + rowspan + "'><div class='col'>" + data.rows.header[index]
-						+ "</div></th>");
-				annotationTitle.click(function() {
-					var col = $(this).parent().children().index($(this)) - 3 - data.cols.order.length;
-					var a = data.rows.annotations[col];
-					data.loading(function() {
-						data.sortRowsByLabel(a, !data.rows.sort.asc);
-						data.paint(obj);
-					});
-				});
-
-				firstRow.append(annotationTitle);
-			}
-
-			firstRow.append("<th class='borderL' rowspan='" + rowspan + "'>&nbsp;</th>");
-
-			// Add column annotations
-			var lastRow = firstRow;
-			for ( var a = 0; a < data.cols.annotations.length; a++) {
-				var index = data.cols.annotations[a];
-				lastRow = $("<tr>", {
-					'class' : 'annotations'
-				});
-				lastRow.append("<th class='border'>");
-
-				var annotationTitle = $("<th class='title'>");
-				annotationTitle.html(data.cols.header[index]);
-				annotationTitle.click(function() {
-					var a = data.cols.annotations[($(this).parent().parent().children().index($(this).parent()) - 2)];
-					data.loading(function() {
-						data.sortColsByLabel(a, !data.cols.sort.asc);
-						data.paint(obj);
-					});
-				});
-				lastRow.append(annotationTitle);
-
-				for ( var c = 0; c < data.cols.order.length; c++) {
-					var cell = $(data.cols.decorators[index].call(this, data.getColValue(c, index)));
-
-					if (data.tooltip) {
-						var tooltipContent = "";
-						$.each(data.cols.header, function(i, value) {
-							if (i == index) {
-								tooltipContent += "<span style='color:red;'><strong>" + value + "</strong>: "
-										+ data.getColValue(c, i) + "</span><br />";
-							} else {
-								tooltipContent += "<strong>" + value + "</strong>: " + data.getColValue(c, i)
-										+ "<br />";
-							}
-						});
-
-						cell.qtip({
-							content : tooltipContent,
-							position : {
-								my : 'top left',
-								at : 'bottom left'
-							}
-						});
-					}
-
-					lastRow.append(cell);
-				}
-				header.append(lastRow);
-			}
+			firstRow.append("<th class='borderL'>&nbsp;</th>");
+			
+			
+			/*******************************************************************
+			 * TABLE BODY *
+			 ******************************************************************/
 
 			// Table body
 			var body = $("<tbody>");
 			table.append(body);
 
-			var firstCell;
-			for ( var r = 0; r < data.rows.order.length; r++) {
+			// Add left border
+			var tableRow = $('<tr>');
+			var firstCell = $('<td>', {
+				'class' : 'border'
+			});
+			tableRow.append(firstCell);
 
-				// Add row header
-				var tableRow = $('<tr>');
-				firstCell = $('<td>', {
-					'class' : 'border'
+			/*******************************************************************
+			 * ROWS HEADERS *
+			 ******************************************************************/
+			
+			var rowsCell = $("<td>", {
+				"class" : "row"
+			});
+			
+			var rowsCanvas = $("<canvas width='200' height='" + (endRow - startRow) * rz + "'></canvas>");
+			rowsCanvas.click(function(e) {
+				var row = Math.floor(e.offsetY / rz) + data.offset.top;
+				data.loading(function(e) {
+					data.sortColsByRow(row, !data.cols.sort.asc);
+					data.paint(obj);
 				});
-				tableRow.append(firstCell);
+				
+			});
+			rowsCell.append(rowsCanvas);
+			tableRow.append(rowsCell);
+			
+			var rowCtx = rowsCanvas.get()[0].getContext('2d');
+			rowCtx.fillStyle = "black";
+			rowCtx.textAlign = "right";
+			rowCtx.textBaseline = "middle";
+			rowCtx.font = (rz > 12 ? 12 : rz) + "px Verdana";
+			
+			for (var row=startRow; row < endRow; row++) {
+				var value = data.getRowValueSelected(row);
+				rowCtx.fillText(value, 200, ((row-startRow)*rz)+ (rz/2) );
+			}
+						
+			/*******************************************************************
+			 * HEATMAP CELLS *
+			 ******************************************************************/
+			
+			var heatmapCell = $('<td>');
+			tableRow.append(heatmapCell);
 
-				var cell = $("<td>", {
-					"class" : "row"
-				}).append($("<div>").html(data.getRowValueSelected(r)));
+			var heatmapCanvas = $("<canvas width='" + (endCol - startCol) * cz + "' height='" + (endRow - startRow) * rz + "'></canvas>");
+			heatmapCell.append(heatmapCanvas);
 
-				cell.click(function() {
-					var row = $(this).parent().parent().children().index($(this).parent());
-					data.loading(function() {
-						data.sortColsByRow(row, !data.cols.sort.asc);
-						data.paint(obj);
-					});
-				});
+			// Paint heatmap
+			var cellCtx = heatmapCanvas.get()[0].getContext('2d');
+			for ( var row = startRow; row < endRow; row++) {
+				for ( var col = startCol; col < endCol; col++) {
 
-				tableRow.append(cell);
+					// Iterate all values
+					var value = data.getCellValueSelected(row, col);
 
-				// Add cell values
-				for ( var c = 0; c < data.cols.order.length; c++) {
-
-					var cell = $(data.cells.decorators[data.cells.selectedValue].call(this, data.getCellValueSelected(
-							r, c)));
-
-					if (data.tooltip) {
-						var tooltipContent = "";
-						$.each(data.cells.header, function(i, value) {
-							if (i == data.cells.selectedValue) {
-								tooltipContent += "<span style='color:red;'><strong>" + value + "</strong>: "
-										+ data.getCellValue(r, c, i) + "</span><br />";
-							} else {
-								tooltipContent += "<strong>" + value + "</strong>: " + data.getCellValue(r, c, i)
-										+ "<br />";
-							}
-						});
-
-						cell.qtip({
-							content : tooltipContent,
-							position : {
-								my : 'top left',
-								at : 'bottom left'
-							}
-						});
+					if (value != null) {
+						var color = data.cells.decorators[data.cells.selectedValue].call(this, value);
+						cellCtx.fillStyle = color;
+						cellCtx.fillRect((col - startCol) * cz, (row - startRow) * rz, cz, rz);
 					}
-
-					tableRow.append(cell);
 				}
-
-				if (data.rows.annotations.length > 0) {
-					tableRow.append("<td class='borderRL'>&nbsp;</td>");
-				}
-
-				// Add row annotations
-				for ( var a = 0; a < data.rows.annotations.length; a++) {
-					var index = data.rows.annotations[a];
-
-					var cell = $(data.rows.decorators[index].call(this, data.getRowValue(r, index)));
-					cell.attr("class", "ra");
-
-					if (data.tooltip) {
-						var tooltipContent = "";
-						$.each(data.rows.header, function(i, value) {
-							if (i == index) {
-								tooltipContent += "<span style='color:red;'><strong>" + value + "</strong>: "
-										+ data.getRowValue(r, i) + "</span><br />";
-							} else {
-								tooltipContent += "<strong>" + value + "</strong>: " + data.getRowValue(r, i)
-										+ "<br />";
-							}
-
-						});
-						cell.qtip({
-							content : tooltipContent,
-							position : {
-								my : 'top left',
-								at : 'bottom left'
-							}
-						});
-					}
-
-					tableRow.append(cell);
-				}
-
-				tableRow.append("<td class='borderL'>&nbsp;</td>");
-
-				body.append(tableRow);
 			}
 
-			// Add last border row
+			heatmapCanvas.click(function(e) {
+				console.log('cell click: ' + e.offsetX + '/' + e.offsetY);
+			});
+			
+			heatmapCanvas.bind('mousewheel', function(e){
+				var col = Math.floor(e.originalEvent.offsetX / cz) + data.offset.left;
+				var row = Math.floor(e.originalEvent.offsetY / rz) + data.offset.top;
+				if(e.originalEvent.wheelDelta/120 > 0) {
+		            data.cols.zoom += 3;
+		            data.rows.zoom += 3;
+		            
+		            var ncz = cz + 3;
+		            ncz = ncz < 3 ? 3 : ncz;
+					ncz = ncz > 32 ? 32 : ncz;
+					
+					// Zoom rows
+					var nrz = rz + 3;
+					nrz = nrz < 3 ? 3 : nrz;
+					nrz = nrz > 32 ? 32 : nrz;
+					
+					var ml = Math.round(col - data.offset.left - ((cz * ( col - data.offset.left )) / ncz));
+					var mt = Math.round(row - data.offset.top - ((rz * ( row - data.offset.top )) / nrz));
+					
+		            data.offset.left += ml; 
+		            data.offset.top += mt;
+		        }
+		        else{
+		        	data.cols.zoom -= 3;
+		            data.rows.zoom -= 3;
+		            
+		            var ncz = cz - 3;
+		            ncz = ncz < 3 ? 3 : ncz;
+					ncz = ncz > 32 ? 32 : ncz;
+					
+					// Zoom rows
+					var nrz = rz - 3;
+					nrz = nrz < 3 ? 3 : nrz;
+					nrz = nrz > 32 ? 32 : nrz;
+					
+					var ml = Math.round(col - data.offset.left - ((cz * ( col - data.offset.left )) / ncz));
+					var mt = Math.round(row - data.offset.top - ((rz * ( row - data.offset.top )) / nrz));
+					
+					data.offset.left += ml;
+		            data.offset.top += mt;
+		        }
+		        
+				if (!(nrz == rz && ncz==cz) ) {
+					data.paint(obj);
+				}
+		    });
+			
+			var downX = null;
+			var downY = null;
+			
+			heatmapCanvas.mousedown( function(e) {
+				downX = e.offsetX;
+				downY = e.offsetY;
+			});
+			
+			heatmapCanvas.mouseup ( function(e) {
+				
+				var pX = e.offsetX - downX;
+				var pY = e.offsetY - downY;
+				
+				var c = Math.round(pX / cz);
+				var r = Math.round(pY / rz);
+				
+				data.offset.top -= r;
+				data.offset.left -= c;
+				
+				if (!(r==0 && c==0)) {
+					data.paint(obj);
+				}
+			});
+			
+			
+
+			/*******************************************************************
+			 * Close table *
+			 ******************************************************************/
+			
+			// Right table border
+			tableRow.append("<td class='borderL'>&nbsp;</td>");
+			body.append(tableRow);
+						
+			// Last border row
 			var endRow = $('<tr>');
 			endRow.append("<td class='border'></td>");
-			endRow.append("<td class='borderT' colspan='" + (data.cols.order.length + 1) + "'></td>");
+			endRow.append("<td class='borderT'></td>");
+			endRow.append("<td class='borderT'></td>");
 			endRow.append("<td class='border'></td>");
-			if (data.rows.annotations.length > 0) {
-				endRow.append("<td class='borderT' colspan='" + (data.rows.annotations.length) + "'></td>");
-			}
 			body.append(endRow);
-
 			obj.append(table);
+			$('div.heatmap-loader').hide();
 
-			data.zoom();
-		};
+	};
 
-	}
-	;
-
+	};
+	
 	String.prototype.splitCSV = function(sep) {
 		for ( var thisCSV = this.split(sep = sep || ","), x = thisCSV.length - 1, tl; x >= 0; x--) {
 			if (thisCSV[x].replace(/"\s+$/, '"').charAt(thisCSV[x].length - 1) == '"') {
@@ -854,12 +935,12 @@
 							if (parse) {
 								var textValues = line.splitCSV(sep);
 								for ( var i = 0; i < textValues.length; i++) {
-									valuesRow.push(parseFloat(textValues[i]));
+									valuesRow[valuesRow.length] = parseFloat(textValues[i]);
 								}
 							} else {
 								valuesRow = line.splitCSV(sep);
 							}
-							result.values.push(valuesRow);
+							result.values[result.values.length] = valuesRow;
 						}
 					}
 				});
@@ -867,21 +948,108 @@
 		},
 
 		// Load all the data files.
-		load : function(data, rowFile, colFile, valuesFile, sep) {
+		load : function(data, options) {
 			data.sync = false;
-			methods['readfile'].call(this, rowFile, sep, data.rows, false);
-			methods['readfile'].call(this, colFile, sep, data.cols, false);
-			methods['readfile'].call(this, valuesFile, sep, data.cells, false);
+			
+			if (options.data.type == "raw" || options.data.type == "tcm" ) {
+				methods['readfile'].call(this, options.data.rows, options.separator, data.rows, false);
+				methods['readfile'].call(this, options.data.cols, options.separator, data.cols, false);
+				methods['readfile'].call(this, options.data.values, options.separator, data.cells, false);
+			} else if (options.data.type == "cdm") {
+				methods['readfile'].call(this, options.data.values, options.separator, data.cells, false);
+			}
 		},
 
-		init : function(rowFile, colFile, valuesFile, options) {
+		init : function(options) {
 			var obj = $(this);
 			obj
-					.html('<div class="heatmap-loader"><div class="background"></div><div class="progress"><img src="images/loading.gif"></div></div>');
+					.html('<div class="heatmap-loader"><div class="background"></div><div class="progress"><img src="'+basePath+'images/loading.gif"></div></div>');
 			obj.ajaxStop(function() {
 				if (!data.sync) {
 
 					data.loading(function() {
+
+						// Two columns matrix format
+						if (options.data.type == "tcm") {
+
+							var cellValues = [];
+
+							// Create a null matrix
+							var totalPos = data.rows.values.length * data.cols.values.length;
+							for ( var pos = 0; pos < totalPos; pos++) {
+								cellValues[pos] = null;
+							}
+
+							// Try to deduce with column is the row primary key.
+							var rowKey;
+							var valuesRowKey;
+							for ( var i = 0; i < data.rows.header.length; i++) {
+								if ((valuesRowKey = data.cells.header.indexOf(data.rows.header[i])) > -1) {
+									rowKey = i;
+									break;
+								}
+							}
+
+							// Try to deduce with column is the column primary
+							// key.
+							var colKey;
+							var valuesColKey;
+							for ( var i = 0; i < data.cols.header.length; i++) {
+								if ((valuesColKey = data.cells.header.indexOf(data.cols.header[i])) > -1) {
+									if (valuesColKey != valuesRowKey) {
+										colKey = i;
+										break;
+									}
+								}
+							}
+
+							// Build hashes
+							var rowHash = {};
+							for ( var i = 0; i < data.rows.values.length; i++) {
+								rowHash[(data.rows.values[i][rowKey]).toString()] = i;
+							}
+							var colHash = {};
+							for ( var i = 0; i < data.cols.values.length; i++) {
+								colHash[(data.cols.values[i][colKey]).toString()] = i;
+							}
+
+							var cl = data.cols.values.length;
+							for ( var i = 0; i < data.cells.values.length; i++) {
+
+								var value = data.cells.values[i];
+								var rowIndex = rowHash[value[valuesRowKey]];
+								var colIndex = colHash[value[valuesColKey]];
+
+								var pos = rowIndex * cl + colIndex;
+
+								cellValues[pos] = value;
+							}
+							
+							delete data.cells.values;
+							data.cells.values = cellValues;
+
+						// Continuous data matrix format
+						} else if (options.data.type == "cdm") {
+														
+							data.cols.header = ["Column"];
+							for (var i=0; i < data.cells.header.length; i++) {
+								data.cols.values[data.cols.values.length] = [ data.cells.header[i] ];
+							}	
+							
+							var cellValues = [];
+							data.rows.header = ["Row"];
+							for (var row=0; row < data.cells.values.length; row++) {
+								data.rows.values[data.rows.values.length] = [ data.cells.values[row][0] ];
+								for (var col=0; col < data.cols.values.length; col++ ) {
+									cellValues[cellValues.length] = [ data.cells.values[row][col+1] ];
+								}								
+							}
+							
+							delete data.cells.header;
+							delete data.cells.values;
+							data.cells.header = ["Value"];
+							data.cells.values = cellValues;							
+						}
 
 						// Reset orders
 						data.init();
@@ -899,21 +1067,28 @@
 			});
 
 			// Load all the data files on init
-			methods['load'].call(this, data, rowFile, colFile, valuesFile, options.separator);
+			methods['load'].call(this, data, options);
 
 		}
 
 	};
+	
 
 	// Main function that creates the heatmap
-	$.fn.heatmap = function(rowFile, colFile, valuesFile, options) {
+	$.fn.heatmap = function(options) {
 		var defaults = {
-			separator : ",",
+			separator : "\t",
+			data : {
+				type : "raw",
+				rows : "heatmap-rows.tsv",
+				cols : "heatmap-cols.tsv",
+				values : "heatmap-values.tsv"
+			},
 			init : function(heatmap) {
 			}
 		};
 		var options = $.extend(defaults, options);
-		return this.each(methods['init'].call(this, rowFile, colFile, valuesFile, options));
+		return this.each(methods['init'].call(this, options));
 	};
-
+	
 })(jQuery);

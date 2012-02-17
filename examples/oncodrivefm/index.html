@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>jHeatmap</title>
+
+<link rel="stylesheet" href="../../css/jheatmap.css" type="text/css" />
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="../../js/jheatmap-filters.js"></script>
+<script type="text/javascript" src="../../js/jheatmap-aggregators.js"></script>
+<script type="text/javascript" src="../../js/jheatmap-decorators.js"></script>
+<script type="text/javascript" src="../../js/jheatmap.js"></script>
+
+<script>
+	$(document).ready(
+			function() {
+				$('#heatmap').heatmap(
+						 {
+							data : {
+								type : "tcm",
+								rows : 'analysis-rows.tsv',
+								cols : 'analysis-columns.tsv',
+								values : 'analysis-results.tsv'
+							},
+
+							init : function(heatmap) {
+								
+								// Disable tooltips
+								heatmap.tooltip = false;
+								
+								// Default cell value
+                				heatmap.cells.selectedValue = 2;
+                				
+                				// Configure decorators and aggregators
+                				heatmap.cells.decorators[2] = heatmapDecorators['median'];
+                    			heatmap.cells.aggregators[2] = heatmapAggregators['median'];
+                				
+                				// Row annotations
+                				heatmap.rows.decorators[4] = heatmapDecorators['pvalue'];
+                				heatmap.rows.annotations = [4];
+                				
+                				// Setup default zoom 
+                				heatmap.cols.zoom = 6;
+                				heatmap.rows.zoom = 6;
+                				
+							}
+						});
+			});
+</script>
+</head>
+<body>
+
+	<div id="heatmap"></div>
+
+</body>
+</html>

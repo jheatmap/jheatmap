@@ -85,8 +85,8 @@ var heatmapDecorators = {
 				g = 204 + Math.round((b / 255) * 51);
 			}
 						
-			var color = (new RGBColor(r, g, b)).toHex();
-			return "<td style='background-color:" + color + "'></td>";
+			var color = (new RGBColor(r, g, b)).toRGB();
+			return color;
 		},
 
 		"pvalue" : function(value) {
@@ -106,8 +106,8 @@ var heatmapDecorators = {
 				g = (value == 0) ? 0 : Math.round((value / 0.05) * 255);
 				b = 0;
 			}
-			var color = (new RGBColor(r, g, b)).toHex();
+			var color = (new RGBColor(r, g, b)).toRGB();
 
-			return "<td style='background-color:" + color + "'></td>";
+			return color;
 		}
 	};

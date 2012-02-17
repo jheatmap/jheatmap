@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>jHeatmap</title>
+
+<link rel="stylesheet" href="../../css/jheatmap.css" type="text/css" />
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="../../js/jheatmap-filters.js"></script>
+<script type="text/javascript" src="../../js/jheatmap-aggregators.js"></script>
+<script type="text/javascript" src="../../js/jheatmap-decorators.js"></script>
+<script type="text/javascript" src="../../js/jheatmap.js"></script>
+
+<script>
+        $(document).ready(function() {
+                $('#heatmap').heatmap(
+                		{ 
+                			data : {
+                				type : 'raw',
+                				rows : 'analysis-rows.tsv',
+                        		cols : 'analysis-columns.tsv',
+                        		values : 'analysis-results.tsv'
+                			},
+                			
+                			init : function(heatmap) {
+                				
+                				// Default cell value
+                				heatmap.cells.selectedValue = 0;
+                				                				
+                				// Configure decorators and aggregators
+                				heatmap.cells.decorators[0] = heatmapDecorators['median'];
+                				heatmap.cells.aggregators[0] = heatmapAggregators['median'];
+                				
+                				// Default zoom
+                				heatmap.cols.zoom = 10;
+                				heatmap.rows.zoom = 10;
+                				
+                				// Add filters
+                				heatmap.filters = {
+                						'non-expressed-rows' : {
+                							title : "Hide non-differentially expressed",
+                							filter : heatmapFilters['non-expressed'],
+                							options : { cutoff : 4 },
+                							fields : [ 0 ]
+                						}
+                				}
+                				heatmap.addRowsFilter('non-expressed-rows');
+                				heatmap.applyFilters();
+               				
+                				// Default sort
+                				heatmap.rows.sort.type = "value";
+								heatmap.rows.sort.field = 0;
+								heatmap.rows.sort.asc = false;
+								heatmap.cols.sort.type = "value";
+								heatmap.cols.sort.field = 0;
+								heatmap.cols.sort.asc = false; 
+								heatmap.applySort();
+                				
+                			}
+                		}
+                );
+        });
+        </script>
+</head>
+<body>
+
+	<div id="heatmap"></div>
+
+</body>
+</html>
