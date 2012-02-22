@@ -580,6 +580,35 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 					}
 				}
 			}));
+			
+			// Separator
+			topToolbar.append($('<img>', {
+				'src' : basePath + "images/sep.png"
+			}));
+			
+			// Fullscreen
+			topToolbar.append($('<img>', {
+				'src' : basePath + "images/" + ( data.size.fullscreen ? "nofull.png" : "full.png")
+			}).click(function() {
+				
+				if (data.size.fullscreen) {
+					data.size.width = data.size.fullscreen.width;
+					data.size.height = data.size.fullscreen.height;
+					delete data.size.fullscreen;	
+				} else {
+					var wHeight = $(window).height();
+					var wWidth = $(window).width();
+								
+					data.size.fullscreen = { width: data.size.width, height: data.size.height };
+					data.size.width = wWidth - 300;
+					data.size.height = wHeight - 235;
+				}
+				
+				data.paint(obj);
+				
+			}));
+			
+			
 
 			borderTop.append(topToolbar);
 			header.append(borderTop);
