@@ -33,9 +33,6 @@ table.heatmap th {
 	vertical-align: bottom;
 	text-align: center;
 	height: 150px;
-	padding-left: 2px;
-	padding-right: 2px;
-	padding-bottom: 8px;
 	border-bottom: 3px solid #666;
 	border-top: 3px solid #666;
 	border-right: 1px solid #666;
@@ -172,6 +169,12 @@ table.heatmap td.borderRL, table.heatmap th.borderRL {
     border-bottom: 0px;
     background-color: white;
 }
+
+table.heatmap td.borderF, table.heatmap th.borderF {
+    border: 3px solid #666;
+    background-color: #666;
+}
+
 
 table.heatmap td.borderL, table.heatmap th.borderL {
     border-right: 0px;

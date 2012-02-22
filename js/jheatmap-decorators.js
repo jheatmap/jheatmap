@@ -32,13 +32,9 @@ function RGBColor(r, g, b) {
 var heatmapDecorators = {
 			
 		"empty" : function(value) {
-			return "<td>&nbsp;</td>";
+			return "white";
 		},
-		
-		"text" : function(value) {
-			return "<td>"+value+"</td>";
-		},
-		
+				
 		"test" : function(value) {
 			var color;
 			if (value == 1) {
@@ -49,7 +45,7 @@ var heatmapDecorators = {
 				color = 'green';
 			}
 			
-			return "<td style='background-color:" + color + "'></td>";
+			return color;
 		},
 		
 		"sex" : function(value) {
@@ -60,7 +56,7 @@ var heatmapDecorators = {
 				color = "blue";
 			}
 			
-			return "<td style='background-color:" + color + "'></td>";
+			return color;
 		},
 		
 		"median" : function(value) {

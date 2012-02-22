@@ -35,9 +35,13 @@
                 				heatmap.cells.decorators[2] = heatmapDecorators['median'];
                     			heatmap.cells.aggregators[2] = heatmapAggregators['median'];
                 				
+                    			// Column annotations
+                    			heatmap.cols.decorators[1] = heatmapDecorators['pvalue'];
+                    			heatmap.cols.annotations = [1];
+                    			
                 				// Row annotations
-                				heatmap.rows.decorators[4] = heatmapDecorators['pvalue'];
-                				heatmap.rows.annotations = [4];
+                				heatmap.rows.decorators[1] = heatmapDecorators['pvalue'];
+                				heatmap.rows.annotations = [1];
                 				
                 				// Setup default zoom 
                 				heatmap.cols.zoom = 6;

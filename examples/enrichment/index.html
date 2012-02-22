@@ -26,6 +26,14 @@
                 			
                 			init : function(heatmap) {
                 				
+                				// Size
+                				heatmap.size.width = 300;
+                				heatmap.size.height = 300;
+                				
+                				// Setup default zoom 
+                				heatmap.cols.zoom = 12;
+                				heatmap.rows.zoom = 12;
+                				
                 				// Default cell value
                 				heatmap.cells.selectedValue = 8;
                 				
@@ -44,9 +52,7 @@
                 				heatmap.rows.decorators[1] = heatmapDecorators['pvalue'];
                 				heatmap.rows.annotations = [1];
                 				
-                				// Setup default zoom 
-                				heatmap.cols.zoom = 12;
-                				heatmap.rows.zoom = 12;
+                				
                 				
                 				// Add filters
                 				heatmap.filters = {
@@ -69,7 +75,7 @@
 								heatmap.cols.sort.field = 8;
 								heatmap.cols.sort.asc = false;                				
                 				heatmap.applySort();
-                				
+                				                				
                 			}
                 		}
                 );
