@@ -14,6 +14,8 @@ table.heatmap .border {
 	background-color: #FFF;
 	border: 0px solid white;
 	vertical-align: top;
+	min-width: 26px;
+	min-height: 26px;
 }
 
 table.heatmap .border img {

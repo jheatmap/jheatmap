@@ -7,9 +7,10 @@
 
 var scripts = document.getElementsByTagName("script");
 var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
+var console=console||{"log":function(){}};
 
 (function($) {
-
+	
 	function Heatmap() {
 
 		this.tooltip = true;
@@ -493,7 +494,7 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 			 * TOP TOOLBAR
 			 */
 
-			var topToolbar = $("<td>");
+			var topToolbar = $("<td>", { colspan: 3 });
 
 			// Order columns by label
 			topToolbar.append($('<img>', {
@@ -548,9 +549,9 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 				'src' : basePath + "/images/hl.png"
 			}).click(function() {
 				if (data.cols.selected.length > 0) {
-					if (data.cols.selected.indexOf(data.cols.order[0]) == -1) {
+					if ($.inArray(data.cols.order[0], data.cols.selected) == -1) {
 						for ( var i = 1; i < data.cols.order.length; i++) {
-							var index = data.cols.selected.indexOf(data.cols.order[i]);
+							var index = $.inArray(data.cols.order[i], data.cols.selected);
 							if (index != -1) {
 								var prevCol = data.cols.order[i - 1];
 								data.cols.order[i - 1] = data.cols.order[i];
@@ -567,9 +568,9 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 				'src' : basePath + "/images/hr.png"
 			}).click(function() {
 				if (data.cols.selected.length > 0) {
-					if (data.cols.selected.indexOf(data.cols.order[data.cols.order.length - 1]) == -1) {
+					if ($.inArray(data.cols.order[data.cols.order.length - 1], data.cols.selected) == -1) {
 						for ( var i = data.cols.order.length - 2; i >= 0; i--) {
-							var index = data.cols.selected.indexOf(data.cols.order[i]);
+							var index = $.inArray(data.cols.order[i], data.cols.selected);
 							if (index != -1) {
 								var nextCol = data.cols.order[i + 1];
 								data.cols.order[i + 1] = data.cols.order[i];
@@ -580,35 +581,36 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 					}
 				}
 			}));
-			
+
 			// Separator
 			topToolbar.append($('<img>', {
 				'src' : basePath + "images/sep.png"
 			}));
-			
+
 			// Fullscreen
 			topToolbar.append($('<img>', {
-				'src' : basePath + "images/" + ( data.size.fullscreen ? "nofull.png" : "full.png")
+				'src' : basePath + "images/" + (data.size.fullscreen ? "nofull.png" : "full.png")
 			}).click(function() {
-				
+
 				if (data.size.fullscreen) {
 					data.size.width = data.size.fullscreen.width;
 					data.size.height = data.size.fullscreen.height;
-					delete data.size.fullscreen;	
+					delete data.size.fullscreen;
 				} else {
 					var wHeight = $(window).height();
 					var wWidth = $(window).width();
-								
-					data.size.fullscreen = { width: data.size.width, height: data.size.height };
+
+					data.size.fullscreen = {
+						width : data.size.width,
+						height : data.size.height
+					};
 					data.size.width = wWidth - 300;
 					data.size.height = wHeight - 235;
 				}
-				
+
 				data.paint(obj);
-				
+
 			}));
-			
-			
 
 			borderTop.append(topToolbar);
 			header.append(borderTop);
@@ -683,9 +685,9 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 				'src' : basePath + "/images/vu.png"
 			}).click(function() {
 				if (data.rows.selected.length > 0) {
-					if (data.rows.selected.indexOf(data.rows.order[0]) == -1) {
+					if ($.inArray(data.rows.order[0], data.rows.selected) == -1) {
 						for ( var i = 1; i < data.rows.order.length; i++) {
-							var index = data.rows.selected.indexOf(data.rows.order[i]);
+							var index = $.inArray(data.rows.order[i], data.rows.selected);
 							if (index != -1) {
 								var prevRow = data.rows.order[i - 1];
 								data.rows.order[i - 1] = data.rows.order[i];
@@ -703,9 +705,9 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 				'src' : basePath + "/images/vd.png"
 			}).click(function() {
 				if (data.rows.selected.length > 0) {
-					if (data.rows.selected.indexOf(data.rows.order[data.rows.order.length - 1]) == -1) {
+					if ($.inArray(data.rows.order[data.rows.order.length - 1], data.rows.selected) == -1) {
 						for ( var i = data.rows.order.length - 2; i >= 0; i--) {
-							var index = data.rows.selected.indexOf(data.rows.order[i]);
+							var index = $.inArray(data.rows.order[i], data.rows.selected);
 							if (index != -1) {
 								var nextRow = data.rows.order[i + 1];
 								data.rows.order[i + 1] = data.rows.order[i];
@@ -731,7 +733,7 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 
 				var filterDef = data.filters[filterId];
 
-				if (filterDef.fields.indexOf(data.cells.selectedValue) > -1) {
+				if ($.inArray(data.cells.selectedValue, filterDef.fields) > -1) {
 
 					var checkInput = $('<input type="checkbox">');
 					checkInput.prop('checked', data.getRowsFilter(filterId));
@@ -815,9 +817,10 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 
 			var colCanvas = $("<canvas width='" + data.size.width + "' height='150'></canvas>");
 			colCanvas.click(function(e) {
-				var col = data.cols.order[Math.floor(e.offsetX / cz) + data.offset.left];
+				var pos = $(this).position();
+				var col = data.cols.order[Math.floor((e.pageX-pos.left) / cz) + data.offset.left];
 
-				var index = data.cols.selected.indexOf(col);
+				var index = $.inArray(col, data.cols.selected);
 				if (index > -1) {
 					data.cols.selected.splice(index, 1);
 				} else {
@@ -829,6 +832,7 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 			colHeader.append(colCanvas);
 
 			var colCtx = colCanvas.get()[0].getContext('2d');
+			
 			colCtx.fillStyle = "black";
 			colCtx.textAlign = "right";
 			colCtx.textBaseline = "middle";
@@ -842,49 +846,54 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 				colCtx.fillText(value, 0, 0);
 				colCtx.restore();
 
-				if (data.cols.selected.indexOf(data.cols.order[c]) > -1) {
+				if ($.inArray(data.cols.order[c], data.cols.selected) > -1) {
 					colCtx.fillStyle = "rgba(0,0,0,0.2)";
 					colCtx.fillRect((c - startCol) * cz, 0, cz, 150);
 					colCtx.fillStyle = "black";
 				}
 			}
 			firstRow.append("<th class='borderF'>&nbsp;</th>");
-			
+
 			/*******************************************************************
 			 * ADD ROW HEADER ANNOTATIONS
 			 ******************************************************************/
-			
+
 			if (data.rows.annotations.length > 0) {
-				var rowspan = (data.cols.annotations.length>0 ? 2 : 1);
-				
-				var annRowHead = $("<th>", { 'class' : 'borderF' , 'rowspan' : rowspan});
+				var rowspan = (data.cols.annotations.length > 0 ? 2 : 1);
+
+				var annRowHead = $("<th>", {
+					'class' : 'borderF',
+					'rowspan' : rowspan
+				});
 				firstRow.append(annRowHead);
-				firstRow.append($("<th>", { 'class' : 'borderL' , 'rowspan' : rowspan}));
-				
-				var annRowHeadCanvas = $("<canvas width='" + 10 * data.rows.annotations.length + "' height='150'></canvas>");
+				firstRow.append($("<th>", {
+					'class' : 'borderL',
+					'rowspan' : rowspan
+				}));
+
+				var annRowHeadCanvas = $("<canvas width='" + 10 * data.rows.annotations.length
+						+ "' height='150'></canvas>");
 				annRowHead.append(annRowHeadCanvas);
 				var annRowHeadCtx = annRowHeadCanvas.get()[0].getContext('2d');
 				annRowHeadCtx.fillStyle = "rgb(255,255,255)";
 				annRowHeadCtx.textAlign = "right";
 				annRowHeadCtx.textBaseline = "middle";
 				annRowHeadCtx.font = "bold 11px Verdana";
-				
-				for (var i=0; i<data.cols.annotations.length; i++) {
-					
+
+				for ( var i = 0; i < data.cols.annotations.length; i++) {
+
 					var value = data.cols.header[data.cols.annotations[i]];
 					annRowHeadCtx.save();
 					annRowHeadCtx.translate(i * 10 + 5, 150);
 					annRowHeadCtx.rotate(Math.PI / 2);
 					annRowHeadCtx.fillText(value, 0, 0);
-					annRowHeadCtx.restore();					
+					annRowHeadCtx.restore();
 				}
-				
+
 			} else {
 				firstRow.append("<th class='borderL'>&nbsp;</th>");
 			}
-			
-			
-			
+
 			/*******************************************************************
 			 * ADD COLUMN ANNOTATIONS
 			 ******************************************************************/
@@ -897,9 +906,11 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 					'class' : 'border'
 				}));
 
-				var colAnnHeaderCell = $("<th>", { "class" : "borderF" });
-				var colAnnHeaderCanvas = $("<canvas style='float:right;' width='200' height='" + 10 * data.cols.annotations.length
-						+ "'></canvas>");
+				var colAnnHeaderCell = $("<th>", {
+					"class" : "borderF"
+				});
+				var colAnnHeaderCanvas = $("<canvas style='float:right;' width='200' height='" + 10
+						* data.cols.annotations.length + "'></canvas>");
 				colAnnHeaderCell.append(colAnnHeaderCanvas);
 				firstRow.append(colAnnHeaderCell);
 
@@ -937,7 +948,7 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 				}
 
 				for ( var col = startCol; col < endCol; col++) {
-					if (data.cols.selected.indexOf(data.cols.order[col]) > -1) {
+					if ($.inArray(data.cols.order[col], data.cols.selected) > -1) {
 						colAnnValuesCtx.fillStyle = "rgba(0,0,0,0.2)";
 						colAnnValuesCtx.fillRect((col - startCol) * cz, 0, cz, data.cols.annotations.length * 10);
 						colAnnValuesCtx.fillStyle = "white";
@@ -947,7 +958,7 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 				firstRow.append("<th class='borderF'>&nbsp;</th>");
 
 			}
-			
+
 			/*******************************************************************
 			 * TABLE BODY *
 			 ******************************************************************/
@@ -974,9 +985,10 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 			var rowsCanvas = $("<canvas width='200' height='" + data.size.height + "'></canvas>");
 
 			rowsCanvas.click(function(e) {
-				var row = data.rows.order[Math.floor(e.offsetY / rz) + data.offset.top];
+				var pos = $(this).position();
+				var row = data.rows.order[Math.floor((e.pageY - pos.top) / rz) + data.offset.top];
 
-				var index = data.rows.selected.indexOf(row);
+				var index = $.inArray(row, data.rows.selected);
 				if (index > -1) {
 					data.rows.selected.splice(index, 1);
 				} else {
@@ -998,7 +1010,7 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 				var value = data.getRowValueSelected(row);
 				rowCtx.fillText(value, 200, ((row - startRow) * rz) + (rz / 2));
 
-				if (data.rows.selected.indexOf(data.rows.order[row]) > -1) {
+				if ($.inArray(data.rows.order[row], data.rows.selected) > -1) {
 					rowCtx.fillStyle = "rgba(0,0,0,0.3)";
 					rowCtx.fillRect(0, ((row - startRow) * rz), 200, rz);
 					rowCtx.fillStyle = "black";
@@ -1032,7 +1044,7 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 					}
 				}
 
-				if (data.rows.selected.indexOf(data.rows.order[row]) > -1) {
+				if ($.inArray(data.rows.order[row], data.rows.selected) > -1) {
 					cellCtx.fillStyle = "rgba(0,0,0,0.2)";
 					cellCtx.fillRect(0, (row - startRow) * rz, (endCol - startCol) * cz, rz);
 					cellCtx.fillStyle = "white";
@@ -1041,7 +1053,7 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 
 			// Paint selected columns
 			for ( var col = startCol; col < endCol; col++) {
-				if (data.cols.selected.indexOf(data.cols.order[col]) > -1) {
+				if ($.inArray(data.cols.order[col], data.cols.selected) > -1) {
 					cellCtx.fillStyle = "rgba(0,0,0,0.2)";
 					cellCtx.fillRect((col - startCol) * cz, 0, cz, (endRow - startRow) * rz);
 					cellCtx.fillStyle = "white";
@@ -1049,10 +1061,8 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 			}
 			;
 
-			heatmapCanvas.bind('mousewheel', function(e) {
-				var col = Math.floor(e.originalEvent.offsetX / cz) + data.offset.left;
-				var row = Math.floor(e.originalEvent.offsetY / rz) + data.offset.top;
-				if (e.originalEvent.wheelDelta / 120 > 0) {
+			var zoomHeatmap = function(zoomin, col, row) {
+				if (zoomin) {
 					data.cols.zoom += 3;
 					data.rows.zoom += 3;
 
@@ -1093,20 +1103,51 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 				if (!(nrz == rz && ncz == cz)) {
 					data.paint(obj);
 				}
+			};
+
+			heatmapCanvas.bind('mousewheel', function(e, delta, deltaX, deltaY) {
+				var pos = $(this).position();
+				var col = Math.floor((e.pageX-pos.left) / cz) + data.offset.left;
+				var row = Math.floor((e.pageY-pos.top) / rz) + data.offset.top;
+				var zoomin = delta / 120 > 0;
+
+				zoomHeatmap(zoomin, col, row);
+			});
+
+			heatmapCanvas.bind('gesturechange', function(e) {
+				e.preventDefault();
+			});
+
+			heatmapCanvas.bind('gestureend', function(e) {
+				e.preventDefault();
+
+				var col = Math.round(startCol + ((endCol - startCol) / 2));
+				var row = Math.round(startRow + ((endRow - startRow) / 2));
+				var zoomin = e.originalEvent.scale > 1;
+
+				console.log("zoomin=" + zoomin + " col=" + col + " row=" + row + " startRow=" + startRow + " endRow="
+						+ endRow);
+				zoomHeatmap(zoomin, col, row);
 			});
 
 			var downX = null;
 			var downY = null;
 
-			heatmapCanvas.mousedown(function(e) {
-				downX = e.offsetX;
-				downY = e.offsetY;
+			heatmapCanvas.bind('vmousedown', function(e) {
+				e.preventDefault();
+				downX = e.pageX;
+				downY = e.pageY;
 			});
 
-			heatmapCanvas.mouseup(function(e) {
+			heatmapCanvas.bind('vmouseup', function(e) {
+				e.preventDefault();
 
-				var pX = e.offsetX - downX;
-				var pY = e.offsetY - downY;
+				if (e.originalEvent.touches && e.originalEvent.touches.length > 1) {
+					return;
+				}
+
+				var pX = e.pageX - downX;
+				var pY = e.pageY - downY;
 
 				var c = Math.round(pX / cz);
 				var r = Math.round(pY / rz);
@@ -1136,11 +1177,12 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 			var iniY = Math.round(maxHeight * (startRow / data.rows.order.length));
 			var endY = Math.round(maxHeight * (endRow / data.rows.order.length));
 			scrollVertCtx.fillRect(0, iniY, 10, endY - iniY);
-			
+
 			scrollVertCanvas.click(function(e) {
-				var pY = e.offsetY - ((endY - iniY) / 2);
-				pY = (pY<0?0:pY);
-				data.offset.top = Math.round((pY/maxHeight) * data.rows.order.length);
+				var pos = $(this).position();
+				var pY = e.pageY - pos.top - ((endY - iniY) / 2);
+				pY = (pY < 0 ? 0 : pY);
+				data.offset.top = Math.round((pY / maxHeight) * data.rows.order.length);
 				data.paint(obj);
 			});
 
@@ -1173,7 +1215,7 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 
 					}
 
-					if (data.rows.selected.indexOf(data.rows.order[row]) > -1) {
+					if ($.inArray(data.rows.order[row], data.rows.selected) > -1) {
 						rowsAnnValuesCtx.fillStyle = "rgba(0,0,0,0.2)";
 						rowsAnnValuesCtx.fillRect(0, (row - startRow) * rz, data.rows.annotations.length * 10, rz);
 						rowsAnnValuesCtx.fillStyle = "white";
@@ -1212,28 +1254,29 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 			scrollHorCtx.fillRect(iniX, 0, endX - iniX, 10);
 
 			scrollHorCanvas.click(function(e) {
-				var pX = e.offsetX - ((endX - iniX) / 2);
-				pX = (pX<0?0:pX);
-				data.offset.left = Math.round((pX/maxWidth) * data.cols.order.length);
+				var pos = $(this).position();
+				var pX = e.pageX - pos.left - ((endX - iniX) / 2);
+				pX = (pX < 0 ? 0 : pX);
+				data.offset.left = Math.round((pX / maxWidth) * data.cols.order.length);
 				data.paint(obj);
 			});
 
 			body.append(scrollRow);
 
-			/******************************************************************
-			 * Close table 
+			/*******************************************************************
+			 * Close table
 			 ******************************************************************/
 
 			// Last border row
-			var endRow = $('<tr>');
-			endRow.append("<td class='border'></td>");
-			endRow.append("<td class='borderT'></td>");
-			endRow.append("<td class='borderT'></td>");
+			var lastRow = $('<tr>');
+			lastRow.append("<td class='border'></td>");
+			lastRow.append("<td class='borderT'></td>");
+			lastRow.append("<td class='borderT'></td>");
 			if (data.rows.annotations.length > 0) {
-				endRow.append("<td class='borderT'></td>");
+				lastRow.append("<td class='borderT'></td>");
 			}
-			endRow.append("<td class='border'></td>");
-			body.append(endRow);
+			lastRow.append("<td class='border'></td>");
+			body.append(lastRow);
 			obj.append(table);
 			$('div.heatmap-loader').hide();
 
@@ -1267,26 +1310,30 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 
 		// Load one file.
 		readfile : function(csvFile, sep, result, parse) {
-			$.get(csvFile, function(data) {
-				var lines = data.replace('\r', '').split('\n');
-				$.each(lines, function(lineCount, line) {
-					if (line.length > 0 && !line.startsWith("#")) {
-						if (lineCount == 0) {
-							result.header = line.splitCSV(sep);
-						} else {
-							var valuesRow = [];
-							if (parse) {
-								var textValues = line.splitCSV(sep);
-								for ( var i = 0; i < textValues.length; i++) {
-									valuesRow[valuesRow.length] = parseFloat(textValues[i]);
-								}
+			$.ajax({
+				url : csvFile,
+				success : function(data) {
+					var lines = data.replace('\r', '').split('\n');
+					$.each(lines, function(lineCount, line) {
+						if (line.length > 0 && !line.startsWith("#")) {
+							if (lineCount == 0) {
+								result.header = line.splitCSV(sep);
 							} else {
-								valuesRow = line.splitCSV(sep);
+								var valuesRow = [];
+								if (parse) {
+									var textValues = line.splitCSV(sep);
+									for ( var i = 0; i < textValues.length; i++) {
+										valuesRow[valuesRow.length] = parseFloat(textValues[i]);
+									}
+								} else {
+									valuesRow = line.splitCSV(sep);
+								}
+								result.values[result.values.length] = valuesRow;
 							}
-							result.values[result.values.length] = valuesRow;
 						}
-					}
-				});
+					});
+				},
+				dataType : "text"
 			});
 		},
 
@@ -1327,7 +1374,7 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 							var rowKey;
 							var valuesRowKey;
 							for ( var i = 0; i < data.rows.header.length; i++) {
-								if ((valuesRowKey = data.cells.header.indexOf(data.rows.header[i])) > -1) {
+								if ((valuesRowKey = $.inArray(data.rows.header[i], data.cells.header)) > -1) {
 									rowKey = i;
 									break;
 								}
@@ -1338,7 +1385,7 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 							var colKey;
 							var valuesColKey;
 							for ( var i = 0; i < data.cols.header.length; i++) {
-								if ((valuesColKey = data.cells.header.indexOf(data.cols.header[i])) > -1) {
+								if ((valuesColKey = $.inArray(data.cols.header[i], data.cells.header)) > -1) {
 									if (valuesColKey != valuesRowKey) {
 										colKey = i;
 										break;
@@ -1360,7 +1407,7 @@ var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
 							for ( var i = 0; i < data.cells.values.length; i++) {
 
 								var value = data.cells.values[i];
-								
+
 								if (value != null) {
 									var rowIndex = rowHash[value[valuesRowKey]];
 									var colIndex = colHash[value[valuesColKey]];
