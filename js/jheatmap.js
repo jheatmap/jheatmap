@@ -327,17 +327,21 @@ var console=console||{"log":function(){}};
 			} else if (this.cols.sort.type == "value") {
 				var aggregation = [];
 				var cl = this.cols.values.length;
-				for ( var c = 0; c < this.cols.order.length; c++) {
+				
+				var cols = this.cols.order;
+				var rows = this.rows.order;
+				
+				for ( var c = 0; c < cols.length; c++) {
 					var sum = 0;
-					for ( var r = 0; r < this.rows.order.length; r++) {
-						var pos = this.rows.order[r] * cl + this.cols.order[c];
+					for ( var r = 0; r < rows.length; r++) {
+						var pos = rows[r] * cl + cols[c];
 						var value = this.cells.values[pos];
 						if (value != null) {
 							sum = this.cells.aggregators[this.cells.selectedValue].call(this, sum,
 									value[this.cols.sort.field]);
 						}
 					}
-					aggregation[this.cols.order[c]] = sum;
+					aggregation[cols[c]] = sum;
 				}
 
 				this.cols.order.sort(function(o_a, o_b) {
@@ -488,7 +492,7 @@ var console=console||{"log":function(){}};
 			var borderTop = $('<tr>', {
 				'class' : 'border'
 			});
-			borderTop.append($('<td>'));
+			borderTop.append('<td><div class="detailsbox">cell details here</div></td>');
 
 			/*
 			 * TOP TOOLBAR
@@ -604,8 +608,10 @@ var console=console||{"log":function(){}};
 						width : data.size.width,
 						height : data.size.height
 					};
-					data.size.width = wWidth - 300;
-					data.size.height = wHeight - 235;
+					
+										
+					data.size.width = wWidth - 290 - (14 * data.cols.annotations.length);
+					data.size.height = wHeight - 290 - (10 * data.rows.annotations.length);
 				}
 
 				data.paint(obj);
@@ -1158,6 +1164,69 @@ var console=console||{"log":function(){}};
 				if (!(r == 0 && c == 0)) {
 					data.paint(obj);
 				}
+			});
+			
+			// Show details box
+			heatmapCanvas.bind('vclick', function(e) {
+				
+				var pos = $(this).position();
+				var col = Math.floor((e.originalEvent.pageX-pos.left) / cz) + data.offset.left;
+				var row = Math.floor((e.originalEvent.pageY-pos.top) / rz) + data.offset.top;
+				
+				var cl = data.cols.values.length;
+				var pos = data.rows.order[row] * cl + data.cols.order[col];
+				var value = data.cells.values[pos];
+								
+				var details = $('table.heatmap div.detailsbox');
+				
+				var boxTop = e.originalEvent.pageY;
+				var boxLeft = e.originalEvent.pageX;
+				var boxWidth;
+				var boxHeight;
+				
+				if (value == null) {
+					details.html("<ul><li>No data</li></ul>");
+					boxWidth = 120;
+					boxHeight = 40;
+					
+				} else {
+					var boxHtml = "<ul>";
+					boxHtml += "<li><strong>Column:</strong> " + data.getColValueSelected(col) + "</li>";
+					boxHtml += "<li><strong>Row:</strong> " + data.getRowValueSelected(row) + "</li>";
+					for (var i=0; i < data.cells.header.length; i++) {
+						boxHtml += "<li>";
+						boxHtml += "<strong>" + data.cells.header[i] + ":</strong> ";
+						boxHtml += value[i];
+						boxHtml += "</li>";
+					}
+					boxHtml += "</ul>";
+					
+					details.html(boxHtml);
+					boxWidth = 300;
+					boxHeight = 60 + (data.cells.header.length*20);
+				}
+				
+				var wHeight = $(document).height();
+				var wWidth = $(document).width();
+				
+				if (boxTop + boxHeight > wHeight) {
+					boxTop -= boxHeight;
+				} 
+				
+				if (boxLeft + boxWidth > wWidth) {
+					boxLeft -= boxWidth;
+				} 
+				
+				details.css('left', boxLeft);
+				details.css('top', boxTop);
+				details.css('width', boxWidth);
+				details.css('height', boxHeight);
+				
+				details.css('display', 'block');
+				details.bind('vclick', function(e) {
+					$(this).css('display', 'none');
+				});
+				
 			});
 
 			/*******************************************************************

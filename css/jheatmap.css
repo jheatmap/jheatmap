@@ -14,8 +14,7 @@ table.heatmap .border {
 	background-color: #FFF;
 	border: 0px solid white;
 	vertical-align: top;
-	min-width: 26px;
-	min-height: 26px;
+	height: 26px;
 }
 
 table.heatmap .border img {
@@ -28,7 +27,8 @@ table.heatmap tr.border td {
 }
 
 table.heatmap th.border {
-     width: 15px; 
+	min-width: 26px;
+    width: 26px; 
 }
 
 table.heatmap th {
@@ -66,6 +66,8 @@ table.heatmap th.topleft {
 	border-right: 3px solid #666;
 	border-left: 3px solid #666;
 	text-align: left;
+	width: 220px;
+	max-width: 220px;
 }
 
 table.heatmap th.topleft select {
@@ -97,8 +99,8 @@ table.heatmap th.topleft div.filter {
 	margin-bottom: 15px;
 	width: 100%;
 	text-align: center;
-	white-space: nowrap;
-	font-size: 12px;
+	font-weight: normal;
+	font-size: 10px;
 	-webkit-transform: rotate(0deg);
 	-moz-transform: rotate(0deg);
 }
@@ -127,20 +129,17 @@ table.heatmap tr {
 	background: #F0F0F0;
 }
 
-/* Only works well on Chrome
-
-table.heatmap tbody {
-    background-color: #000;     
-}
-
-table.heatmap tbody tr:hover {
-	opacity: 0.90;
-}
-
-*/
-
 table.heatmap div.col, table.heatmap td.row, table.heatmap th.title {
      cursor: pointer;   
+}
+
+/* Details box */
+table.heatmap div.detailsbox {
+    position: absolute;
+    border: 1px solid black;
+    background-color: white;
+    display: none;
+    overflow: auto;
 }
 
 /* Loader */
