@@ -6,7 +6,11 @@
  */
 
 var scripts = document.getElementsByTagName("script");
-var basePath = scripts[scripts.length - 1].src.replace("js/jheatmap.js", "");
+
+if (!basePath) {
+	var basePath = scripts[scripts.length - 1].src.replace(/js\/jheatmap-(.*)\.js/g, "");
+}
+
 var console=console||{"log":function(){}};
 
 (function($) {

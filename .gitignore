@@ -10,6 +10,7 @@
 .classpath
 .project
 .settings/
+.externalToolBuilders/
 
 # Maven files
 target/

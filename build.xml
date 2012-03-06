@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<project name="jheatmap" default="minify">
+	<description>Interactive heatmap viewer</description>
+
+	<property name="jheatmap.version" value="1.0.0-alpha"/>
+
+	<target name="minify">
+
+		<path id="task.classpath">
+			<pathelement location="lib/yui-compressor-2.4.2.jar" />
+			<pathelement location="lib/yui-compressor-ant-task-0.5.jar" />
+		</path>
+
+		<!-- yui-compressor task definition -->
+		<taskdef name="yui-compressor"
+			classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask">
+			<classpath refid="task.classpath" />
+		</taskdef>
+
+		<!-- Remove previous compilation -->
+		<echo message="Purging javascript and stylesheet sources" />
+		<delete dir="css" />
+		<delete dir="js" />
+
+		<!-- concatenation of javascript -->
+		<echo message="Building global javascript" />
+		<concat destfile="js/jheatmap-${jheatmap.version}.js" force="no">
+			<!-- explicitly order js concat because ordering matters here -->
+			<fileset dir="." includes="src/js/jquery-1.7.1.js" />
+			<fileset dir="." includes="src/js/jquery.mobile-1.1.0-rc.1.js" />
+			<fileset dir="." includes="src/js/jquery.mousewheel.js" />
+			<fileset dir="." includes="src/js/jheatmap-aggregators.js" />
+			<fileset dir="." includes="src/js/jheatmap-decorators.js" />
+			<fileset dir="." includes="src/js/jheatmap-filters.js" />
+			<fileset dir="." includes="src/js/jheatmap.js" />
+		</concat>
+
+		<!-- concatenation of cascading stylesheets -->
+		<echo message="Building global cascading stylesheets" />
+		<concat destfile="css/jheatmap-${jheatmap.version}.css" force="no">
+			<fileset dir="." includes="src/css/jquery.mobile-1.1.0-rc.1.css" />
+			<fileset dir="." includes="src/css/jheatmap.css" />
+		</concat>
+
+		<!-- invoke compressor -->
+		<yui-compressor warn="false" charset="UTF-8" fromdir="."
+			todir=".">
+			<include name="js/jheatmap-${jheatmap.version}.js" />
+			<include name="css/jheatmap-${jheatmap.version}.css" />
+		</yui-compressor>
+		
+		<!-- update examples heads -->
+		<echo message="Update examples heads" />
+		<replaceregexp 
+			match='link id="jheatmap-min.css" href="(.*)"' 
+			replace='link id="jheatmap-min.css" href="../../css/jheatmap-${jheatmap.version}-min.css" rel="stylesheet" type="text/css"' 
+			flags="g" 
+			byline="true">
+    		<fileset dir="./examples" includes="**/index.html"/>
+		</replaceregexp>
+		
+		<replaceregexp 
+			match='script id="jheatmap-min.js" src="(.*)"' 
+			replace='script id="jheatmap-min.js" src="../../js/jheatmap-${jheatmap.version}-min.js" type="text/javascript"' 
+			flags="g" 
+			byline="true">
+    		<fileset dir="./examples" includes="**/index.html"/>
+		</replaceregexp>
+
+	</target>
+
+</project>
