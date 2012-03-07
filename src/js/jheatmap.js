@@ -1053,6 +1053,15 @@ var console=console||{"log":function(){}};
 					annRowHeadCtx.fillText(value, 0, 0);
 					annRowHeadCtx.restore();
 				}
+				
+				annRowHeadCanvas.click(function(e) {
+					var pos = $(this).position();
+					var i = Math.floor((e.pageX-pos.left) / 10);
+
+					data.sortRowsByLabel(data.rows.annotations[i], !data.rows.sort.asc);
+					data.paint(obj);
+
+				});
 
 			} else {
 				firstRow.append("<th class='borderL'>&nbsp;</th>");
@@ -1115,6 +1124,15 @@ var console=console||{"log":function(){}};
 						colAnnValuesCtx.fillStyle = "white";
 					}
 				}
+				
+				colAnnHeaderCanvas.click(function(e) {
+					var pos = $(this).position();
+					var i = Math.floor((e.pageY-pos.top) / 10);
+
+					data.sortColsByLabel(data.cols.annotations[i], !data.cols.sort.asc);
+					data.paint(obj);
+
+				});
 
 				firstRow.append("<th class='borderF'>&nbsp;</th>");
 
