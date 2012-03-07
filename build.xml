@@ -1,27 +1,55 @@
 <?xml version="1.0"?>
-<project name="jheatmap" default="minify">
+<project name="jheatmap" default="release">
 	<description>Interactive heatmap viewer</description>
 
-	<property name="jheatmap.version" value="1.0.0-alpha"/>
+	<property name="jheatmap.version" value="1.0.0-alpha" />
 
-	<target name="minify">
+	<target name="release" depends="purge, concat, yuicompressor, examples-release">
+	</target>
+	
+	<target name="develop" depends="purge, concat, examples-develop">	
+	</target>
 
-		<path id="task.classpath">
-			<pathelement location="lib/yui-compressor-2.4.2.jar" />
-			<pathelement location="lib/yui-compressor-ant-task-0.5.jar" />
-		</path>
+	<target name="examples-release">
+		<!-- update examples heads -->
+		<echo message="Update examples heads" />
+		<replaceregexp match='link id="jheatmap.css" href="(.*)"'
+			replace='link id="jheatmap.css" href="../../css/jheatmap-${jheatmap.version}-min.css" rel="stylesheet" type="text/css"'
+			flags="g" byline="true">
+			<fileset dir="./examples" includes="**/index.html" />
+		</replaceregexp>
 
-		<!-- yui-compressor task definition -->
-		<taskdef name="yui-compressor"
-			classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask">
-			<classpath refid="task.classpath" />
-		</taskdef>
+		<replaceregexp match='script id="jheatmap.js" src="(.*)"'
+			replace='script id="jheatmap.js" src="../../js/jheatmap-${jheatmap.version}-min.js" type="text/javascript"'
+			flags="g" byline="true">
+			<fileset dir="./examples" includes="**/index.html" />
+		</replaceregexp>
+	</target>
+	
+	<target name="examples-develop">
+		<!-- update examples heads -->
+		<echo message="Update examples heads" />
+		<replaceregexp match='link id="jheatmap.css" href="(.*)"'
+			replace='link id="jheatmap.css" href="../../css/jheatmap-${jheatmap.version}.css" rel="stylesheet" type="text/css"'
+			flags="g" byline="true">
+			<fileset dir="./examples" includes="**/index.html" />
+		</replaceregexp>
 
+		<replaceregexp match='script id="jheatmap.js" src="(.*)"'
+			replace='script id="jheatmap.js" src="../../js/jheatmap-${jheatmap.version}.js" type="text/javascript"'
+			flags="g" byline="true">
+			<fileset dir="./examples" includes="**/index.html" />
+		</replaceregexp>
+	</target>
+
+	<target name="purge">
 		<!-- Remove previous compilation -->
 		<echo message="Purging javascript and stylesheet sources" />
 		<delete dir="css" />
 		<delete dir="js" />
+	</target>
 
+	<target name="concat">
 		<!-- concatenation of javascript -->
 		<echo message="Building global javascript" />
 		<concat destfile="js/jheatmap-${jheatmap.version}.js" force="no">
@@ -41,6 +69,20 @@
 			<fileset dir="." includes="src/css/jquery.mobile-1.1.0-rc.1.css" />
 			<fileset dir="." includes="src/css/jheatmap.css" />
 		</concat>
+	</target>
+
+	<target name="yuicompressor">
+
+		<path id="task.classpath">
+			<pathelement location="lib/yui-compressor-2.4.2.jar" />
+			<pathelement location="lib/yui-compressor-ant-task-0.5.jar" />
+		</path>
+
+		<!-- yui-compressor task definition -->
+		<taskdef name="yui-compressor"
+			classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask">
+			<classpath refid="task.classpath" />
+		</taskdef>
 
 		<!-- invoke compressor -->
 		<yui-compressor warn="false" charset="UTF-8" fromdir="."
@@ -48,25 +90,6 @@
 			<include name="js/jheatmap-${jheatmap.version}.js" />
 			<include name="css/jheatmap-${jheatmap.version}.css" />
 		</yui-compressor>
-		
-		<!-- update examples heads -->
-		<echo message="Update examples heads" />
-		<replaceregexp 
-			match='link id="jheatmap-min.css" href="(.*)"' 
-			replace='link id="jheatmap-min.css" href="../../css/jheatmap-${jheatmap.version}-min.css" rel="stylesheet" type="text/css"' 
-			flags="g" 
-			byline="true">
-    		<fileset dir="./examples" includes="**/index.html"/>
-		</replaceregexp>
-		
-		<replaceregexp 
-			match='script id="jheatmap-min.js" src="(.*)"' 
-			replace='script id="jheatmap-min.js" src="../../js/jheatmap-${jheatmap.version}-min.js" type="text/javascript"' 
-			flags="g" 
-			byline="true">
-    		<fileset dir="./examples" includes="**/index.html"/>
-		</replaceregexp>
-
 	</target>
 
 </project>

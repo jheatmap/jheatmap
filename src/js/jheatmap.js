@@ -32,6 +32,8 @@ var console=console||{"log":function(){}};
 		this.sync = false;
 
 		this.filters = {};
+		
+		this.search = null;
 
 		this.rows = {
 			zoom : 20,
@@ -487,11 +489,7 @@ var console=console||{"log":function(){}};
 			var table = $("<table>", {
 				"class" : "heatmap"
 			});
-
-			// table header
-			var header = $("<thead>");
-			table.append(header);
-
+			
 			// top border
 			var borderTop = $('<tr>', {
 				'class' : 'border'
@@ -533,7 +531,8 @@ var console=console||{"log":function(){}};
 
 			// Zoom cols -
 			topToolbar.append($('<img>', {
-				'src' : basePath + "/images/z_less.png"
+				'src' : basePath + "/images/z_less.png",
+				'title' : "Decrease columns width"
 			}).click(function() {
 				data.cols.zoom = data.cols.zoom - 3;
 				data.paint(obj);
@@ -541,7 +540,8 @@ var console=console||{"log":function(){}};
 
 			// Zoom cols +
 			topToolbar.append($('<img>', {
-				'src' : basePath + "/images/z_plus.png"
+				'src' : basePath + "/images/z_plus.png",
+				'title' : "Increase columns width"
 			}).click(function() {
 				data.cols.zoom = data.cols.zoom + 3;
 				data.paint(obj);
@@ -554,7 +554,8 @@ var console=console||{"log":function(){}};
 
 			// Move left
 			topToolbar.append($('<img>', {
-				'src' : basePath + "/images/hl.png"
+				'src' : basePath + "/images/hl.png",
+				'title' : "Move selected columns to the left"
 			}).click(function() {
 				if (data.cols.selected.length > 0) {
 					if ($.inArray(data.cols.order[0], data.cols.selected) == -1) {
@@ -573,7 +574,8 @@ var console=console||{"log":function(){}};
 
 			// Move rigth
 			topToolbar.append($('<img>', {
-				'src' : basePath + "/images/hr.png"
+				'src' : basePath + "/images/hr.png",
+				'title' : "Move selected columns to the right"
 			}).click(function() {
 				if (data.cols.selected.length > 0) {
 					if ($.inArray(data.cols.order[data.cols.order.length - 1], data.cols.selected) == -1) {
@@ -589,6 +591,30 @@ var console=console||{"log":function(){}};
 					}
 				}
 			}));
+			
+			// Separator
+			topToolbar.append($('<img>', {
+				'src' : basePath + "images/sep.png"
+			}));
+			
+			// Select none
+			topToolbar.append($('<img>', {
+				'src' : basePath + "/images/shnone.png",
+				'title' : "Unselect all columns"
+			}).click(function() {
+				data.cols.selected = [];
+				data.paint(obj);
+			}));
+			
+			// Select all visible
+			topToolbar.append($('<img>', {
+				'src' : basePath + "/images/shall.png",
+				'title' : "Select all visible columns"
+			}).click(function() {
+				data.cols.selected = data.cols.order.slice(0);
+				data.paint(obj);
+			}));
+			
 
 			// Separator
 			topToolbar.append($('<img>', {
@@ -597,7 +623,8 @@ var console=console||{"log":function(){}};
 
 			// Fullscreen
 			topToolbar.append($('<img>', {
-				'src' : basePath + "images/" + (data.size.fullscreen ? "nofull.png" : "full.png")
+				'src' : basePath + "images/" + (data.size.fullscreen ? "nofull.png" : "full.png"),
+				'title' : (data.size.fullscreen ? "Resize to original heatmap size" : "Resize to fit window size")
 			}).click(function() {
 
 				if (data.size.fullscreen) {
@@ -621,19 +648,54 @@ var console=console||{"log":function(){}};
 				data.paint(obj);
 
 			}));
-
+			
+			// Separator
+			topToolbar.append($('<img>', {
+				'src' : basePath + "images/sep.png"
+			}));
+			
+			// Search
+			var searchFunction = function() {
+				data.search = searchField.val();
+				if (data.search == "") {
+					data.search = null;
+				}
+				data.paint(obj);
+			};
+			
+			var searchField = $("<input>", {
+				'type': 'search',
+				'placeholder' : "Search...",
+				'name' : "jheatmap-search",
+				'value': data.search 
+			});
+			
+			// HTML5 compatibility?
+			//searchField.keyup(function(e) {
+			//	if(e.keyCode == 13) {
+			//		searchFunction();
+			//	}
+			//});
+			
+			searchField.bind('search', function(e) {
+				searchFunction();
+			});
+			
+			topToolbar.append(searchField);
+			
 			borderTop.append(topToolbar);
-			header.append(borderTop);
+			table.append(borderTop);
 
 			var firstRow = $("<tr>");
-			header.append(firstRow);
+			table.append(firstRow);
 
 			/*
 			 * LEFT TOOLBAR
 			 */
 
 			var leftToolbar = $('<th>', {
-				'class' : 'border'
+				'class' : 'border',
+				'rowspan' : 3 + (data.cols.annotations.length > 0 ? 1 : 0)
 			});
 			firstRow.append(leftToolbar);
 
@@ -668,7 +730,8 @@ var console=console||{"log":function(){}};
 
 			// Zoom rows -
 			leftToolbar.append($('<img>', {
-				'src' : basePath + "/images/z_less.png"
+				'src' : basePath + "/images/z_less.png",
+				'title' : "Decrease rows height"
 			}).click(function() {
 				data.rows.zoom = data.rows.zoom - 3;
 				data.paint(obj);
@@ -677,7 +740,8 @@ var console=console||{"log":function(){}};
 
 			// Zoom rows +
 			leftToolbar.append($('<img>', {
-				'src' : basePath + "/images/z_plus.png"
+				'src' : basePath + "/images/z_plus.png",
+				'title' : "Increase rows height"
 			}).click(function() {
 				data.rows.zoom = data.rows.zoom + 3;
 				data.paint(obj);
@@ -692,7 +756,8 @@ var console=console||{"log":function(){}};
 
 			// Move up
 			leftToolbar.append($('<img>', {
-				'src' : basePath + "/images/vu.png"
+				'src' : basePath + "/images/vu.png",
+				'title' : "Move selected columns up"
 			}).click(function() {
 				if (data.rows.selected.length > 0) {
 					if ($.inArray(data.rows.order[0], data.rows.selected) == -1) {
@@ -712,7 +777,8 @@ var console=console||{"log":function(){}};
 
 			// Move down
 			leftToolbar.append($('<img>', {
-				'src' : basePath + "/images/vd.png"
+				'src' : basePath + "/images/vd.png",
+				'title' : "Move selected columns down"
 			}).click(function() {
 				if (data.rows.selected.length > 0) {
 					if ($.inArray(data.rows.order[data.rows.order.length - 1], data.rows.selected) == -1) {
@@ -728,6 +794,32 @@ var console=console||{"log":function(){}};
 					}
 				}
 			}));
+			
+			// Separator
+			leftToolbar.append($('<img>', {
+				'src' : basePath + "images/sep.png"
+			}));
+			leftToolbar.append($('<br>'));
+			
+			// Select none
+			leftToolbar.append($('<img>', {
+				'src' : basePath + "/images/svnone.png",
+				'title' : "Unselect all selected rows"
+			}).click(function() {
+				data.rows.selected = [];
+				data.paint(obj);
+			}));
+			leftToolbar.append($('<br>'));
+			
+			// Select all visible
+			leftToolbar.append($('<img>', {
+				'src' : basePath + "/images/svall.png",
+				'title' : "Select all visible rows"
+			}).click(function() {
+				data.rows.selected = data.rows.order.slice(0);
+				data.paint(obj);
+			}));
+			leftToolbar.append($('<br>'));
 
 			/*
 			 * TOP-LEFT PANEL
@@ -861,6 +953,12 @@ var console=console||{"log":function(){}};
 					colCtx.fillRect((c - startCol) * cz, 0, cz, 150);
 					colCtx.fillStyle = "black";
 				}
+				
+				if (data.search != null && value.toUpperCase().indexOf(data.search.toUpperCase()) != -1 ) {
+					colCtx.fillStyle = "rgba(255,255,0,0.3)";
+					colCtx.fillRect((c - startCol) * cz, 0, cz, 150);
+					colCtx.fillStyle = "black";
+				}
 			}
 			firstRow.append("<th class='borderF'>&nbsp;</th>");
 
@@ -911,11 +1009,8 @@ var console=console||{"log":function(){}};
 			if (data.cols.annotations.length > 0) {
 
 				firstRow = $("<tr class='annotations'>");
-				header.append(firstRow);
-				firstRow.append($('<th>', {
-					'class' : 'border'
-				}));
-
+				table.append(firstRow);
+				
 				var colAnnHeaderCell = $("<th>", {
 					"class" : "borderF"
 				});
@@ -968,22 +1063,10 @@ var console=console||{"log":function(){}};
 				firstRow.append("<th class='borderF'>&nbsp;</th>");
 
 			}
-
-			/*******************************************************************
-			 * TABLE BODY *
-			 ******************************************************************/
-
-			// Table body
-			var body = $("<tbody>");
-			table.append(body);
-
+			
 			// Add left border
 			var tableRow = $('<tr>');
-			var firstCell = $('<td>', {
-				'class' : 'border'
-			});
-			tableRow.append(firstCell);
-
+			
 			/*******************************************************************
 			 * ROWS HEADERS *
 			 ******************************************************************/
@@ -992,7 +1075,7 @@ var console=console||{"log":function(){}};
 				"class" : "row"
 			});
 
-			var rowsCanvas = $("<canvas width='200' height='" + data.size.height + "'></canvas>");
+			var rowsCanvas = $("<canvas width='230' height='" + data.size.height + "'></canvas>");
 
 			rowsCanvas.click(function(e) {
 				var pos = $(this).position();
@@ -1018,11 +1101,17 @@ var console=console||{"log":function(){}};
 
 			for ( var row = startRow; row < endRow; row++) {
 				var value = data.getRowValueSelected(row);
-				rowCtx.fillText(value, 200, ((row - startRow) * rz) + (rz / 2));
+				rowCtx.fillText(value, 230, ((row - startRow) * rz) + (rz / 2));
 
 				if ($.inArray(data.rows.order[row], data.rows.selected) > -1) {
 					rowCtx.fillStyle = "rgba(0,0,0,0.3)";
-					rowCtx.fillRect(0, ((row - startRow) * rz), 200, rz);
+					rowCtx.fillRect(0, ((row - startRow) * rz), 230, rz);
+					rowCtx.fillStyle = "black";
+				}
+				
+				if (data.search != null && value.toUpperCase().indexOf(data.search.toUpperCase()) != -1 ) {
+					rowCtx.fillStyle = "rgba(255,255,0,0.3)";
+					rowCtx.fillRect(0, ((row - startRow) * rz), 230, rz);
 					rowCtx.fillStyle = "black";
 				}
 
@@ -1299,13 +1388,12 @@ var console=console||{"log":function(){}};
 
 			// Right table border
 			tableRow.append("<td class='borderL'>&nbsp;</td>");
-			body.append(tableRow);
+			table.append(tableRow);
 
 			/*******************************************************************
 			 * Horitzontal scroll
 			 ******************************************************************/
 			var scrollRow = $('<tr>');
-			scrollRow.append("<td class='borderR'></td>");
 			scrollRow.append("<td class='borderF'></td>");
 			var scrollHor = $("<td class='borderT'>");
 			scrollRow.append(scrollHor);
@@ -1334,7 +1422,7 @@ var console=console||{"log":function(){}};
 				data.paint(obj);
 			});
 
-			body.append(scrollRow);
+			table.append(scrollRow);
 
 			/*******************************************************************
 			 * Close table
@@ -1349,7 +1437,7 @@ var console=console||{"log":function(){}};
 				lastRow.append("<td class='borderT'></td>");
 			}
 			lastRow.append("<td class='border'></td>");
-			body.append(lastRow);
+			table.append(lastRow);
 			obj.append(table);
 			$('div.heatmap-loader').hide();
 

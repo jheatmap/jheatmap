@@ -106,7 +106,7 @@ table.heatmap th.topleft div.filter {
 }
 
 table.heatmap td.row {
-	padding-left: 30px;
+	padding-left: 0px;
 	background-color: #EEE;
 	border-right: 3px solid #666;
 	border-left: 3px solid #666;
