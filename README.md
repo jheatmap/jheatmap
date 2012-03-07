@@ -1,6 +1,13 @@
 jHeatmap
 ========
 
+Website
+--------
+
+Check the documentation and online examples here: 
+
+http://bg.upf.edu/jheatmap
+
 Bug tracker
 -----------
 
