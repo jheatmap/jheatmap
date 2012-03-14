@@ -4,7 +4,12 @@
 <title>jHeatmap</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" rel="stylesheet" type="text/css" />
 <link id="jheatmap.css" href="../../css/jheatmap-1.0.0-alpha-min.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js"></script>
 <script id="jheatmap.js" src="../../js/jheatmap-1.0.0-alpha-min.js" type="text/javascript"></script>
 
 <script>
@@ -16,14 +21,14 @@
                 				type : 'raw',
                 				rows : 'analysis-rows.tsv',
                         		cols : 'analysis-columns.tsv',
-                        		values : 'analysis-results.tsv',
+                        		values : 'analysis-results.tsv'
                 			},
                 			
                 			init : function(heatmap) {
                 				
                 				// Size
-                				heatmap.size.width = 300;
-                				heatmap.size.height = 300;
+                				heatmap.size.width = 600;
+                				heatmap.size.height = 600;
                 				
                 				// Setup default zoom 
                 				heatmap.cols.zoom = 12;
@@ -33,18 +38,23 @@
                 				heatmap.cells.selectedValue = 8;
                 				
                 				// Configure decorators and aggregators
+                                var decoratorPValue = new jheatmap.decorators.PValue();
+                                var aggregatorPValue = new jheatmap.aggregators.PValue({});
                 				$.each( [8, 9, 10, 11, 12, 13], function(pos, value) {
-                					heatmap.cells.decorators[value] = heatmapDecorators['pvalue'];
-                    				heatmap.cells.aggregators[value] = heatmapAggregators['pvalue'];
+                					heatmap.cells.decorators[value] = decoratorPValue;
+                    				heatmap.cells.aggregators[value] = aggregatorPValue;
                 				});
                 				
                 				// Column annotations
-                				heatmap.cols.decorators[1] = heatmapDecorators['test'];
-                				heatmap.cols.decorators[2] = heatmapDecorators['sex'];
+                				heatmap.cols.decorators[1] = new jheatmap.decorators.Constant({});
+                				heatmap.cols.decorators[2] = new jheatmap.decorators.Categorical({
+                                        values: ["F", "M"],
+                                        colors: ["pink", "blue"]
+                                        });
                 				heatmap.cols.annotations = [1, 2];
                 				
                 				// Row annotations
-                				heatmap.rows.decorators[1] = heatmapDecorators['pvalue'];
+                				heatmap.rows.decorators[1] = decoratorPValue;
                 				heatmap.rows.annotations = [1];
                 				
                 				
@@ -53,8 +63,7 @@
                 				heatmap.filters = {
                 						'non-significant-rows' : {
                 							title : "Hide non-significant rows",
-                							filter : heatmapFilters['non-significant'],
-                							options : { level : 0.05 },
+                							filter : new jheatmap.filters.NonSignificance(),
                 							fields : [8, 9, 10, 11, 12, 13]
                 						}
                 				}

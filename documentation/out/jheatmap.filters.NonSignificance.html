@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>JSDoc: Class: NonSignificance</title>
+	
+	<script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
+    <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
+    
+    <link type="text/css" rel="stylesheet" href="styles/node-dark.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Class: NonSignificance</h1>
+    
+    
+    
+    <section>
+     
+    <header>
+        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.filters.html">.filters</a>.</span>NonSignificance</h2>
+        
+    </header>  
+    
+    <article>
+        <div class="container-overview">
+        <dt>
+    <h4 class="name" id="NonSignificance"><span class="type-signature"></span>new NonSignificance</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <p class="description">
+        Filter rows or columns with all the values non-significant
+    </p>
+    
+    
+    
+    
+    <h5>Parameters:</h5>
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>cutoff</code></td>
+            
+            
+            <td class="type">
+            number
+            </td>
+            
+            
+                <td class="attributes">
+                &lt;optional><br>
+                </td>
+            
+            
+            
+                <td class="default">
+                0.05
+                </td>
+            
+            
+            <td class="description last">Significance cutoff</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    <dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 430</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    <h5>Example</h5>
+    <pre class="sh_javascript"><code>new jheatmap.filters.NonSignificance({ cutoff: 0.01 });</code></pre>
+
+
+</dd>
+
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            
+            <h3 class="subsection-title">Methods</h3>
+            
+            <dl><dt>
+    <h4 class="name" id="filter"><span class="type-signature"></span>filter</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+    
+    
+    <h5>Parameters:</h5>
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>values</code></td>
+            
+            
+            <td class="type">
+            Array
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">All the row or column values</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    <dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 439</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+<div class="param-desc">
+    Returns 'false' if at least one value is significant otherwise returns 'true'
+</div>
+
+
+
+    
+    
+
+</dd>
+</dl>
+            
+        
+        
+        
+        
+        
+    </article>
+    
+    </section>  
+    
+</div>
+
+<nav>
+    <h3>Classes</h3><ul><li><a href="jheatmap.aggregators.Addition.html">Addition</a></li><li><a href="jheatmap.aggregators.Median.html">Median</a></li><li><a href="jheatmap.aggregators.PValue.html">PValue</a></li><li><a href="jheatmap.decorators.Categorical.html">Categorical</a></li><li><a href="jheatmap.decorators.Constant.html">Constant</a></li><li><a href="jheatmap.decorators.Linear.html">Linear</a></li><li><a href="jheatmap.decorators.Median.html">Median</a></li><li><a href="jheatmap.decorators.PValue.html">PValue</a></li><li><a href="jheatmap.filters.NonExpressed.html">NonExpressed</a></li><li><a href="jheatmap.filters.NonSignificance.html">NonSignificance</a></li><li><a href="jheatmap.Heatmap.html">Heatmap</a></li><li><a href="jheatmap.utils.RGBColor.html">RGBColor</a></li></ul><h3>Namespaces</h3><ul><li><a href="jheatmap.html">jheatmap</a></li><li><a href="jheatmap.aggregators.html">aggregators</a></li><li><a href="jheatmap.decorators.html">decorators</a></li><li><a href="jheatmap.filters.html">filters</a></li><li><a href="jheatmap.utils.html">utils</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/micmath/jsdoc">JSDoc 3</a> on Wed Mar 14 2012 14:31:50 GMT+0100 (CET)
+</footer>
+
+<script> sh_highlightDocument(); </script>
+</body>
+</html>

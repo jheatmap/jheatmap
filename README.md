@@ -37,6 +37,8 @@ Authors
 
 + <http://github.com/jordeu>
 
+**Michael Schroeder**
+
 
 Copyright and license
 ---------------------

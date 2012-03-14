@@ -4,7 +4,7 @@
 
 	<property name="jheatmap.version" value="1.0.0-alpha" />
 
-	<target name="release" depends="purge, concat, yuicompressor, examples-release">
+	<target name="release" depends="purge, concat, yuicompressor, examples-release, jsdoc">
 	</target>
 	
 	<target name="develop" depends="purge, concat, examples-develop">	
@@ -54,19 +54,18 @@
 		<echo message="Building global javascript" />
 		<concat destfile="js/jheatmap-${jheatmap.version}.js" force="no">
 			<!-- explicitly order js concat because ordering matters here -->
-			<fileset dir="." includes="src/js/jquery-1.7.1.js" />
-			<fileset dir="." includes="src/js/jquery.mobile-1.1.0-rc.1.js" />
 			<fileset dir="." includes="src/js/jquery.mousewheel.js" />
-			<fileset dir="." includes="src/js/jheatmap-aggregators.js" />
-			<fileset dir="." includes="src/js/jheatmap-decorators.js" />
-			<fileset dir="." includes="src/js/jheatmap-filters.js" />
-			<fileset dir="." includes="src/js/jheatmap.js" />
+            <fileset dir="." includes="src/js/jheatmap.utils.js" />
+            <fileset dir="." includes="src/js/jheatmap.decorators.js" />
+            <fileset dir="." includes="src/js/jheatmap.aggregators.js" />
+            <fileset dir="." includes="src/js/jheatmap.filters.js" />
+            <fileset dir="." includes="src/js/jheatmap.Heatmap.js" />
+            <fileset dir="." includes="src/js/jquery.jheatmap.js" />
 		</concat>
 
 		<!-- concatenation of cascading stylesheets -->
 		<echo message="Building global cascading stylesheets" />
 		<concat destfile="css/jheatmap-${jheatmap.version}.css" force="no">
-			<fileset dir="." includes="src/css/jquery.mobile-1.1.0-rc.1.css" />
 			<fileset dir="." includes="src/css/jheatmap.css" />
 		</concat>
 	</target>
@@ -91,5 +90,12 @@
 			<include name="css/jheatmap-${jheatmap.version}.css" />
 		</yui-compressor>
 	</target>
+
+    <target name="jsdoc">
+        <echo message="Creating the documentation" />
+        <exec executable="documentation/jsdoc"
+              failonerror="true"
+              osfamily="unix"/>
+    </target>
 
 </project>

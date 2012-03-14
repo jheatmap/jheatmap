@@ -1,166 +1,179 @@
 <html>
 <head>
-<title>jHeatmap</title>
+    <title>jHeatmap</title>
 
-<style type="text/css">
-* {
-	margin: 0;
-	padding: 0;
-}
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="http://jquery.com/demo/thickbox/thickbox-code/thickbox-compressed.js"></script>
+    <link rel="stylesheet" href="http://jquery.com/demo/thickbox/thickbox-code/thickbox.css" type="text/css"
+          media="screen"/>
 
-body {
-	font: 16px Helvetica, Sans-Serif;
-	line-height: 24px;
-	background: url(images/noise.jpg);
-}
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-.clear {
-	clear: both;
-}
+        body {
+            font: 16px Helvetica, Sans-Serif;
+            line-height: 24px;
+            background: url(images/noise.jpg);
+        }
 
-#page-wrap {
-	width: 800px;
-	margin: 40px auto 60px;
-}
+        .clear {
+            clear: both;
+        }
 
-#pic {
-	float: right;
-	margin: -20px 0 0 0;
-}
+        #page-wrap {
+            width: 800px;
+            margin: 40px auto 60px;
+        }
 
-h1 {
-	margin: 0 0 16px 0;
-	padding: 0 0 16px 0;
-	font-size: 42px;
-	font-weight: bold;
-	letter-spacing: -2px;
-	border-bottom: 1px solid #999;
-}
+        #pic {
+            float: right;
+            margin: -20px 0 0 0;
+        }
 
-h2 {
-	font-size: 20px;
-	margin: 0 0 6px 0;
-	position: relative;
-}
+        h1 {
+            margin: 0 0 16px 0;
+            padding: 0 0 16px 0;
+            font-size: 42px;
+            font-weight: bold;
+            letter-spacing: -2px;
+            border-bottom: 1px solid #999;
+        }
 
-h2 span {
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	font-style: italic;
-	font-family: Georgia, Serif;
-	font-size: 16px;
-	color: #999;
-	font-weight: normal;
-}
+        h2 {
+            font-size: 20px;
+            margin: 0 0 6px 0;
+            position: relative;
+        }
 
-p {
-	margin: 0 0 16px 0;
-}
+        h2 span {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-style: italic;
+            font-family: Georgia, Serif;
+            font-size: 16px;
+            color: #999;
+            font-weight: normal;
+        }
 
-a {
-	color: #999;
-	text-decoration: none;
-	border-bottom: 1px dotted #999;
-}
+        p {
+            margin: 0 0 16px 0;
+        }
 
-a:hover {
-	border-bottom-style: solid;
-	color: black;
-}
+        a {
+            color: #999;
+            text-decoration: none;
+            border-bottom: 1px dotted #999;
+        }
 
-ul {
-	margin: 0 0 32px 17px;
-}
+        a:hover {
+            border-bottom-style: solid;
+            color: black;
+        }
 
-#objective {
-	width: 450px;
-	float: left;
-}
+        ul {
+            margin: 0 0 32px 17px;
+        }
 
-#objective p {
-	font-family: Georgia, Serif;
-	font-style: italic;
-	color: #666;
-}
+        #objective {
+            width: 450px;
+            float: left;
+        }
 
-dt {
-	font-style: italic;
-	font-weight: bold;
-	font-size: 18px;
-	text-align: right;
-	padding: 0 26px 0 0;
-	width: 150px;
-	float: left;
-	height: 100px;
-	border-right: 1px solid #999;
-}
+        #objective p {
+            font-family: Georgia, Serif;
+            font-style: italic;
+            color: #666;
+        }
 
-dd {
-	width: 600px;
-	float: right;
-}
+        dt {
+            font-style: italic;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: right;
+            padding: 0 26px 0 0;
+            width: 150px;
+            float: left;
+            height: 100px;
+            border-right: 1px solid #999;
+        }
 
-dd.clear {
-	float: none;
-	margin: 0;
-	height: 15px;
-}
-</style>
+        dd {
+            width: 600px;
+            float: right;
+        }
+
+        dd.clear {
+            float: none;
+            margin: 0;
+            height: 15px;
+        }
+    </style>
 
 </head>
 <body>
 
-	<div id="page-wrap">
+<div id="page-wrap">
 
-		<img src="examples/images/screenshot.png" alt="jHeatmap screenshot" id="pic" />
+    <img src="examples/images/screenshot.png" alt="jHeatmap screenshot" id="pic"/>
 
-		<div>
-			<h1>jHeatmap</h1>
-		</div>
+    <div>
+        <h1>jHeatmap</h1>
+    </div>
 
-		<div id="objective">
-			<p>Interactive web heatmap viewer</p>
-		</div>
+    <div id="objective">
+        <p>Interactive web heatmap viewer</p>
+    </div>
 
-		<div class="clear"></div>
+    <div class="clear"></div>
 
-		<dl>
-			<dd class="clear"></dd>
+    <dl>
+        <dd class="clear"></dd>
 
-			<dt>Examples</dt>
-			<dd>
-				<ul>
-					<li><a href="examples/enrichment/index.html">Enrichment</a></li>
-					<li><a href="examples/median/index.html">Median</a></li>
-					<li><a href="examples/oncodrivefm/index.html">Oncodrivefm</a></li>
-					<li><a href="examples/bigmatrix/index.html">Two million	cells matrix</a></li>
-				</ul>
-			</dd>
-			<dd class="clear"></dd>
-			
-			<dt>Documentation</dt>
-			<dd>
-				
-			</dd>
-			<dd class="clear"></dd>
-			
-			<dt>Download</dt>
-			<dd>
-				<ul>
-					<li><a href="https://github.com/jordeu/jheatmap/zipball/master">Latest version</a>
-				</ul>
-			</dd>
-			<dd class="clear"></dd>
-			
-		</dl>
+        <dt>Examples</dt>
+        <dd>
+            <ul>
+                <li><a class="thickbox" href="examples/enrichment/index.html?TB_iframe=true&width=900&height=900">Enrichment</a></li>
+                <li><a class="thickbox" href="examples/median/index.html?TB_iframe=true&width=900&height=900">Median</a></li>
+                <li><a class="thickbox" href="examples/oncodrivefm/index.html?TB_iframe=true&width=900&height=900">Oncodrivefm</a></li>
+                <li><a class="thickbox" href="examples/bigmatrix/index.html?TB_iframe=true&width=900&height=900">Two million cells matrix</a></li>
+            </ul>
+        </dd>
+        <dd class="clear"></dd>
 
-	</div>
+        <dt>Documentation</dt>
+        <dd>
+            <ul>
+                <li><a class="thickbox" href="documentation/quickstart.html?TB_iframe=true&width=900&height=900">Quick start</a></li>
+                <li><a class="thickbox" href="documentation/out/jheatmap.decorators.html?TB_iframe=true&width=900&height=900">Decorators</a>
+                </li>
+                <li><a class="thickbox"
+                       href="documentation/out/jheatmap.aggregators.html?TB_iframe=true&width=900&height=1000">Aggregators</a></li>
+                <li><a class="thickbox" href="documentation/out/jheatmap.Heatmap.html?TB_iframe=true&width=900&height=900">Heatmap class</a>
+                </li>
+            </ul>
+        </dd>
+        <dd class="clear"></dd>
 
-	<a href="https://github.com/jordeu/jheatmap"><img
-		style="position: absolute; top: 0; right: 0; border: 0;"
-		src="https://a248.e.akamai.net/assets.github.com/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67"
-		alt="Fork me on GitHub"> </a>
+        <dt>Download</dt>
+        <dd>
+            <ul>
+                <li><a href="https://github.com/jordeu/jheatmap/zipball/master">Latest version</a>
+            </ul>
+        </dd>
+        <dd class="clear"></dd>
+
+    </dl>
+
+</div>
+
+<a href="https://github.com/jordeu/jheatmap"><img
+        style="position: absolute; top: 0; right: 0; border: 0;"
+        src="https://a248.e.akamai.net/assets.github.com/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67"
+        alt="Fork me on GitHub"> </a>
 
 </body>
 </html>

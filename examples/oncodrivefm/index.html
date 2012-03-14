@@ -4,14 +4,19 @@
 <title>jHeatmap</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" rel="stylesheet" type="text/css" />
 <link id="jheatmap.css" href="../../css/jheatmap-1.0.0-alpha-min.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js"></script>
 <script id="jheatmap.js" src="../../js/jheatmap-1.0.0-alpha-min.js" type="text/javascript"></script>
 
 <script>
 	$(document).ready(function() {
 		$('#heatmap').heatmap({
 			data : {
-				type : "tcm",
+				type : "tdm",
 				rows : 'analysis-rows.tsv',
 				cols : 'analysis-columns.tsv',
 				values : 'analysis-results.tsv'
@@ -19,22 +24,23 @@
 
 			init : function(heatmap) {
 
-				// Disable tooltips
-				heatmap.tooltip = false;
+                // Size
+                heatmap.size.width = 600;
+                heatmap.size.height = 600;
 
-				// Default cell value
+                // Default cell value
 				heatmap.cells.selectedValue = 2;
 
 				// Configure decorators and aggregators
-				heatmap.cells.decorators[2] = heatmapDecorators['median'];
-				heatmap.cells.aggregators[2] = heatmapAggregators['median'];
+				heatmap.cells.decorators[2] = new jheatmap.decorators.Median();
+				heatmap.cells.aggregators[2] = new jheatmap.aggregators.Median();
 
 				// Column annotations
-				heatmap.cols.decorators[1] = heatmapDecorators['pvalue'];
+				heatmap.cols.decorators[1] = new jheatmap.decorators.PValue( { cutoff: 0.8 } );
 				heatmap.cols.annotations = [ 1 ];
 
 				// Row annotations
-				heatmap.rows.decorators[1] = heatmapDecorators['pvalue'];
+				heatmap.rows.decorators[1] = new jheatmap.decorators.Linear();
 				heatmap.rows.annotations = [ 1 ];
 
 				// Setup default zoom 
