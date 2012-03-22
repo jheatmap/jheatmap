@@ -619,7 +619,7 @@ jheatmap.Heatmap = function () {
          * TOP TOOLBAR
          */
 
-        var topToolbar = $("<td>", { colspan:3 });
+        var topToolbar = $("<td>", { colspan: (heatmap.rows.annotations.length > 0 ? 4 : 3) });
 
         // Order columns by label
         topToolbar.append($('<img>', {
@@ -822,6 +822,7 @@ jheatmap.Heatmap = function () {
         topToolbar.append(searchField);
 
         borderTop.append(topToolbar);
+        borderTop.append("<th class='border'></th>");
         table.append(borderTop);
 
         var firstRow = $("<tr>");
@@ -1127,24 +1128,20 @@ jheatmap.Heatmap = function () {
                 colCtx.fillStyle = "black";
             }
         }
-        firstRow.append("<th class='borderF'>&nbsp;</th>");
 
         /*******************************************************************
          * ADD ROW HEADER ANNOTATIONS
          ******************************************************************/
 
+        var rowspan = (heatmap.cols.annotations.length > 0 ? 2 : 1);
+        
         if (heatmap.rows.annotations.length > 0) {
-            var rowspan = (heatmap.cols.annotations.length > 0 ? 2 : 1);
 
             var annRowHead = $("<th>", {
-                'class':'borderF',
+                'class':'border-rows-ann',
                 'rowspan':rowspan
             });
             firstRow.append(annRowHead);
-            firstRow.append($("<th>", {
-                'class':'borderL',
-                'rowspan':rowspan
-            }));
 
             var annRowHeadCanvas = $("<canvas width='" + 10 * heatmap.rows.annotations.length
                 + "' height='150'></canvas>");
@@ -1155,9 +1152,9 @@ jheatmap.Heatmap = function () {
             annRowHeadCtx.textBaseline = "middle";
             annRowHeadCtx.font = "bold 11px Verdana";
 
-            for (var i = 0; i < heatmap.cols.annotations.length; i++) {
+            for (var i = 0; i < heatmap.rows.annotations.length; i++) {
 
-                var value = heatmap.cols.header[heatmap.cols.annotations[i]];
+                var value = heatmap.rows.header[heatmap.rows.annotations[i]];
                 annRowHeadCtx.save();
                 annRowHeadCtx.translate(i * 10 + 5, 150);
                 annRowHeadCtx.rotate(Math.PI / 2);
@@ -1174,9 +1171,22 @@ jheatmap.Heatmap = function () {
 
             });
 
-        } else {
-            firstRow.append("<th class='borderL'>&nbsp;</th>");
+
+
         }
+
+        firstRow.append($("<th>", {
+            'class':'borderF',
+            'rowspan':rowspan
+        }));
+
+        firstRow.append($("<th>", {
+            'class':'border',
+            'rowspan':rowspan
+        }));
+
+
+
 
         /*******************************************************************
          * ADD COLUMN ANNOTATIONS
@@ -1188,7 +1198,7 @@ jheatmap.Heatmap = function () {
             table.append(firstRow);
 
             var colAnnHeaderCell = $("<th>", {
-                "class":"borderF"
+                "class":"border-cols-ann"
             });
             var colAnnHeaderCanvas = $("<canvas style='float:right;' width='200' height='" + 10
                 * heatmap.cols.annotations.length + "'></canvas>");
@@ -1245,8 +1255,6 @@ jheatmap.Heatmap = function () {
                 heatmap.paint(obj);
 
             });
-
-            firstRow.append("<th class='borderF'>&nbsp;</th>");
 
         }
 
@@ -1508,31 +1516,7 @@ jheatmap.Heatmap = function () {
 
         });
 
-        /*******************************************************************
-         * Vertical scroll
-         ******************************************************************/
 
-        var scrollVert = $("<td class='borderL'>");
-        tableRow.append(scrollVert);
-
-        var maxHeight = (endRow - startRow) * rz;
-        var scrollVertCanvas = $("<canvas width='10' height='" + heatmap.size.height + "'></canvas>");
-        scrollVert.append(scrollVertCanvas);
-
-        var scrollVertCtx = scrollVertCanvas.get()[0].getContext('2d');
-
-        scrollVertCtx.fillStyle = "rgba(0,0,0,0.4)";
-        var iniY = Math.round(maxHeight * (startRow / heatmap.rows.order.length));
-        var endY = Math.round(maxHeight * (endRow / heatmap.rows.order.length));
-        scrollVertCtx.fillRect(0, iniY, 10, endY - iniY);
-
-        scrollVertCanvas.click(function (e) {
-            var pos = $(this).position();
-            var pY = e.pageY - pos.top - ((endY - iniY) / 2);
-            pY = (pY < 0 ? 0 : pY);
-            heatmap.offset.top = Math.round((pY / maxHeight) * heatmap.rows.order.length);
-            heatmap.paint(obj);
-        });
 
         /*******************************************************************
          * Vertical annotations
@@ -1571,6 +1555,32 @@ jheatmap.Heatmap = function () {
 
         }
 
+        /*******************************************************************
+         * Vertical scroll
+         ******************************************************************/
+
+        var scrollVert = $("<td class='borderL'>");
+        tableRow.append(scrollVert);
+
+        var maxHeight = (endRow - startRow) * rz;
+        var scrollVertCanvas = $("<canvas width='10' height='" + heatmap.size.height + "'></canvas>");
+        scrollVert.append(scrollVertCanvas);
+
+        var scrollVertCtx = scrollVertCanvas.get()[0].getContext('2d');
+
+        scrollVertCtx.fillStyle = "rgba(0,0,0,0.4)";
+        var iniY = Math.round(maxHeight * (startRow / heatmap.rows.order.length));
+        var endY = Math.round(maxHeight * (endRow / heatmap.rows.order.length));
+        scrollVertCtx.fillRect(0, iniY, 10, endY - iniY);
+
+        scrollVertCanvas.click(function (e) {
+            var pos = $(this).position();
+            var pY = e.pageY - pos.top - ((endY - iniY) / 2);
+            pY = (pY < 0 ? 0 : pY);
+            heatmap.offset.top = Math.round((pY / maxHeight) * heatmap.rows.order.length);
+            heatmap.paint(obj);
+        });
+
         // Right table border
         tableRow.append("<td class='borderL'>&nbsp;</td>");
         table.append(tableRow);
@@ -1587,6 +1597,8 @@ jheatmap.Heatmap = function () {
         if (heatmap.rows.annotations.length > 0) {
             scrollRow.append("<td class='borderF'></td>");
         }
+
+        scrollRow.append("<td class='border'></td>");
 
         var maxWidth = (endCol - startCol) * cz;
         var scrollHorCanvas = $("<canvas width='" + heatmap.size.width + "' height='10'></canvas>");
@@ -1615,12 +1627,13 @@ jheatmap.Heatmap = function () {
 
             // Last border row
         var lastRow = $('<tr>');
-        lastRow.append("<td class='border'></td>");
+        lastRow.append("<td class='border'>&nbsp;</td>");
         lastRow.append("<td class='borderT'></td>");
         lastRow.append("<td class='borderT'></td>");
         if (heatmap.rows.annotations.length > 0) {
             lastRow.append("<td class='borderT'></td>");
         }
+        lastRow.append("<td class='borderT'></td>");
         lastRow.append("<td class='border'></td>");
         table.append(lastRow);
         obj.append(table);
