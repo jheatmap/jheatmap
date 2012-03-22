@@ -619,7 +619,9 @@ jheatmap.Heatmap = function () {
          * TOP TOOLBAR
          */
 
-        var topToolbar = $("<td>", { colspan: (heatmap.rows.annotations.length > 0 ? 4 : 3) });
+        var textSpacing = 5;
+
+        var topToolbar = $("<td>", { colspan: (heatmap.rows.annotations.length > 0 ? 3 : 2) });
 
         // Order columns by label
         topToolbar.append($('<img>', {
@@ -823,6 +825,9 @@ jheatmap.Heatmap = function () {
 
         borderTop.append(topToolbar);
         borderTop.append("<th class='border'></th>");
+        borderTop.append($("<th class='border'>").append($('<img>', {
+            'src':basePath + "/images/sep.png"
+        })));
         table.append(borderTop);
 
         var firstRow = $("<tr>");
@@ -834,7 +839,8 @@ jheatmap.Heatmap = function () {
 
         var leftToolbar = $('<th>', {
             'class':'border',
-            'rowspan':3 + (heatmap.cols.annotations.length > 0 ? 1 : 0)
+            'rowspan':2 + (heatmap.cols.annotations.length > 0 ? 1 : 0),
+            'style': 'max-width: 25px;'
         });
         firstRow.append(leftToolbar);
 
@@ -1085,7 +1091,7 @@ jheatmap.Heatmap = function () {
         var colHeader = $("<th>");
         firstRow.append(colHeader);
 
-        var colCanvas = $("<canvas width='" + heatmap.size.width + "' height='150'></canvas>");
+        var colCanvas = $("<canvas id='colCanvas' width='" + heatmap.size.width + "' height='150'></canvas>");
         colCanvas.click(function (e) {
             var pos = $(this).position();
             var col = heatmap.cols.order[Math.floor((e.pageX - pos.left) / cz) + heatmap.offset.left];
@@ -1113,7 +1119,7 @@ jheatmap.Heatmap = function () {
             colCtx.save();
             colCtx.translate((c - startCol) * cz + (cz / 2), 150);
             colCtx.rotate(Math.PI / 2);
-            colCtx.fillText(value, 0, 0);
+            colCtx.fillText(value, -textSpacing, 0);
             colCtx.restore();
 
             if ($.inArray(heatmap.cols.order[c], heatmap.cols.selected) > -1) {
@@ -1147,7 +1153,7 @@ jheatmap.Heatmap = function () {
                 + "' height='150'></canvas>");
             annRowHead.append(annRowHeadCanvas);
             var annRowHeadCtx = annRowHeadCanvas.get()[0].getContext('2d');
-            annRowHeadCtx.fillStyle = "rgb(255,255,255)";
+            annRowHeadCtx.fillStyle =  "rgb(51,51,51)"; /* = #333 , like the borders */
             annRowHeadCtx.textAlign = "right";
             annRowHeadCtx.textBaseline = "middle";
             annRowHeadCtx.font = "bold 11px Verdana";
@@ -1158,7 +1164,7 @@ jheatmap.Heatmap = function () {
                 annRowHeadCtx.save();
                 annRowHeadCtx.translate(i * 10 + 5, 150);
                 annRowHeadCtx.rotate(Math.PI / 2);
-                annRowHeadCtx.fillText(value, 0, 0);
+                annRowHeadCtx.fillText(value, -textSpacing, 0);
                 annRowHeadCtx.restore();
             }
 
@@ -1176,7 +1182,7 @@ jheatmap.Heatmap = function () {
         }
 
         firstRow.append($("<th>", {
-            'class':'borderF',
+            'class':'border',
             'rowspan':rowspan
         }));
 
@@ -1206,14 +1212,14 @@ jheatmap.Heatmap = function () {
             firstRow.append(colAnnHeaderCell);
 
             var colAnnHeaderCtx = colAnnHeaderCanvas.get()[0].getContext('2d');
-            colAnnHeaderCtx.fillStyle = "rgb(255,255,255)";
+            colAnnHeaderCtx.fillStyle = "rgb(51,51,51)"; /* = #333 , like the borders */
             colAnnHeaderCtx.textAlign = "right";
             colAnnHeaderCtx.textBaseline = "middle";
             colAnnHeaderCtx.font = "bold 11px Verdana";
 
             for (i = 0; i < heatmap.cols.annotations.length; i++) {
                 var value = heatmap.cols.header[heatmap.cols.annotations[i]];
-                colAnnHeaderCtx.fillText(value, 200, (i * 10) + 5);
+                colAnnHeaderCtx.fillText(value, 200 - textSpacing, (i * 10) + 5);
             }
 
             var colAnnValuesCell = $("<th>");
@@ -1295,7 +1301,7 @@ jheatmap.Heatmap = function () {
 
         for (var row = startRow; row < endRow; row++) {
             var value = heatmap.getRowValueSelected(row);
-            rowCtx.fillText(value, 230, ((row - startRow) * rz) + (rz / 2));
+            rowCtx.fillText(value, 230 - textSpacing, ((row - startRow) * rz) + (rz / 2));
 
             if ($.inArray(heatmap.rows.order[row], heatmap.rows.selected) > -1) {
                 rowCtx.fillStyle = "rgba(0,0,0,0.3)";
@@ -1588,14 +1594,15 @@ jheatmap.Heatmap = function () {
         /*******************************************************************
          * Horitzontal scroll
          ******************************************************************/
-        var scrollRow = $('<tr>');
-        scrollRow.append("<td class='borderF'></td>");
+        var scrollRow = $("<tr class='horizontalScroll'>");
+        scrollRow.append("<td class='border'></td>");
+        scrollRow.append("<td class='border'></td>");
         var scrollHor = $("<td class='borderT'>");
         scrollRow.append(scrollHor);
-        scrollRow.append("<td class='borderF'></td>");
+        scrollRow.append("<td class='borderT'></td>");
 
         if (heatmap.rows.annotations.length > 0) {
-            scrollRow.append("<td class='borderF'></td>");
+            scrollRow.append("<td class='border'></td>");
         }
 
         scrollRow.append("<td class='border'></td>");
@@ -1627,13 +1634,15 @@ jheatmap.Heatmap = function () {
 
             // Last border row
         var lastRow = $('<tr>');
-        lastRow.append("<td class='border'>&nbsp;</td>");
-        lastRow.append("<td class='borderT'></td>");
+        lastRow.append($("<td class='border'>").append($('<img>', {
+        'src':basePath + "/images/sep.png"
+        })));
+        lastRow.append("<td class='border'></td>");
         lastRow.append("<td class='borderT'></td>");
         if (heatmap.rows.annotations.length > 0) {
-            lastRow.append("<td class='borderT'></td>");
+            lastRow.append("<td class='border'></td>");
         }
-        lastRow.append("<td class='borderT'></td>");
+        lastRow.append("<td class='border'></td>");
         lastRow.append("<td class='border'></td>");
         table.append(lastRow);
         obj.append(table);

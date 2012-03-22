@@ -1,8 +1,10 @@
 /* CSV Table Classes */
-table.heatmap {
-	font: 12px Verdana, Arial, Geneva, Helvetica, sans-serif;
-	border-collapse: collapse;
-	width: 450px;
+tr, td, th, table {
+    border-collapse: collapse;
+    border-spacing: 0px;
+    padding: 0px;
+    margin: 0px;
+    font-size: 1px;
 }
 
 /* Header */
@@ -14,7 +16,6 @@ table.heatmap .border {
 	background-color: #FFF;
 	border: 0px solid white;
 	vertical-align: top;
-	height: 26px;
 }
 
 table.heatmap .border img {
@@ -26,18 +27,12 @@ table.heatmap tr.border td {
 	border: 0px solid white;
 }
 
-table.heatmap th.border {
-	min-width: 26px;
-    width: 26px; 
-}
-
 table.heatmap th {
 	vertical-align: bottom;
 	text-align: center;
-	height: 150px;
-	border-bottom: 3px solid #666;
-	border-top: 3px solid #666;
-	border-right: 1px solid #666;
+	border-bottom: 1px solid #333;
+	border-top: 1px solid #333;
+	border-right: 1px solid #333;
 }
 
 table.heatmap tr.annotations th {
@@ -46,25 +41,26 @@ table.heatmap tr.annotations th {
 }
 
 table.heatmap tr.annotations td {
-    border-bottom: 3px solid #666;
-    border-left: 1px dotted #666;    
+    border-bottom: 1px solid #333;
+    border-left: 1px dotted #333;    
 }
 
 table.heatmap tr.annotations th.title {
      text-align: right;
      font-size: 11px;
      color: white;
-     background-color: #666;
+     background-color: #333;
      padding-right: 5px;
-     border-bottom: 3px solid #666;
-     border-left: 3px solid #666;
+     border-bottom: 1px solid #333;
+     border-left: 1px solid #333;
 }
 
 table.heatmap th.topleft {
+    font: 12px Verdana, Arial, Geneva, Helvetica, sans-serif;
 	color: #FFF;
-	background-color: #666;
-	border-right: 3px solid #666;
-	border-left: 3px solid #666;
+	background-color: #aaa;
+	border-right: 1px solid #333;
+	border-left: 1px solid #333;
 	text-align: left;
 	width: 220px;
 	max-width: 220px;
@@ -83,6 +79,7 @@ table.heatmap th.topleft span {
 	vertical-align: top;
 	margin-left: 5px;
 }
+
 
 table.heatmap th div.col {
 	text-align: center;
@@ -108,9 +105,9 @@ table.heatmap th.topleft div.filter {
 table.heatmap td.row {
 	padding-left: 0px;
 	background-color: #EEE;
-	border-right: 3px solid #666;
-	border-left: 3px solid #666;
-	border-bottom: 1px solid #666;
+	border-right: 1px solid #333;
+	border-left: 1px solid #333;
+	border-bottom: 1px solid #333;
 	text-align: right;
 	font-weight: bold;
 	white-space:nowrap;
@@ -122,7 +119,7 @@ table.heatmap td {
 	text-align: left;
 	width: 0px;
 	height: 0px;
-	font-size: 12px;
+	font-size: 1px;
 }
 /* Default background color for rows */
 table.heatmap tr {
@@ -140,6 +137,7 @@ table.heatmap div.detailsbox {
     background-color: white;
     display: none;
     overflow: auto;
+    font-size: 12px;
 }
 
 /* Loader */
@@ -164,22 +162,27 @@ div.heatmap-loader div.progress {
 }
 
 table.heatmap td.borderRL, table.heatmap th.borderRL {
-    border-right: 3px solid #666;
-    border-left: 3px solid #666;    
+    border-right: 1px solid #333;
+    border-left: 1px solid #333;    
     border-top: 0px;
     border-bottom: 0px;
     background-color: white;
 }
 
-table.heatmap td.borderF, table.heatmap th.borderF {
-    border: 3px solid #666;
-    background-color: #666;
+table.heatmap td.border-rows-ann, table.heatmap th.border-rows-ann {
+    border: 1px solid #333;
+    background-color: #eee;
+}
+
+table.heatmap td.border-cols-ann, table.heatmap th.border-cols-ann {
+    border: 1px solid #333;
+    background-color: #eee;
 }
 
 
 table.heatmap td.borderL, table.heatmap th.borderL {
     border-right: 0px;
-    border-left: 3px solid #666;    
+    border-left: 1px solid #333;
     border-top: 0px;
     border-bottom: 0px;
     background-color: white;
@@ -187,12 +190,12 @@ table.heatmap td.borderL, table.heatmap th.borderL {
 
 table.heatmap td.borderT, table.heatmap th.borderT {
     border-right: 0px;
-    border-top: 3px solid #666;    
+    border-top: 1px solid #333;    
     border-left: 0px;
     border-bottom: 0px;
     background-color: white;
 }
 
 table.heatmap td.ra {
-    border-left: 1px dashed #666;
+    border-left: 1px dashed #333;
 }
