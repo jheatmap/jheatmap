@@ -117,10 +117,13 @@ jheatmap.decorators.Linear.prototype.toColor = function (value) {
  *
  * @class
  * @param {number}  [maxValue=3]    Absolute maximum and minimum of the median
+ * @param {Array}   [nullColor=[255,255,255]]   NaN values color [r,g,b]
  */
 jheatmap.decorators.Median = function (options) {
     options = options || {};
     this.maxValue = options.maxValue || 3;
+    this.nullColor = options.nullColor || [255,255,255]
+
 };
 
 /**
@@ -131,9 +134,9 @@ jheatmap.decorators.Median = function (options) {
 jheatmap.decorators.Median.prototype.toColor = function (value) {
     var r, g, b;
     if (isNaN(value)) {
-        r = 255;
-        g = 255;
-        b = 255;
+        r = this.nullColor[0];
+        g = this.nullColor[1];
+        b = this.nullColor[2];
     } else if (value < 0) {
         value = Math.abs(value);
         value = (value > this.maxValue ? this.maxValue : value);
@@ -157,10 +160,12 @@ jheatmap.decorators.Median.prototype.toColor = function (value) {
  *
  * @class
  * @param {number}  [cutoff=0.05]   Significance cutoff.
+ * @param {Array}   [nullColor=[255,255,255]]   NaN values color [r,g,b]
  */
 jheatmap.decorators.PValue = function (options) {
     options = options || {};
     this.cutoff = options.cutoff || 0.05;
+    this.nullColor = options.nullColor || [255,255,255]
 };
 
 /**
@@ -172,9 +177,9 @@ jheatmap.decorators.PValue.prototype.toColor = function (value) {
     var r, g, b;
 
     if (isNaN(value)) {
-        r = 255;
-        g = 255;
-        b = 255;
+        r = this.nullColor[0];
+        g = this.nullColor[1];
+        b = this.nullColor[2];
     } else if (value > this.cutoff) {
         r = 187;
         g = 187;
