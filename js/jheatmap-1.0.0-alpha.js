@@ -259,10 +259,13 @@ jheatmap.decorators.Linear.prototype.toColor = function (value) {
  *
  * @class
  * @param {number}  [maxValue=3]    Absolute maximum and minimum of the median
+ * @param {Array}   [nullColor=[255,255,255]]   NaN values color [r,g,b]
  */
 jheatmap.decorators.Median = function (options) {
     options = options || {};
     this.maxValue = options.maxValue || 3;
+    this.nullColor = options.nullColor || [255,255,255]
+
 };
 
 /**
@@ -273,9 +276,9 @@ jheatmap.decorators.Median = function (options) {
 jheatmap.decorators.Median.prototype.toColor = function (value) {
     var r, g, b;
     if (isNaN(value)) {
-        r = 255;
-        g = 255;
-        b = 255;
+        r = this.nullColor[0];
+        g = this.nullColor[1];
+        b = this.nullColor[2];
     } else if (value < 0) {
         value = Math.abs(value);
         value = (value > this.maxValue ? this.maxValue : value);
@@ -299,10 +302,12 @@ jheatmap.decorators.Median.prototype.toColor = function (value) {
  *
  * @class
  * @param {number}  [cutoff=0.05]   Significance cutoff.
+ * @param {Array}   [nullColor=[255,255,255]]   NaN values color [r,g,b]
  */
 jheatmap.decorators.PValue = function (options) {
     options = options || {};
     this.cutoff = options.cutoff || 0.05;
+    this.nullColor = options.nullColor || [255,255,255]
 };
 
 /**
@@ -314,9 +319,9 @@ jheatmap.decorators.PValue.prototype.toColor = function (value) {
     var r, g, b;
 
     if (isNaN(value)) {
-        r = 255;
-        g = 255;
-        b = 255;
+        r = this.nullColor[0];
+        g = this.nullColor[1];
+        b = this.nullColor[2];
     } else if (value > this.cutoff) {
         r = 187;
         g = 187;
@@ -1092,7 +1097,9 @@ jheatmap.Heatmap = function () {
          * TOP TOOLBAR
          */
 
-        var topToolbar = $("<td>", { colspan:3 });
+        var textSpacing = 5;
+
+        var topToolbar = $("<td>", { colspan: (heatmap.rows.annotations.length > 0 ? 3 : 2) });
 
         // Order columns by label
         topToolbar.append($('<img>', {
@@ -1295,6 +1302,10 @@ jheatmap.Heatmap = function () {
         topToolbar.append(searchField);
 
         borderTop.append(topToolbar);
+        borderTop.append("<th class='border'></th>");
+        borderTop.append($("<th class='border'>").append($('<img>', {
+            'src':basePath + "/images/sep.png"
+        })));
         table.append(borderTop);
 
         var firstRow = $("<tr>");
@@ -1306,7 +1317,8 @@ jheatmap.Heatmap = function () {
 
         var leftToolbar = $('<th>', {
             'class':'border',
-            'rowspan':3 + (heatmap.cols.annotations.length > 0 ? 1 : 0)
+            'rowspan':2 + (heatmap.cols.annotations.length > 0 ? 1 : 0),
+            'style': 'max-width: 25px;'
         });
         firstRow.append(leftToolbar);
 
@@ -1557,7 +1569,7 @@ jheatmap.Heatmap = function () {
         var colHeader = $("<th>");
         firstRow.append(colHeader);
 
-        var colCanvas = $("<canvas width='" + heatmap.size.width + "' height='150'></canvas>");
+        var colCanvas = $("<canvas id='colCanvas' width='" + heatmap.size.width + "' height='150'></canvas>");
         colCanvas.click(function (e) {
             var pos = $(this).position();
             var col = heatmap.cols.order[Math.floor((e.pageX - pos.left) / cz) + heatmap.offset.left];
@@ -1585,7 +1597,7 @@ jheatmap.Heatmap = function () {
             colCtx.save();
             colCtx.translate((c - startCol) * cz + (cz / 2), 150);
             colCtx.rotate(Math.PI / 2);
-            colCtx.fillText(value, 0, 0);
+            colCtx.fillText(value, -textSpacing, 0);
             colCtx.restore();
 
             if ($.inArray(heatmap.cols.order[c], heatmap.cols.selected) > -1) {
@@ -1600,41 +1612,37 @@ jheatmap.Heatmap = function () {
                 colCtx.fillStyle = "black";
             }
         }
-        firstRow.append("<th class='borderF'>&nbsp;</th>");
 
         /*******************************************************************
          * ADD ROW HEADER ANNOTATIONS
          ******************************************************************/
 
+        var rowspan = (heatmap.cols.annotations.length > 0 ? 2 : 1);
+        
         if (heatmap.rows.annotations.length > 0) {
-            var rowspan = (heatmap.cols.annotations.length > 0 ? 2 : 1);
 
             var annRowHead = $("<th>", {
-                'class':'borderF',
+                'class':'border-rows-ann',
                 'rowspan':rowspan
             });
             firstRow.append(annRowHead);
-            firstRow.append($("<th>", {
-                'class':'borderL',
-                'rowspan':rowspan
-            }));
 
             var annRowHeadCanvas = $("<canvas width='" + 10 * heatmap.rows.annotations.length
                 + "' height='150'></canvas>");
             annRowHead.append(annRowHeadCanvas);
             var annRowHeadCtx = annRowHeadCanvas.get()[0].getContext('2d');
-            annRowHeadCtx.fillStyle = "rgb(255,255,255)";
+            annRowHeadCtx.fillStyle =  "rgb(51,51,51)"; /* = #333 , like the borders */
             annRowHeadCtx.textAlign = "right";
             annRowHeadCtx.textBaseline = "middle";
             annRowHeadCtx.font = "bold 11px Verdana";
 
-            for (var i = 0; i < heatmap.cols.annotations.length; i++) {
+            for (var i = 0; i < heatmap.rows.annotations.length; i++) {
 
-                var value = heatmap.cols.header[heatmap.cols.annotations[i]];
+                var value = heatmap.rows.header[heatmap.rows.annotations[i]];
                 annRowHeadCtx.save();
                 annRowHeadCtx.translate(i * 10 + 5, 150);
                 annRowHeadCtx.rotate(Math.PI / 2);
-                annRowHeadCtx.fillText(value, 0, 0);
+                annRowHeadCtx.fillText(value, -textSpacing, 0);
                 annRowHeadCtx.restore();
             }
 
@@ -1647,9 +1655,22 @@ jheatmap.Heatmap = function () {
 
             });
 
-        } else {
-            firstRow.append("<th class='borderL'>&nbsp;</th>");
+
+
         }
+
+        firstRow.append($("<th>", {
+            'class':'border',
+            'rowspan':rowspan
+        }));
+
+        firstRow.append($("<th>", {
+            'class':'border',
+            'rowspan':rowspan
+        }));
+
+
+
 
         /*******************************************************************
          * ADD COLUMN ANNOTATIONS
@@ -1661,7 +1682,7 @@ jheatmap.Heatmap = function () {
             table.append(firstRow);
 
             var colAnnHeaderCell = $("<th>", {
-                "class":"borderF"
+                "class":"border-cols-ann"
             });
             var colAnnHeaderCanvas = $("<canvas style='float:right;' width='200' height='" + 10
                 * heatmap.cols.annotations.length + "'></canvas>");
@@ -1669,14 +1690,14 @@ jheatmap.Heatmap = function () {
             firstRow.append(colAnnHeaderCell);
 
             var colAnnHeaderCtx = colAnnHeaderCanvas.get()[0].getContext('2d');
-            colAnnHeaderCtx.fillStyle = "rgb(255,255,255)";
+            colAnnHeaderCtx.fillStyle = "rgb(51,51,51)"; /* = #333 , like the borders */
             colAnnHeaderCtx.textAlign = "right";
             colAnnHeaderCtx.textBaseline = "middle";
             colAnnHeaderCtx.font = "bold 11px Verdana";
 
             for (i = 0; i < heatmap.cols.annotations.length; i++) {
                 var value = heatmap.cols.header[heatmap.cols.annotations[i]];
-                colAnnHeaderCtx.fillText(value, 200, (i * 10) + 5);
+                colAnnHeaderCtx.fillText(value, 200 - textSpacing, (i * 10) + 5);
             }
 
             var colAnnValuesCell = $("<th>");
@@ -1719,8 +1740,6 @@ jheatmap.Heatmap = function () {
 
             });
 
-            firstRow.append("<th class='borderF'>&nbsp;</th>");
-
         }
 
         // Add left border
@@ -1760,7 +1779,7 @@ jheatmap.Heatmap = function () {
 
         for (var row = startRow; row < endRow; row++) {
             var value = heatmap.getRowValueSelected(row);
-            rowCtx.fillText(value, 230, ((row - startRow) * rz) + (rz / 2));
+            rowCtx.fillText(value, 230 - textSpacing, ((row - startRow) * rz) + (rz / 2));
 
             if ($.inArray(heatmap.rows.order[row], heatmap.rows.selected) > -1) {
                 rowCtx.fillStyle = "rgba(0,0,0,0.3)";
@@ -1981,31 +2000,7 @@ jheatmap.Heatmap = function () {
 
         });
 
-        /*******************************************************************
-         * Vertical scroll
-         ******************************************************************/
 
-        var scrollVert = $("<td class='borderL'>");
-        tableRow.append(scrollVert);
-
-        var maxHeight = (endRow - startRow) * rz;
-        var scrollVertCanvas = $("<canvas width='10' height='" + heatmap.size.height + "'></canvas>");
-        scrollVert.append(scrollVertCanvas);
-
-        var scrollVertCtx = scrollVertCanvas.get()[0].getContext('2d');
-
-        scrollVertCtx.fillStyle = "rgba(0,0,0,0.4)";
-        var iniY = Math.round(maxHeight * (startRow / heatmap.rows.order.length));
-        var endY = Math.round(maxHeight * (endRow / heatmap.rows.order.length));
-        scrollVertCtx.fillRect(0, iniY, 10, endY - iniY);
-
-        scrollVertCanvas.click(function (e) {
-            var pos = $(this).position();
-            var pY = e.pageY - pos.top - ((endY - iniY) / 2);
-            pY = (pY < 0 ? 0 : pY);
-            heatmap.offset.top = Math.round((pY / maxHeight) * heatmap.rows.order.length);
-            heatmap.paint(obj);
-        });
 
         /*******************************************************************
          * Vertical annotations
@@ -2044,25 +2039,62 @@ jheatmap.Heatmap = function () {
 
         }
 
+        /*******************************************************************
+         * Vertical scroll
+         ******************************************************************/
+
+        var scrollVert = $("<td class='borderL'>");
+        tableRow.append(scrollVert);
+
+        var maxHeight = (endRow - startRow) * rz;
+        var scrollVertCanvas = $("<canvas title='Click to jump to this position' width='10' height='" + heatmap.size.height + "'></canvas>");
+        scrollVert.append(scrollVertCanvas);
+
+        var scrollVertCtx = scrollVertCanvas.get()[0].getContext('2d');
+
+        scrollVertCtx.fillStyle = "rgba(0,0,0,0.4)";
+        var iniY = Math.round(maxHeight * (startRow / heatmap.rows.order.length));
+        var endY = Math.round(maxHeight * (endRow / heatmap.rows.order.length));
+        scrollVertCtx.fillRect(0, iniY, 10, endY - iniY);
+
+        scrollVertCanvas.click(function (e) {
+            var pos = $(this).position();
+            var pY = e.pageY - pos.top - ((endY - iniY) / 2);
+            pY = (pY < 0 ? 0 : pY);
+            heatmap.offset.top = Math.round((pY / maxHeight) * heatmap.rows.order.length);
+            heatmap.paint(obj);
+        });
+
+        $(scrollVertCanvas).tooltip({
+            delay: 0,
+            top: -30,
+            left: 0,
+            fade: true,
+            blocked: true
+        });
+
         // Right table border
         tableRow.append("<td class='borderL'>&nbsp;</td>");
         table.append(tableRow);
 
         /*******************************************************************
-         * Horitzontal scroll
+         * Horizontal scroll
          ******************************************************************/
-        var scrollRow = $('<tr>');
-        scrollRow.append("<td class='borderF'></td>");
+        var scrollRow = $("<tr class='horizontalScroll'>");
+        scrollRow.append("<td class='border'></td>");
+        scrollRow.append("<td class='border'></td>");
         var scrollHor = $("<td class='borderT'>");
         scrollRow.append(scrollHor);
-        scrollRow.append("<td class='borderF'></td>");
+        scrollRow.append("<td class='border'></td>");
 
         if (heatmap.rows.annotations.length > 0) {
-            scrollRow.append("<td class='borderF'></td>");
+            scrollRow.append("<td class='border'></td>");
         }
 
+        scrollRow.append("<td class='border'></td>");
+
         var maxWidth = (endCol - startCol) * cz;
-        var scrollHorCanvas = $("<canvas width='" + heatmap.size.width + "' height='10'></canvas>");
+        var scrollHorCanvas = $("<canvas title='Click to jump to this position' width='" + heatmap.size.width + "' height='10'></canvas>");
         scrollHor.append(scrollHorCanvas);
 
         var scrollHorCtx = scrollHorCanvas.get()[0].getContext('2d');
@@ -2080,6 +2112,14 @@ jheatmap.Heatmap = function () {
             heatmap.paint(obj);
         });
 
+        $(scrollHorCanvas).tooltip({
+            delay: 0,
+            top: -30,
+            left: 0,
+            fade: true,
+            blocked: true
+        });
+
         table.append(scrollRow);
 
         /*******************************************************************
@@ -2088,12 +2128,15 @@ jheatmap.Heatmap = function () {
 
             // Last border row
         var lastRow = $('<tr>');
+        lastRow.append($("<td class='border'>").append($('<img>', {
+        'src':basePath + "/images/sep.png"
+        })));
         lastRow.append("<td class='border'></td>");
         lastRow.append("<td class='borderT'></td>");
-        lastRow.append("<td class='borderT'></td>");
         if (heatmap.rows.annotations.length > 0) {
-            lastRow.append("<td class='borderT'></td>");
+            lastRow.append("<td class='border'></td>");
         }
+        lastRow.append("<td class='border'></td>");
         lastRow.append("<td class='border'></td>");
         table.append(lastRow);
         obj.append(table);
@@ -2167,13 +2210,18 @@ var console = console || {"log":function () {
         load:function (data, options) {
             data.sync = false;
 
-            if (options.data.type == "raw" || options.data.type == "tdm") {
+            if (options.data.rows != undefined) {
                 methods['readfile'].call(this, options.data.rows, options.separator, data.rows, false);
+            }
+
+            if (options.data.cols != undefined) {
                 methods['readfile'].call(this, options.data.cols, options.separator, data.cols, false);
-                methods['readfile'].call(this, options.data.values, options.separator, data.cells, false);
-            } else if (options.data.type == "cdm") {
+            }
+
+            if (options.data.values != undefined) {
                 methods['readfile'].call(this, options.data.values, options.separator, data.cells, false);
             }
+
         },
 
         init:function (options) {
@@ -2190,43 +2238,76 @@ var console = console || {"log":function () {
 
                             var cellValues = [];
 
-                            // Create a null matrix
-                            var totalPos = data.rows.values.length * data.cols.values.length;
-                            for (var pos = 0; pos < totalPos; pos++) {
-                                cellValues[pos] = null;
-                            }
-
                             // Try to deduce with column is the row primary key.
                             var rowKey;
                             var valuesRowKey;
-                            for (var i = 0; i < data.rows.header.length; i++) {
-                                if ((valuesRowKey = $.inArray(data.rows.header[i], data.cells.header)) > -1) {
-                                    rowKey = i;
-                                    break;
+                            if (options.data.rows != undefined) {
+                                for (var i = 0; i < data.rows.header.length; i++) {
+                                    if ((valuesRowKey = $.inArray(data.rows.header[i], data.cells.header)) > -1) {
+                                        rowKey = i;
+                                        break;
+                                    }
                                 }
+                            } else {
+                                rowKey = 0;
+                                valuesRowKey = 1;
+                                data.rows.header = [ data.cells.header[ valuesRowKey ] ];
                             }
 
                             // Try to deduce with column is the column primary
                             // key.
                             var colKey;
                             var valuesColKey;
-                            for (var i = 0; i < data.cols.header.length; i++) {
-                                if ((valuesColKey = $.inArray(data.cols.header[i], data.cells.header)) > -1) {
-                                    if (valuesColKey != valuesRowKey) {
-                                        colKey = i;
-                                        break;
+                            if (options.data.cols != undefined) {
+                                for (var i = 0; i < data.cols.header.length; i++) {
+                                    if ((valuesColKey = $.inArray(data.cols.header[i], data.cells.header)) > -1) {
+                                        if (valuesColKey != valuesRowKey) {
+                                            colKey = i;
+                                            break;
+                                        }
                                     }
                                 }
+                            } else {
+                                colKey = 0;
+                                valuesColKey = 0;
+                                data.cols.header = [ data.cells.header[ valuesColKey ]];
                             }
 
                             // Build hashes
                             var rowHash = {};
-                            for (var i = 0; i < data.rows.values.length; i++) {
-                                rowHash[(data.rows.values[i][rowKey]).toString()] = i;
+                            if (options.data.rows != undefined) {
+                                for (var i = 0; i < data.rows.values.length; i++) {
+                                    rowHash[(data.rows.values[i][rowKey]).toString()] = i;
+                                }
+                            } else {
+                                for (var i = 0; i < data.cells.values.length; i++) {
+                                    var value = data.cells.values[i][valuesRowKey];
+                                    if (rowHash[(value).toString()] == undefined) {
+                                        rowHash[(value).toString()] = data.rows.values.length;
+                                        data.rows.values[data.rows.values.length] = [ value ];
+                                    }
+                                }
                             }
+
                             var colHash = {};
-                            for (var i = 0; i < data.cols.values.length; i++) {
-                                colHash[(data.cols.values[i][colKey]).toString()] = i;
+                            if (options.data.cols != undefined) {
+                                for (var i = 0; i < data.cols.values.length; i++) {
+                                    colHash[(data.cols.values[i][colKey]).toString()] = i;
+                                }
+                            } else {
+                                for (var i = 0; i < data.cells.values.length; i++) {
+                                    var value = data.cells.values[i][valuesColKey];
+                                    if (colHash[(value).toString()] == undefined) {
+                                        colHash[(value).toString()] = data.cols.values.length;
+                                        data.cols.values[data.cols.values.length] = [ value ];
+                                    }
+                                }
+                            }
+
+                            // Create a null matrix
+                            var totalPos = data.rows.values.length * data.cols.values.length;
+                            for (var pos = 0; pos < totalPos; pos++) {
+                                cellValues[pos] = null;
                             }
 
                             var cl = data.cols.values.length;
@@ -2308,5 +2389,299 @@ var console = console || {"log":function () {
         var options = $.extend(defaults, options);
         return this.each(methods['init'].call(this, options));
     };
+
+})(jQuery);
+/*
+ * jQuery Tooltip plugin 1.3
+ *
+ * http://bassistance.de/jquery-plugins/jquery-plugin-tooltip/
+ * http://docs.jquery.com/Plugins/Tooltip
+ *
+ * Copyright (c) 2006 - 2008 Jörn Zaefferer
+ *
+ * $Id: jquery.tooltip.js 5741 2008-06-21 15:22:16Z joern.zaefferer $
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ *   http://www.opensource.org/licenses/mit-license.php
+ *   http://www.gnu.org/licenses/gpl.html
+ */
+
+;(function($) {
+
+    // the tooltip element
+    var helper = {},
+        // the current tooltipped element
+        current,
+        // the title of the current element, used for restoring
+        title,
+        // timeout id for delayed tooltips
+        tID,
+        // IE 5.5 or 6
+        IE = $.browser.msie && /MSIE\s(5\.5|6\.)/.test(navigator.userAgent),
+        // flag for mouse tracking
+        track = false;
+
+    $.tooltip = {
+        blocked: false,
+        defaults: {
+            delay: 200,
+            fade: false,
+            showURL: true,
+            extraClass: "",
+            top: 15,
+            left: 15,
+            id: "tooltip"
+        },
+        block: function() {
+            $.tooltip.blocked = !$.tooltip.blocked;
+        }
+    };
+
+    $.fn.extend({
+        tooltip: function(settings) {
+            settings = $.extend({}, $.tooltip.defaults, settings);
+            createHelper(settings);
+            return this.each(function() {
+                $.data(this, "tooltip", settings);
+                this.tOpacity = helper.parent.css("opacity");
+                // copy tooltip into its own expando and remove the title
+                this.tooltipText = this.title;
+                $(this).removeAttr("title");
+                // also remove alt attribute to prevent default tooltip in IE
+                this.alt = "";
+            })
+                .mouseover(save)
+                .mouseout(hide)
+                .click(hide);
+        },
+        fixPNG: IE ? function() {
+            return this.each(function () {
+                var image = $(this).css('backgroundImage');
+                if (image.match(/^url\(["']?(.*\.png)["']?\)$/i)) {
+                    image = RegExp.$1;
+                    $(this).css({
+                        'backgroundImage': 'none',
+                        'filter': "progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=crop, src='" + image + "')"
+                    }).each(function () {
+                            var position = $(this).css('position');
+                            if (position != 'absolute' && position != 'relative')
+                                $(this).css('position', 'relative');
+                        });
+                }
+            });
+        } : function() { return this; },
+        unfixPNG: IE ? function() {
+            return this.each(function () {
+                $(this).css({'filter': '', backgroundImage: ''});
+            });
+        } : function() { return this; },
+        hideWhenEmpty: function() {
+            return this.each(function() {
+                $(this)[ $(this).html() ? "show" : "hide" ]();
+            });
+        },
+        url: function() {
+            return this.attr('href') || this.attr('src');
+        }
+    });
+
+    function createHelper(settings) {
+        // there can be only one tooltip helper
+        if( helper.parent )
+            return;
+        // create the helper, h3 for title, div for url
+        helper.parent = $('<div id="' + settings.id + '"><h3></h3><div class="body"></div><div class="url"></div></div>')
+            // add to document
+            .appendTo(document.body)
+            // hide it at first
+            .hide();
+
+        // apply bgiframe if available
+        if ( $.fn.bgiframe )
+            helper.parent.bgiframe();
+
+        // save references to title and url elements
+        helper.title = $('h3', helper.parent);
+        helper.body = $('div.body', helper.parent);
+        helper.url = $('div.url', helper.parent);
+    }
+
+    function settings(element) {
+        return $.data(element, "tooltip");
+    }
+
+    // main event handler to start showing tooltips
+    function handle(event) {
+        // show helper, either with timeout or on instant
+        if( settings(this).delay )
+            tID = setTimeout(show, settings(this).delay);
+        else
+            show();
+
+        // if selected, update the helper position when the mouse moves
+        track = !!settings(this).track;
+        $(document.body).bind('mousemove', update);
+
+        // update at least once
+        update(event);
+    }
+
+    // save elements title before the tooltip is displayed
+    function save() {
+        // if this is the current source, or it has no title (occurs with click event), stop
+        if ( $.tooltip.blocked || this == current || (!this.tooltipText && !settings(this).bodyHandler) )
+            return;
+
+        // save current
+        current = this;
+        title = this.tooltipText;
+
+        if ( settings(this).bodyHandler ) {
+            helper.title.hide();
+            var bodyContent = settings(this).bodyHandler.call(this);
+            if (bodyContent.nodeType || bodyContent.jquery) {
+                helper.body.empty().append(bodyContent)
+            } else {
+                helper.body.html( bodyContent );
+            }
+            helper.body.show();
+        } else if ( settings(this).showBody ) {
+            var parts = title.split(settings(this).showBody);
+            helper.title.html(parts.shift()).show();
+            helper.body.empty();
+            for(var i = 0, part; (part = parts[i]); i++) {
+                if(i > 0)
+                    helper.body.append("<br/>");
+                helper.body.append(part);
+            }
+            helper.body.hideWhenEmpty();
+        } else {
+            helper.title.html(title).show();
+            helper.body.hide();
+        }
+
+        // if element has href or src, add and show it, otherwise hide it
+        if( settings(this).showURL && $(this).url() )
+            helper.url.html( $(this).url().replace('http://', '') ).show();
+        else
+            helper.url.hide();
+
+        // add an optional class for this tip
+        helper.parent.addClass(settings(this).extraClass);
+
+        // fix PNG background for IE
+        if (settings(this).fixPNG )
+            helper.parent.fixPNG();
+
+        handle.apply(this, arguments);
+    }
+
+    // delete timeout and show helper
+    function show() {
+        tID = null;
+        if ((!IE || !$.fn.bgiframe) && settings(current).fade) {
+            if (helper.parent.is(":animated"))
+                helper.parent.stop().show().fadeTo(settings(current).fade, current.tOpacity);
+            else
+                helper.parent.is(':visible') ? helper.parent.fadeTo(settings(current).fade, current.tOpacity) : helper.parent.fadeIn(settings(current).fade);
+        } else {
+            helper.parent.show();
+        }
+        update();
+    }
+
+    /**
+     * callback for mousemove
+     * updates the helper position
+     * removes itself when no current element
+     */
+    function update(event)	{
+        if($.tooltip.blocked)
+            return;
+
+        if (event && event.target.tagName == "OPTION") {
+            return;
+        }
+
+        // stop updating when tracking is disabled and the tooltip is visible
+        if ( !track && helper.parent.is(":visible")) {
+            $(document.body).unbind('mousemove', update)
+        }
+
+        // if no current element is available, remove this listener
+        if( current == null ) {
+            $(document.body).unbind('mousemove', update);
+            return;
+        }
+
+        // remove position helper classes
+        helper.parent.removeClass("viewport-right").removeClass("viewport-bottom");
+
+        var left = helper.parent[0].offsetLeft;
+        var top = helper.parent[0].offsetTop;
+        if (event) {
+            // position the helper 15 pixel to bottom right, starting from mouse position
+            left = event.pageX + settings(current).left;
+            top = event.pageY + settings(current).top;
+            var right='auto';
+            if (settings(current).positionLeft) {
+                right = $(window).width() - left;
+                left = 'auto';
+            }
+            helper.parent.css({
+                left: left,
+                right: right,
+                top: top
+            });
+        }
+
+        var v = viewport(),
+            h = helper.parent[0];
+        // check horizontal position
+        if (v.x + v.cx < h.offsetLeft + h.offsetWidth) {
+            left -= h.offsetWidth + 20 + settings(current).left;
+            helper.parent.css({left: left + 'px'}).addClass("viewport-right");
+        }
+        // check vertical position
+        if (v.y + v.cy < h.offsetTop + h.offsetHeight) {
+            top -= h.offsetHeight + 20 + settings(current).top;
+            helper.parent.css({top: top + 'px'}).addClass("viewport-bottom");
+        }
+    }
+
+    function viewport() {
+        return {
+            x: $(window).scrollLeft(),
+            y: $(window).scrollTop(),
+            cx: $(window).width(),
+            cy: $(window).height()
+        };
+    }
+
+    // hide helper and restore added classes and the title
+    function hide(event) {
+        if($.tooltip.blocked)
+            return;
+        // clear timeout if possible
+        if(tID)
+            clearTimeout(tID);
+        // no more current element
+        current = null;
+
+        var tsettings = settings(this);
+        function complete() {
+            helper.parent.removeClass( tsettings.extraClass ).hide().css("opacity", "");
+        }
+        if ((!IE || !$.fn.bgiframe) && tsettings.fade) {
+            if (helper.parent.is(':animated'))
+                helper.parent.stop().fadeTo(tsettings.fade, 0, complete);
+            else
+                helper.parent.stop().fadeOut(tsettings.fade, complete);
+        } else
+            complete();
+
+        if( settings(this).fixPNG )
+            helper.parent.unfixPNG();
+    }
 
 })(jQuery);
