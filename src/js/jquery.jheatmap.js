@@ -63,13 +63,18 @@ var console = console || {"log":function () {
         load:function (data, options) {
             data.sync = false;
 
-            if (options.data.type == "raw" || options.data.type == "tdm") {
+            if (options.data.rows != undefined) {
                 methods['readfile'].call(this, options.data.rows, options.separator, data.rows, false);
+            }
+
+            if (options.data.cols != undefined) {
                 methods['readfile'].call(this, options.data.cols, options.separator, data.cols, false);
-                methods['readfile'].call(this, options.data.values, options.separator, data.cells, false);
-            } else if (options.data.type == "cdm") {
+            }
+
+            if (options.data.values != undefined) {
                 methods['readfile'].call(this, options.data.values, options.separator, data.cells, false);
             }
+
         },
 
         init:function (options) {
@@ -86,43 +91,76 @@ var console = console || {"log":function () {
 
                             var cellValues = [];
 
-                            // Create a null matrix
-                            var totalPos = data.rows.values.length * data.cols.values.length;
-                            for (var pos = 0; pos < totalPos; pos++) {
-                                cellValues[pos] = null;
-                            }
-
                             // Try to deduce with column is the row primary key.
                             var rowKey;
                             var valuesRowKey;
-                            for (var i = 0; i < data.rows.header.length; i++) {
-                                if ((valuesRowKey = $.inArray(data.rows.header[i], data.cells.header)) > -1) {
-                                    rowKey = i;
-                                    break;
+                            if (options.data.rows != undefined) {
+                                for (var i = 0; i < data.rows.header.length; i++) {
+                                    if ((valuesRowKey = $.inArray(data.rows.header[i], data.cells.header)) > -1) {
+                                        rowKey = i;
+                                        break;
+                                    }
                                 }
+                            } else {
+                                rowKey = 0;
+                                valuesRowKey = 1;
+                                data.rows.header = [ data.cells.header[ valuesRowKey ] ];
                             }
 
                             // Try to deduce with column is the column primary
                             // key.
                             var colKey;
                             var valuesColKey;
-                            for (var i = 0; i < data.cols.header.length; i++) {
-                                if ((valuesColKey = $.inArray(data.cols.header[i], data.cells.header)) > -1) {
-                                    if (valuesColKey != valuesRowKey) {
-                                        colKey = i;
-                                        break;
+                            if (options.data.cols != undefined) {
+                                for (var i = 0; i < data.cols.header.length; i++) {
+                                    if ((valuesColKey = $.inArray(data.cols.header[i], data.cells.header)) > -1) {
+                                        if (valuesColKey != valuesRowKey) {
+                                            colKey = i;
+                                            break;
+                                        }
                                     }
                                 }
+                            } else {
+                                colKey = 0;
+                                valuesColKey = 0;
+                                data.cols.header = [ data.cells.header[ valuesColKey ]];
                             }
 
                             // Build hashes
                             var rowHash = {};
-                            for (var i = 0; i < data.rows.values.length; i++) {
-                                rowHash[(data.rows.values[i][rowKey]).toString()] = i;
+                            if (options.data.rows != undefined) {
+                                for (var i = 0; i < data.rows.values.length; i++) {
+                                    rowHash[(data.rows.values[i][rowKey]).toString()] = i;
+                                }
+                            } else {
+                                for (var i = 0; i < data.cells.values.length; i++) {
+                                    var value = data.cells.values[i][valuesRowKey];
+                                    if (rowHash[(value).toString()] == undefined) {
+                                        rowHash[(value).toString()] = data.rows.values.length;
+                                        data.rows.values[data.rows.values.length] = [ value ];
+                                    }
+                                }
                             }
+
                             var colHash = {};
-                            for (var i = 0; i < data.cols.values.length; i++) {
-                                colHash[(data.cols.values[i][colKey]).toString()] = i;
+                            if (options.data.cols != undefined) {
+                                for (var i = 0; i < data.cols.values.length; i++) {
+                                    colHash[(data.cols.values[i][colKey]).toString()] = i;
+                                }
+                            } else {
+                                for (var i = 0; i < data.cells.values.length; i++) {
+                                    var value = data.cells.values[i][valuesColKey];
+                                    if (colHash[(value).toString()] == undefined) {
+                                        colHash[(value).toString()] = data.cols.values.length;
+                                        data.cols.values[data.cols.values.length] = [ value ];
+                                    }
+                                }
+                            }
+
+                            // Create a null matrix
+                            var totalPos = data.rows.values.length * data.cols.values.length;
+                            for (var pos = 0; pos < totalPos; pos++) {
+                                cellValues[pos] = null;
                             }
 
                             var cl = data.cols.values.length;
