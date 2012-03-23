@@ -1569,7 +1569,7 @@ jheatmap.Heatmap = function () {
         tableRow.append(scrollVert);
 
         var maxHeight = (endRow - startRow) * rz;
-        var scrollVertCanvas = $("<canvas width='10' height='" + heatmap.size.height + "'></canvas>");
+        var scrollVertCanvas = $("<canvas title='Click to jump to this position' width='10' height='" + heatmap.size.height + "'></canvas>");
         scrollVert.append(scrollVertCanvas);
 
         var scrollVertCtx = scrollVertCanvas.get()[0].getContext('2d');
@@ -1587,19 +1587,27 @@ jheatmap.Heatmap = function () {
             heatmap.paint(obj);
         });
 
+        $(scrollVertCanvas).tooltip({
+            delay: 0,
+            top: -30,
+            left: 0,
+            fade: true,
+            blocked: true
+        });
+
         // Right table border
         tableRow.append("<td class='borderL'>&nbsp;</td>");
         table.append(tableRow);
 
         /*******************************************************************
-         * Horitzontal scroll
+         * Horizontal scroll
          ******************************************************************/
         var scrollRow = $("<tr class='horizontalScroll'>");
         scrollRow.append("<td class='border'></td>");
         scrollRow.append("<td class='border'></td>");
         var scrollHor = $("<td class='borderT'>");
         scrollRow.append(scrollHor);
-        scrollRow.append("<td class='borderT'></td>");
+        scrollRow.append("<td class='border'></td>");
 
         if (heatmap.rows.annotations.length > 0) {
             scrollRow.append("<td class='border'></td>");
@@ -1608,7 +1616,7 @@ jheatmap.Heatmap = function () {
         scrollRow.append("<td class='border'></td>");
 
         var maxWidth = (endCol - startCol) * cz;
-        var scrollHorCanvas = $("<canvas width='" + heatmap.size.width + "' height='10'></canvas>");
+        var scrollHorCanvas = $("<canvas title='Click to jump to this position' width='" + heatmap.size.width + "' height='10'></canvas>");
         scrollHor.append(scrollHorCanvas);
 
         var scrollHorCtx = scrollHorCanvas.get()[0].getContext('2d');
@@ -1624,6 +1632,14 @@ jheatmap.Heatmap = function () {
             pX = (pX < 0 ? 0 : pX);
             heatmap.offset.left = Math.round((pX / maxWidth) * heatmap.cols.order.length);
             heatmap.paint(obj);
+        });
+
+        $(scrollHorCanvas).tooltip({
+            delay: 0,
+            top: -30,
+            left: 0,
+            fade: true,
+            blocked: true
         });
 
         table.append(scrollRow);

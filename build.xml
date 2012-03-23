@@ -61,6 +61,7 @@
             <fileset dir="." includes="src/js/jheatmap.filters.js" />
             <fileset dir="." includes="src/js/jheatmap.Heatmap.js" />
             <fileset dir="." includes="src/js/jquery.jheatmap.js" />
+            <fileset dir="." includes="src/js/jquery.tooltip.js" />
 		</concat>
 
 		<!-- concatenation of cascading stylesheets -->
