@@ -211,7 +211,7 @@ jheatmap.decorators.Categorical.prototype.toColor = function (value) {
  * @class
  * @param {Array}   [minColor=[255,255,255]]    Minimum color [r,g,b]
  * @param {number}  [minValue=0]                Minimum value
- * @param {Array}   [maxValue=[0,255,0]]        Maximum color [r,g,b]
+ * @param {Array}   [maxColor=[0,255,0]]        Maximum color [r,g,b]
  * @param {number}  [maxValue=1]                Maximum value
  * @param {Array}   [nullColor=[255,255,255]]   NaN values color [r,g,b]
  * @param {Array}   [outColor=[187,187,187]]    Color for values outside range [r,g,b]
@@ -318,7 +318,7 @@ jheatmap.decorators.PValue = function (options) {
 jheatmap.decorators.PValue.prototype.toColor = function (value) {
     var r, g, b;
 
-    if (isNaN(value)) {
+    if (!value || isNaN(value)) {
         r = this.nullColor[0];
         g = this.nullColor[1];
         b = this.nullColor[2];
@@ -413,7 +413,9 @@ jheatmap.aggregators.PValue = function (options) {
 jheatmap.aggregators.PValue.prototype.acumulate = function (values) {
     var sum = 0;
     for (var i = 0; i < values.length; i++) {
-        sum += ((values[i] >= this.cutoff) ? 0 : ((this.cutoff - values[i]) / this.cutoff));
+        if (values[i] && !isNaN(values[i])) {
+            sum += ((values[i] >= this.cutoff) ? 0 : ((this.cutoff - values[i]) / this.cutoff));
+        }
     }
     return sum;
 };/**
@@ -514,6 +516,14 @@ jheatmap.Heatmap = function () {
      * @private
      */
     this.sync = false;
+
+    /**
+     * Show the indication "click to jump here" when the
+     * mouse is hovering the scrollbars.
+     *
+     * @private
+     */
+    this.showScrollBarTooltip = true;
 
     /**
      * User defined filters
@@ -760,6 +770,9 @@ jheatmap.Heatmap = function () {
     this.getColValueSelected = function (col) {
         return this.getColValue(col, this.cols.selectedValue);
     };
+
+
+
 
     /**
      * Initialize the Heatmap
@@ -1520,12 +1533,12 @@ jheatmap.Heatmap = function () {
                 heatmap.paint(obj);
             });
         });
+        topleftPanel.append($("<span>Columns</span>"));
         topleftPanel.append(selectCol);
         for (var o = 0; o < this.cols.header.length; o++) {
             selectCol.append(new Option(this.cols.header[o], o, o == this.cols.selectedValue));
         }
         selectCol.val(this.cols.selectedValue);
-        topleftPanel.append($("<span>Columns</span>"));
         topleftPanel.append($("<br>"));
 
         // Add row selector
@@ -1535,8 +1548,8 @@ jheatmap.Heatmap = function () {
                 heatmap.paint(obj);
             });
         });
-        topleftPanel.append(selectRow);
         topleftPanel.append($("<span>Rows</span>"));
+        topleftPanel.append(selectRow);
         topleftPanel.append($("<br>"));
 
         for (o = 0; o < this.rows.header.length; o++) {
@@ -1552,8 +1565,8 @@ jheatmap.Heatmap = function () {
                 heatmap.paint(obj);
             });
         });
-        topleftPanel.append(selectCell);
         topleftPanel.append($("<span>Cells</span>"));
+        topleftPanel.append(selectCell);
         topleftPanel.append($("<br>"));
 
         for (o = 0; o < this.cells.header.length; o++) {
@@ -2065,13 +2078,16 @@ jheatmap.Heatmap = function () {
             heatmap.paint(obj);
         });
 
-        $(scrollVertCanvas).tooltip({
-            delay: 0,
-            top: -30,
-            left: 0,
-            fade: true,
-            blocked: true
-        });
+        if (this.showScrollBarTooltip == true) {
+            $(scrollVertCanvas).tooltip({
+                delay: 0,
+                top: 15,
+                left: 0,
+                track: true,
+                fade: true,
+                blocked: true
+            });
+        }
 
         // Right table border
         tableRow.append("<td class='borderL'>&nbsp;</td>");
@@ -2112,13 +2128,16 @@ jheatmap.Heatmap = function () {
             heatmap.paint(obj);
         });
 
-        $(scrollHorCanvas).tooltip({
-            delay: 0,
-            top: -30,
-            left: 0,
-            fade: true,
-            blocked: true
-        });
+        if (this.showScrollBarTooltip == true) {
+            $(scrollHorCanvas).tooltip({
+                delay: 0,
+                top: -40,
+                left: 0,
+                track: true,
+                fade: true,
+                blocked: true
+            });
+        }
 
         table.append(scrollRow);
 
@@ -2226,8 +2245,9 @@ var console = console || {"log":function () {
 
         init:function (options) {
             var obj = $(this);
-            obj.html('<div class="heatmap-loader"><div class="background"></div><div class="progress"><img src="'
-                + basePath + 'images/loading.gif"></div></div>');
+
+            data.paint(obj);
+
             obj.ajaxStop(function () {
                 if (!data.sync) {
 
@@ -2366,8 +2386,11 @@ var console = console || {"log":function () {
 
             });
 
+
             // Load all the data files on init
-            methods['load'].call(this, data, options);
+            data.loading( function() {
+                methods['load'].call(this, data, options);
+            });
 
         }
 
