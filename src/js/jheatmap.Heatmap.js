@@ -1053,12 +1053,12 @@ jheatmap.Heatmap = function () {
                 heatmap.paint(obj);
             });
         });
+        topleftPanel.append($("<span>Columns</span>"));
         topleftPanel.append(selectCol);
         for (var o = 0; o < this.cols.header.length; o++) {
             selectCol.append(new Option(this.cols.header[o], o, o == this.cols.selectedValue));
         }
         selectCol.val(this.cols.selectedValue);
-        topleftPanel.append($("<span>Columns</span>"));
         topleftPanel.append($("<br>"));
 
         // Add row selector
@@ -1068,8 +1068,8 @@ jheatmap.Heatmap = function () {
                 heatmap.paint(obj);
             });
         });
-        topleftPanel.append(selectRow);
         topleftPanel.append($("<span>Rows</span>"));
+        topleftPanel.append(selectRow);
         topleftPanel.append($("<br>"));
 
         for (o = 0; o < this.rows.header.length; o++) {
@@ -1085,8 +1085,8 @@ jheatmap.Heatmap = function () {
                 heatmap.paint(obj);
             });
         });
-        topleftPanel.append(selectCell);
         topleftPanel.append($("<span>Cells</span>"));
+        topleftPanel.append(selectCell);
         topleftPanel.append($("<br>"));
 
         for (o = 0; o < this.cells.header.length; o++) {

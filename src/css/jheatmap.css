@@ -67,8 +67,9 @@ table.heatmap th.topleft {
 }
 
 table.heatmap th.topleft select {
-	width: 20px;
+	width: 120px;
 	height: 15px;
+    font-size: 11px;
 	border: 1px solid #CCC;
 	background-color: #AAA;
 	margin: 0;
@@ -78,6 +79,8 @@ table.heatmap th.topleft select {
 table.heatmap th.topleft span {
 	vertical-align: top;
 	margin-left: 5px;
+    display: inline-block;
+    width: 55px;
 }
 
 
