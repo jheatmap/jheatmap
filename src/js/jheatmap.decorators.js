@@ -69,7 +69,7 @@ jheatmap.decorators.Categorical.prototype.toColor = function (value) {
  * @class
  * @param {Array}   [minColor=[255,255,255]]    Minimum color [r,g,b]
  * @param {number}  [minValue=0]                Minimum value
- * @param {Array}   [maxValue=[0,255,0]]        Maximum color [r,g,b]
+ * @param {Array}   [maxColor=[0,255,0]]        Maximum color [r,g,b]
  * @param {number}  [maxValue=1]                Maximum value
  * @param {Array}   [nullColor=[255,255,255]]   NaN values color [r,g,b]
  * @param {Array}   [outColor=[187,187,187]]    Color for values outside range [r,g,b]
@@ -176,7 +176,7 @@ jheatmap.decorators.PValue = function (options) {
 jheatmap.decorators.PValue.prototype.toColor = function (value) {
     var r, g, b;
 
-    if (isNaN(value)) {
+    if (!value || isNaN(value)) {
         r = this.nullColor[0];
         g = this.nullColor[1];
         b = this.nullColor[2];

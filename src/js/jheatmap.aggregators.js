@@ -77,7 +77,9 @@ jheatmap.aggregators.PValue = function (options) {
 jheatmap.aggregators.PValue.prototype.acumulate = function (values) {
     var sum = 0;
     for (var i = 0; i < values.length; i++) {
-        sum += ((values[i] >= this.cutoff) ? 0 : ((this.cutoff - values[i]) / this.cutoff));
+        if (values[i] && !isNaN(values[i])) {
+            sum += ((values[i] >= this.cutoff) ? 0 : ((this.cutoff - values[i]) / this.cutoff));
+        }
     }
     return sum;
 };

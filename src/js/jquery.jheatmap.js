@@ -79,8 +79,9 @@ var console = console || {"log":function () {
 
         init:function (options) {
             var obj = $(this);
-            obj.html('<div class="heatmap-loader"><div class="background"></div><div class="progress"><img src="'
-                + basePath + 'images/loading.gif"></div></div>');
+
+            data.paint(obj);
+
             obj.ajaxStop(function () {
                 if (!data.sync) {
 
@@ -219,8 +220,11 @@ var console = console || {"log":function () {
 
             });
 
+
             // Load all the data files on init
-            methods['load'].call(this, data, options);
+            data.loading( function() {
+                methods['load'].call(this, data, options);
+            });
 
         }
 
