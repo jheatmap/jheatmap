@@ -38,6 +38,14 @@ jheatmap.Heatmap = function () {
     this.sync = false;
 
     /**
+     * Show the indication "click to jump here" when the
+     * mouse is hovering the scrollbars.
+     *
+     * @private
+     */
+    this.showScrollBarTooltip = true;
+
+    /**
      * User defined filters
      */
     this.filters = {};
@@ -282,6 +290,9 @@ jheatmap.Heatmap = function () {
     this.getColValueSelected = function (col) {
         return this.getColValue(col, this.cols.selectedValue);
     };
+
+
+
 
     /**
      * Initialize the Heatmap
@@ -1587,13 +1598,15 @@ jheatmap.Heatmap = function () {
             heatmap.paint(obj);
         });
 
-        $(scrollVertCanvas).tooltip({
-            delay: 0,
-            top: -30,
-            left: 0,
-            fade: true,
-            blocked: true
-        });
+        if (this.showScrollBarTooltip == true) {
+            $(scrollVertCanvas).tooltip({
+                delay: 0,
+                top: 15,
+                left: 0,
+                fade: false,
+                blocked: true
+            });
+        }
 
         // Right table border
         tableRow.append("<td class='borderL'>&nbsp;</td>");
@@ -1634,13 +1647,15 @@ jheatmap.Heatmap = function () {
             heatmap.paint(obj);
         });
 
-        $(scrollHorCanvas).tooltip({
-            delay: 0,
-            top: -30,
-            left: 0,
-            fade: true,
-            blocked: true
-        });
+        if (this.showScrollBarTooltip == true) {
+            $(scrollHorCanvas).tooltip({
+                delay: 0,
+                top: -40,
+                left: 0,
+                fade: false,
+                blocked: true
+            });
+        }
 
         table.append(scrollRow);
 
