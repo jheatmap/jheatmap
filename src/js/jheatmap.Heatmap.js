@@ -1603,7 +1603,8 @@ jheatmap.Heatmap = function () {
                 delay: 0,
                 top: 15,
                 left: 0,
-                fade: false,
+                track: true,
+                fade: true,
                 blocked: true
             });
         }
@@ -1652,7 +1653,8 @@ jheatmap.Heatmap = function () {
                 delay: 0,
                 top: -40,
                 left: 0,
-                fade: false,
+                track: true,
+                fade: true,
                 blocked: true
             });
         }
