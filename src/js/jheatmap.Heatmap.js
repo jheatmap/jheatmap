@@ -401,6 +401,14 @@ jheatmap.Heatmap = function () {
                 var v_a = heatmap.rows.values[o_a][heatmap.rows.sort.field].toLowerCase();
                 var v_b = heatmap.rows.values[o_b][heatmap.rows.sort.field].toLowerCase();
                 var val = (heatmap.rows.sort.asc ? 1 : -1);
+
+                if (!isNaN(v_a)) {
+                    v_a = parseFloat(v_a);
+                    v_b = parseFloat(v_b);
+                    o_a = parseFloat(o_a);
+                    o_b = parseFloat(o_b);
+                }
+
                 return (v_a == v_b) ? 0 : (v_a > v_b ? val : -val);
             });
         } else if (this.rows.sort.type == "value") {
@@ -453,6 +461,13 @@ jheatmap.Heatmap = function () {
             this.cols.order.sort(function (o_a, o_b) {
                 var v_a = heatmap.cols.values[o_a][heatmap.cols.sort.field].toLowerCase();
                 var v_b = heatmap.cols.values[o_b][heatmap.cols.sort.field].toLowerCase();
+
+                if (!isNaN(v_a)) {
+                    v_a = parseFloat(v_a);
+                    v_b = parseFloat(v_b);
+                    o_a = parseFloat(o_a);
+                    o_b = parseFloat(o_b);
+                }
                 var val = (heatmap.cols.sort.asc ? 1 : -1);
                 return (v_a == v_b) ? 0 : ((v_a > v_b) ? val : -val);
             });

@@ -21,10 +21,43 @@ jheatmap.aggregators.Addition = function () {
 jheatmap.aggregators.Addition.prototype.acumulate = function (values) {
     var sum = 0;
     for (var i = 0; i < values.length; i++) {
-        sum += values[i];
+        var value = values[i];
+        if (value && !isNaN(value)) {
+            sum += value;
+        }
     }
     return sum;
 };
+
+/**
+ * Average aggregator.
+ *
+ * @example
+ * new jheatmap.aggregators.Median({ maxValue: 4 });
+ *
+ */
+jheatmap.aggregators.Average = function (options) {
+    options = options || {};
+}
+
+/**
+ * Acumulates all the values
+ * @param {Array}   values  The values to acumulate
+ */
+jheatmap.aggregators.Average.prototype.acumulate = function (values) {
+    var avg = 0;
+    var count = 0;
+    for (var i = 0; i < values.length; i++) {
+        var value = values[i];
+
+        if (value && !isNaN(value)) {
+            avg += value;
+            count++;
+        }
+    }
+    return (count==0 ? -10 : (avg/count));
+};
+
 
 /**
  * Median aggregator.

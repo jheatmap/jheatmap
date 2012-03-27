@@ -80,8 +80,6 @@ var console = console || {"log":function () {
         init:function (options) {
             var obj = $(this);
 
-            data.paint(obj);
-
             obj.ajaxStop(function () {
                 if (!data.sync) {
 
@@ -111,7 +109,7 @@ var console = console || {"log":function () {
                                     valuesRowKey = rowAnn[0];
                                     data.rows.header = [];
 
-                                    for (var i=0; i < rowAnn.length; i++) {
+                                    for (var i = 0; i < rowAnn.length; i++) {
                                         data.rows.header.push(data.cells.header[rowAnn[i]]);
                                     }
                                 } else {
@@ -142,7 +140,7 @@ var console = console || {"log":function () {
                                     valuesColKey = colAnn[0];
                                     data.cols.header = [];
 
-                                    for (var i=0; i < colAnn.length; i++) {
+                                    for (var i = 0; i < colAnn.length; i++) {
                                         data.cols.header.push(data.cells.header[colAnn[i]]);
                                     }
                                 } else {
@@ -166,44 +164,46 @@ var console = console || {"log":function () {
                                 }
 
                             } else {
-                                //console.log((new Date().getTime()) + " Building columns and rows hashes...");
+                                console.log((new Date().getTime()) + " Building columns and rows hashes...");
                                 for (var i = 0; i < data.cells.values.length; i++) {
                                     var values = data.cells.values[i];
 
-                                    var rowValues;
-                                    if (options.data.rows_annotations != undefined) {
-                                        rowValues = options.data.rows_annotations;
-                                    } else {
-                                        rowValues = [ valuesRowKey ];
-                                    }
-                                    if (rowHash[(values[valuesRowKey]).toString()] == undefined) {
-
-                                        var pos = data.rows.values.length;
-                                        rowHash[(values[valuesRowKey]).toString()] = pos;
-                                        data.rows.values[pos] = [];
-
-                                        for (var r=0; r < rowValues.length; r++ ) {
-                                            data.rows.values[pos][r] = values[rowValues[r]];
+                                    if (values != null) {
+                                        var rowValues;
+                                        if (options.data.rows_annotations != undefined) {
+                                            rowValues = options.data.rows_annotations;
+                                        } else {
+                                            rowValues = [ valuesRowKey ];
                                         }
-                                    }
+                                        if (rowHash[(values[valuesRowKey]).toString()] == undefined) {
 
-                                    var colValues;
-                                    if (options.data.cols_annotations != undefined) {
-                                        colValues = options.data.cols_annotations;
-                                    } else {
-                                        colValues = [ valuesColKey ];
-                                    }
-                                    if (colHash[(values[valuesColKey]).toString()] == undefined) {
-                                        var pos = data.cols.values.length;
-                                        colHash[(values[valuesColKey]).toString()] = pos;
-                                        data.cols.values[pos] = [];
+                                            var pos = data.rows.values.length;
+                                            rowHash[(values[valuesRowKey]).toString()] = pos;
+                                            data.rows.values[pos] = [];
 
-                                        for (var c=0; c < colValues.length; c++ ) {
-                                            data.cols.values[pos][c] = values[colValues[c]];
+                                            for (var r = 0; r < rowValues.length; r++) {
+                                                data.rows.values[pos][r] = values[rowValues[r]];
+                                            }
+                                        }
+
+                                        var colValues;
+                                        if (options.data.cols_annotations != undefined) {
+                                            colValues = options.data.cols_annotations;
+                                        } else {
+                                            colValues = [ valuesColKey ];
+                                        }
+                                        if (colHash[(values[valuesColKey]).toString()] == undefined) {
+                                            var pos = data.cols.values.length;
+                                            colHash[(values[valuesColKey]).toString()] = pos;
+                                            data.cols.values[pos] = [];
+
+                                            for (var c = 0; c < colValues.length; c++) {
+                                                data.cols.values[pos][c] = values[colValues[c]];
+                                            }
                                         }
                                     }
                                 }
-                                //console.log((new Date().getTime()) + " Hashes ready");
+                                console.log((new Date().getTime()) + " Hashes ready");
                             }
 
                             // Create a null matrix
@@ -214,7 +214,7 @@ var console = console || {"log":function () {
 
                             var cl = data.cols.values.length;
 
-                            //console.log((new Date().getTime()) + " Loading cell values...");
+                            console.log((new Date().getTime()) + " Loading cell values...");
                             for (var i = 0; i < data.cells.values.length; i++) {
 
                                 var value = data.cells.values[i];
@@ -228,7 +228,7 @@ var console = console || {"log":function () {
                                     cellValues[pos] = value;
                                 }
                             }
-                            //console.log((new Date().getTime()) + " Cells ready");
+                            console.log((new Date().getTime()) + " Cells ready");
 
                             delete data.cells.values;
                             data.cells.values = cellValues;
@@ -275,7 +275,7 @@ var console = console || {"log":function () {
 
 
             // Load all the data files on init
-            data.loading( function() {
+            data.loading(function () {
                 methods['load'].call(this, data, options);
             });
 
