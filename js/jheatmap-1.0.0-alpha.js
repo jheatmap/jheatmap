@@ -169,6 +169,35 @@ jheatmap.decorators.Constant.prototype.toColor = function () {
 };
 
 /**
+ * String to color decorator. The color is calculated from the ASCII code of the String
+ */
+jheatmap.decorators.StringColor = function (options) {
+    options = options || {};
+}
+
+jheatmap.decorators.StringColor.prototype.toColor = function (value) {
+    var color = [0,0,0];
+
+    value = value.toUpperCase();
+
+    var iterations = 0;
+    for (var i=0; i < value.length; i=i+3 ) {
+        color[0] += ((value.charCodeAt(i) || 65) - 48) * 7;
+        color[1] += ((value.charCodeAt(i+1) || 65) - 48) * 7;
+        color[2] += ((value.charCodeAt(i+2) || 65) - 48) * 7;
+        iterations++;
+    }
+
+    color[0] = Math.round( color[0] / iterations );
+    color[1] = Math.round( color[1] / iterations );
+    color[2] = Math.round( color[2] / iterations );
+
+    return (new jheatmap.utils.RGBColor(color)).toRGB();
+
+}
+
+
+/**
  * Categorical decorator.
  *
  * @example
@@ -357,10 +386,43 @@ jheatmap.aggregators.Addition = function () {
 jheatmap.aggregators.Addition.prototype.acumulate = function (values) {
     var sum = 0;
     for (var i = 0; i < values.length; i++) {
-        sum += values[i];
+        var value = values[i];
+        if (value && !isNaN(value)) {
+            sum += value;
+        }
     }
     return sum;
 };
+
+/**
+ * Average aggregator.
+ *
+ * @example
+ * new jheatmap.aggregators.Median({ maxValue: 4 });
+ *
+ */
+jheatmap.aggregators.Average = function (options) {
+    options = options || {};
+}
+
+/**
+ * Acumulates all the values
+ * @param {Array}   values  The values to acumulate
+ */
+jheatmap.aggregators.Average.prototype.acumulate = function (values) {
+    var avg = 0;
+    var count = 0;
+    for (var i = 0; i < values.length; i++) {
+        var value = values[i];
+
+        if (value && !isNaN(value)) {
+            avg += value;
+            count++;
+        }
+    }
+    return (count==0 ? -10 : (avg/count));
+};
+
 
 /**
  * Median aggregator.
@@ -881,6 +943,14 @@ jheatmap.Heatmap = function () {
                 var v_a = heatmap.rows.values[o_a][heatmap.rows.sort.field].toLowerCase();
                 var v_b = heatmap.rows.values[o_b][heatmap.rows.sort.field].toLowerCase();
                 var val = (heatmap.rows.sort.asc ? 1 : -1);
+
+                if (!isNaN(v_a)) {
+                    v_a = parseFloat(v_a);
+                    v_b = parseFloat(v_b);
+                    o_a = parseFloat(o_a);
+                    o_b = parseFloat(o_b);
+                }
+
                 return (v_a == v_b) ? 0 : (v_a > v_b ? val : -val);
             });
         } else if (this.rows.sort.type == "value") {
@@ -933,6 +1003,13 @@ jheatmap.Heatmap = function () {
             this.cols.order.sort(function (o_a, o_b) {
                 var v_a = heatmap.cols.values[o_a][heatmap.cols.sort.field].toLowerCase();
                 var v_b = heatmap.cols.values[o_b][heatmap.cols.sort.field].toLowerCase();
+
+                if (!isNaN(v_a)) {
+                    v_a = parseFloat(v_a);
+                    v_b = parseFloat(v_b);
+                    o_a = parseFloat(o_a);
+                    o_b = parseFloat(o_b);
+                }
                 var val = (heatmap.cols.sort.asc ? 1 : -1);
                 return (v_a == v_b) ? 0 : ((v_a > v_b) ? val : -val);
             });
@@ -2246,8 +2323,6 @@ var console = console || {"log":function () {
         init:function (options) {
             var obj = $(this);
 
-            data.paint(obj);
-
             obj.ajaxStop(function () {
                 if (!data.sync) {
 
@@ -2270,8 +2345,20 @@ var console = console || {"log":function () {
                                 }
                             } else {
                                 rowKey = 0;
-                                valuesRowKey = 1;
-                                data.rows.header = [ data.cells.header[ valuesRowKey ] ];
+
+                                if (options.data.rows_annotations != undefined) {
+                                    var rowAnn = options.data.rows_annotations;
+
+                                    valuesRowKey = rowAnn[0];
+                                    data.rows.header = [];
+
+                                    for (var i = 0; i < rowAnn.length; i++) {
+                                        data.rows.header.push(data.cells.header[rowAnn[i]]);
+                                    }
+                                } else {
+                                    valuesRowKey = 1;
+                                    data.rows.header = [ data.cells.header[ valuesRowKey ] ];
+                                }
                             }
 
                             // Try to deduce with column is the column primary
@@ -2289,39 +2376,77 @@ var console = console || {"log":function () {
                                 }
                             } else {
                                 colKey = 0;
-                                valuesColKey = 0;
-                                data.cols.header = [ data.cells.header[ valuesColKey ]];
+
+                                if (options.data.cols_annotations != undefined) {
+                                    var colAnn = options.data.cols_annotations;
+
+                                    valuesColKey = colAnn[0];
+                                    data.cols.header = [];
+
+                                    for (var i = 0; i < colAnn.length; i++) {
+                                        data.cols.header.push(data.cells.header[colAnn[i]]);
+                                    }
+                                } else {
+                                    valuesColKey = 0;
+                                    data.cols.header = [ data.cells.header[ valuesColKey ]];
+                                }
                             }
 
                             // Build hashes
                             var rowHash = {};
-                            if (options.data.rows != undefined) {
+                            var colHash = {};
+
+                            if (options.data.rows != undefined && options.data.cols != undefined) {
+
                                 for (var i = 0; i < data.rows.values.length; i++) {
                                     rowHash[(data.rows.values[i][rowKey]).toString()] = i;
                                 }
-                            } else {
-                                for (var i = 0; i < data.cells.values.length; i++) {
-                                    var value = data.cells.values[i][valuesRowKey];
-                                    if (rowHash[(value).toString()] == undefined) {
-                                        rowHash[(value).toString()] = data.rows.values.length;
-                                        data.rows.values[data.rows.values.length] = [ value ];
-                                    }
-                                }
-                            }
 
-                            var colHash = {};
-                            if (options.data.cols != undefined) {
                                 for (var i = 0; i < data.cols.values.length; i++) {
                                     colHash[(data.cols.values[i][colKey]).toString()] = i;
                                 }
+
                             } else {
+                                console.log((new Date().getTime()) + " Building columns and rows hashes...");
                                 for (var i = 0; i < data.cells.values.length; i++) {
-                                    var value = data.cells.values[i][valuesColKey];
-                                    if (colHash[(value).toString()] == undefined) {
-                                        colHash[(value).toString()] = data.cols.values.length;
-                                        data.cols.values[data.cols.values.length] = [ value ];
+                                    var values = data.cells.values[i];
+
+                                    if (values != null) {
+                                        var rowValues;
+                                        if (options.data.rows_annotations != undefined) {
+                                            rowValues = options.data.rows_annotations;
+                                        } else {
+                                            rowValues = [ valuesRowKey ];
+                                        }
+                                        if (rowHash[(values[valuesRowKey]).toString()] == undefined) {
+
+                                            var pos = data.rows.values.length;
+                                            rowHash[(values[valuesRowKey]).toString()] = pos;
+                                            data.rows.values[pos] = [];
+
+                                            for (var r = 0; r < rowValues.length; r++) {
+                                                data.rows.values[pos][r] = values[rowValues[r]];
+                                            }
+                                        }
+
+                                        var colValues;
+                                        if (options.data.cols_annotations != undefined) {
+                                            colValues = options.data.cols_annotations;
+                                        } else {
+                                            colValues = [ valuesColKey ];
+                                        }
+                                        if (colHash[(values[valuesColKey]).toString()] == undefined) {
+                                            var pos = data.cols.values.length;
+                                            colHash[(values[valuesColKey]).toString()] = pos;
+                                            data.cols.values[pos] = [];
+
+                                            for (var c = 0; c < colValues.length; c++) {
+                                                data.cols.values[pos][c] = values[colValues[c]];
+                                            }
+                                        }
                                     }
                                 }
+                                console.log((new Date().getTime()) + " Hashes ready");
                             }
 
                             // Create a null matrix
@@ -2331,6 +2456,8 @@ var console = console || {"log":function () {
                             }
 
                             var cl = data.cols.values.length;
+
+                            console.log((new Date().getTime()) + " Loading cell values...");
                             for (var i = 0; i < data.cells.values.length; i++) {
 
                                 var value = data.cells.values[i];
@@ -2344,6 +2471,7 @@ var console = console || {"log":function () {
                                     cellValues[pos] = value;
                                 }
                             }
+                            console.log((new Date().getTime()) + " Cells ready");
 
                             delete data.cells.values;
                             data.cells.values = cellValues;
@@ -2378,7 +2506,9 @@ var console = console || {"log":function () {
                         options.init.call(this, data);
 
                         // Paint the heatmap
+                        //console.log((new Date().getTime()) + " Painting the heatmap...")
                         data.paint(obj);
+                        //console.log((new Date().getTime()) + " Heatmap ready");
                         data.sync = true;
 
                     });
@@ -2388,7 +2518,7 @@ var console = console || {"log":function () {
 
 
             // Load all the data files on init
-            data.loading( function() {
+            data.loading(function () {
                 methods['load'].call(this, data, options);
             });
 
