@@ -111,6 +111,7 @@ var console = console || {"log":function () {
 
                                     for (var i = 0; i < rowAnn.length; i++) {
                                         data.rows.header.push(data.cells.header[rowAnn[i]]);
+                                        data.cells.header[rowAnn[i]] = undefined;
                                     }
                                 } else {
                                     valuesRowKey = 1;
@@ -122,6 +123,7 @@ var console = console || {"log":function () {
                             // key.
                             var colKey;
                             var valuesColKey;
+
                             if (options.data.cols != undefined) {
                                 for (var i = 0; i < data.cols.header.length; i++) {
                                     if ((valuesColKey = $.inArray(data.cols.header[i], data.cells.header)) > -1) {
@@ -142,7 +144,9 @@ var console = console || {"log":function () {
 
                                     for (var i = 0; i < colAnn.length; i++) {
                                         data.cols.header.push(data.cells.header[colAnn[i]]);
+                                        data.cells.header[colAnn[i]] = undefined;
                                     }
+
                                 } else {
                                     valuesColKey = 0;
                                     data.cols.header = [ data.cells.header[ valuesColKey ]];
@@ -257,15 +261,14 @@ var console = console || {"log":function () {
                         }
 
                         // Reset orders
-                        data.init();
+                        data.init(obj);
 
                         // Call init function
                         options.init.call(this, data);
 
                         // Paint the heatmap
-                        //console.log((new Date().getTime()) + " Painting the heatmap...")
-                        data.paint(obj);
-                        //console.log((new Date().getTime()) + " Heatmap ready");
+                        data.build();
+                        data.paint();
                         data.sync = true;
 
                     });

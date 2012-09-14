@@ -111,7 +111,9 @@ jheatmap.aggregators.PValue.prototype.acumulate = function (values) {
     var sum = 0;
     for (var i = 0; i < values.length; i++) {
         if (values[i] && !isNaN(values[i])) {
-            sum += ((values[i] >= this.cutoff) ? 0 : ((this.cutoff - values[i]) / this.cutoff));
+            var value = parseFloat(values[i]);
+            sum += ((value >= this.cutoff) ? 0 : ((this.cutoff - value) / this.cutoff));
+
         }
     }
     return sum;
