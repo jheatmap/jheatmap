@@ -995,7 +995,7 @@ jheatmap.Heatmap = function () {
             for (var r = 0; r < this.rows.order.length; r++) {
                 var values = [];
                 for (var i = 0; i < this.rows.sort.item.length; i++) {
-                    var pos = this.rows.order[r] * cl + this.cols.order[this.rows.sort.item[i]];
+                    var pos = this.rows.order[r] * cl + this.rows.sort.item[i];
                     var value = this.cells.values[pos];
                     if (value != null) {
                         values.push(value[this.rows.sort.field]);
@@ -1022,12 +1022,20 @@ jheatmap.Heatmap = function () {
                 var v_a = (value_a == null ? null : parseFloat(value_a[heatmap.rows.sort.field]));
                 var v_b = (value_b == null ? null : parseFloat(value_b[heatmap.rows.sort.field]));
 
-                if (v_a == null) {
+                if (isNaN(v_a) && v_b == null) {
+                    return -1;
+                }
+
+                if (isNaN(v_b) && v_a == null) {
                     return 1;
                 }
 
-                if (v_b == null) {
-                    return 0;
+                if (v_a == null || isNaN(v_a)) {
+                    return 1;
+                }
+
+                if (v_b == null || isNaN(v_b)) {
+                    return -1;
                 }
 
                 var val = (heatmap.rows.sort.asc ? 1 : -1);
@@ -1062,7 +1070,6 @@ jheatmap.Heatmap = function () {
             var cl = this.cols.values.length;
 
             var cols = this.cols.order;
-            var rows = this.rows.order;
 
             if (this.cols.sort.item == undefined) {
                 this.cols.sort.item = this.rows.order;
@@ -1070,7 +1077,7 @@ jheatmap.Heatmap = function () {
             for (var c = 0; c < cols.length; c++) {
                 var values = [];
                 for (var i = 0; i < this.cols.sort.item.length; i++) {
-                    var pos = rows[this.cols.sort.item[i]] * cl + cols[c];
+                    var pos = this.cols.sort.item[i] * cl + cols[c];
                     var value = this.cells.values[pos];
                     if (value != null) {
                         values.push(value[this.cols.sort.field]);
@@ -1095,15 +1102,25 @@ jheatmap.Heatmap = function () {
                 var v_a = (value_a == null ? null : parseFloat(value_a[heatmap.cols.sort.field]));
                 var v_b = (value_b == null ? null : parseFloat(value_b[heatmap.cols.sort.field]));
 
-                if (v_a == null) {
-                    return 1;
-                };
 
-                if (v_b == null) {
-                    return 0;
-                };
+                if (isNaN(v_a) && v_b == null) {
+                    return -1;
+                }
+
+                if (isNaN(v_b) && v_a == null) {
+                    return 1;
+                }
+
+                if (v_a == null || isNaN(v_a)) {
+                    return 1;
+                }
+
+                if (v_b == null || isNaN(v_b)) {
+                    return -1;
+                }
 
                 var val = (heatmap.cols.sort.asc ? 1 : -1);
+
                 return (v_a == v_b) ? 0 : ((v_a > v_b) ? val : -val);
             });
         }
@@ -1682,8 +1699,8 @@ jheatmap.Heatmap = function () {
             "<h3>Keys help</h3></div>" +
             "<div class='modal-body'>" +
             "<dl class='dl-horizontal'>" +
-            "<dt>Supr</dt><dd>Hide selected rows/columns</dd>" +
-            "<dt>Insert</dt><dd>Show hidden rows/columns</dd>" +
+            "<dt>H</dt><dd>Hide selected rows/columns</dd>" +
+            "<dt>S</dt><dd>Show hidden rows/columns</dd>" +
             "</dl>" +
             "</div>" +
             "<div class='modal-footer'>" +
@@ -2139,8 +2156,8 @@ jheatmap.Heatmap = function () {
 
     this.onRowsKeyPress = function(e) {
 
-        // Supr
-        if (e.keyCode == 46) {
+        // 'H' or 'h'
+        if (e.charCode == 72 || e.charCode == 104) {
             var heatmap = this;
             if (heatmap.rows.selected.length > 0) {
                 heatmap.rows.order = $.grep(heatmap.rows.order, function (value) {
@@ -2150,8 +2167,8 @@ jheatmap.Heatmap = function () {
             }
         }
 
-        // Insert
-        if (e.keyCode == 45) {
+        // 'S' or 's'
+        if (e.keyCode == 83 || e.charCode == 115) {
             var heatmap = this;
             heatmap.rows.order = [];
             for (var c = 0; c < heatmap.rows.values.length; c++) {
@@ -2290,8 +2307,8 @@ jheatmap.Heatmap = function () {
 
     this.onColsKeyPress = function(e) {
 
-        // Supr
-        if (e.keyCode == 46) {
+        // 'H' or 'h'
+        if (e.charCode == 72 || e.charCode == 104) {
             var heatmap = this;
             if (heatmap.cols.selected.length > 0) {
                 heatmap.cols.order = $.grep(heatmap.cols.order, function (value) {
@@ -2301,8 +2318,8 @@ jheatmap.Heatmap = function () {
             }
         }
 
-        // Insert
-        if (e.keyCode == 45) {
+        // 'S' or 's'
+        if (e.keyCode == 83 || e.charCode == 115) {
             var heatmap = this;
             heatmap.cols.order = [];
             for (var c = 0; c < heatmap.cols.values.length; c++) {
@@ -2356,16 +2373,16 @@ var console = console || {"log":function () {
         return (this.match("^" + str) == str);
     };
 
-    var data = new jheatmap.Heatmap();
+    var data;
 
     var methods = {
 
         // Load one file.
-        readfile:function (csvFile, sep, result, parse) {
+        readfile:function (csvFile, sep, result, parse, options, obj) {
             $.ajax({
                 url:csvFile,
-                success:function (data) {
-                    var lines = data.replace('\r', '').split('\n');
+                success:function (file) {
+                    var lines = file.replace('\r', '').split('\n');
                     $.each(lines, function (lineCount, line) {
                         if (line.length > 0 && !line.startsWith("#")) {
                             if (lineCount == 0) {
@@ -2384,25 +2401,217 @@ var console = console || {"log":function () {
                             }
                         }
                     });
+                    if (options != undefined) {
+
+                        data.loading(function () {
+
+                            // Two columns matrix format
+                            if (options.data.type == "tdm") {
+
+                                var cellValues = [];
+
+                                // Try to deduce with column is the row primary key.
+                                var rowKey;
+                                var valuesRowKey;
+                                if (options.data.rows != undefined) {
+                                    for (var i = 0; i < data.rows.header.length; i++) {
+                                        if ((valuesRowKey = $.inArray(data.rows.header[i], data.cells.header)) > -1) {
+                                            rowKey = i;
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    rowKey = 0;
+
+                                    if (options.data.rows_annotations != undefined) {
+                                        var rowAnn = options.data.rows_annotations;
+
+                                        valuesRowKey = rowAnn[0];
+                                        data.rows.header = [];
+
+                                        for (var i = 0; i < rowAnn.length; i++) {
+                                            data.rows.header.push(data.cells.header[rowAnn[i]]);
+                                            data.cells.header[rowAnn[i]] = undefined;
+                                        }
+                                    } else {
+                                        valuesRowKey = 1;
+                                        data.rows.header = [ data.cells.header[ valuesRowKey ] ];
+                                    }
+                                }
+
+                                // Try to deduce with column is the column primary
+                                // key.
+                                var colKey;
+                                var valuesColKey;
+
+                                if (options.data.cols != undefined) {
+                                    for (var i = 0; i < data.cols.header.length; i++) {
+                                        if ((valuesColKey = $.inArray(data.cols.header[i], data.cells.header)) > -1) {
+                                            if (valuesColKey != valuesRowKey) {
+                                                colKey = i;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    colKey = 0;
+
+                                    if (options.data.cols_annotations != undefined) {
+                                        var colAnn = options.data.cols_annotations;
+
+                                        valuesColKey = colAnn[0];
+                                        data.cols.header = [];
+
+                                        for (var i = 0; i < colAnn.length; i++) {
+                                            data.cols.header.push(data.cells.header[colAnn[i]]);
+                                            data.cells.header[colAnn[i]] = undefined;
+                                        }
+
+                                    } else {
+                                        valuesColKey = 0;
+                                        data.cols.header = [ data.cells.header[ valuesColKey ]];
+                                    }
+                                }
+
+                                // Build hashes
+                                var rowHash = {};
+                                var colHash = {};
+
+                                if (options.data.rows != undefined && options.data.cols != undefined) {
+
+                                    for (var i = 0; i < data.rows.values.length; i++) {
+                                        rowHash[(data.rows.values[i][rowKey]).toString()] = i;
+                                    }
+
+                                    for (var i = 0; i < data.cols.values.length; i++) {
+                                        colHash[(data.cols.values[i][colKey]).toString()] = i;
+                                    }
+
+                                } else {
+                                    console.log((new Date().getTime()) + " Building columns and rows hashes...");
+                                    for (var i = 0; i < data.cells.values.length; i++) {
+                                        var values = data.cells.values[i];
+
+                                        if (values != null) {
+                                            var rowValues;
+                                            if (options.data.rows_annotations != undefined) {
+                                                rowValues = options.data.rows_annotations;
+                                            } else {
+                                                rowValues = [ valuesRowKey ];
+                                            }
+                                            if (rowHash[(values[valuesRowKey]).toString()] == undefined) {
+
+                                                var pos = data.rows.values.length;
+                                                rowHash[(values[valuesRowKey]).toString()] = pos;
+                                                data.rows.values[pos] = [];
+
+                                                for (var r = 0; r < rowValues.length; r++) {
+                                                    data.rows.values[pos][r] = values[rowValues[r]];
+                                                }
+                                            }
+
+                                            var colValues;
+                                            if (options.data.cols_annotations != undefined) {
+                                                colValues = options.data.cols_annotations;
+                                            } else {
+                                                colValues = [ valuesColKey ];
+                                            }
+                                            if (colHash[(values[valuesColKey]).toString()] == undefined) {
+                                                var pos = data.cols.values.length;
+                                                colHash[(values[valuesColKey]).toString()] = pos;
+                                                data.cols.values[pos] = [];
+
+                                                for (var c = 0; c < colValues.length; c++) {
+                                                    data.cols.values[pos][c] = values[colValues[c]];
+                                                }
+                                            }
+                                        }
+                                    }
+                                    console.log((new Date().getTime()) + " Hashes ready");
+                                }
+
+                                // Create a null matrix
+                                var totalPos = data.rows.values.length * data.cols.values.length;
+                                for (var pos = 0; pos < totalPos; pos++) {
+                                    cellValues[pos] = null;
+                                }
+
+                                var cl = data.cols.values.length;
+
+                                console.log((new Date().getTime()) + " Loading cell values...");
+                                for (var i = 0; i < data.cells.values.length; i++) {
+
+                                    var value = data.cells.values[i];
+
+                                    if (value != null) {
+                                        var rowIndex = rowHash[value[valuesRowKey]];
+                                        var colIndex = colHash[value[valuesColKey]];
+
+                                        var pos = rowIndex * cl + colIndex;
+
+                                        cellValues[pos] = value;
+                                    }
+                                }
+                                console.log((new Date().getTime()) + " Cells ready");
+
+                                delete data.cells.values;
+                                data.cells.values = cellValues;
+
+                                // Continuous data matrix format
+                            } else if (options.data.type == "cdm") {
+
+                                data.cols.header = [ "Column" ];
+                                for (var i = 0; i < data.cells.header.length; i++) {
+                                    data.cols.values[data.cols.values.length] = [ data.cells.header[i] ];
+                                }
+
+                                var cellValues = [];
+                                data.rows.header = [ "Row" ];
+                                for (var row = 0; row < data.cells.values.length; row++) {
+                                    data.rows.values[data.rows.values.length] = [ data.cells.values[row][0] ];
+                                    for (var col = 0; col < data.cols.values.length; col++) {
+                                        cellValues[cellValues.length] = [ data.cells.values[row][col + 1] ];
+                                    }
+                                }
+
+                                delete data.cells.header;
+                                delete data.cells.values;
+                                data.cells.header = [ "Value" ];
+                                data.cells.values = cellValues;
+                            }
+
+                            // Reset orders
+                            data.init(obj);
+
+                            // Call init function
+                            options.init.call(this, data);
+
+                            // Paint the heatmap
+                            data.build();
+                            data.paint();
+                            data.sync = true;
+
+                        });
+                    };
+
                 },
                 dataType:"text"
             });
         },
 
         // Load all the data files.
-        load:function (data, options) {
-            data.sync = false;
+        load:function (data, options, obj) {
 
             if (options.data.rows != undefined) {
-                methods['readfile'].call(this, options.data.rows, options.separator, data.rows, false);
+                methods['readfile'].call(this, options.data.rows, options.separator, data.rows, false, options, obj);
             }
 
             if (options.data.cols != undefined) {
-                methods['readfile'].call(this, options.data.cols, options.separator, data.cols, false);
+                methods['readfile'].call(this, options.data.cols, options.separator, data.cols, false, options, obj);
             }
 
             if (options.data.values != undefined) {
-                methods['readfile'].call(this, options.data.values, options.separator, data.cells, false);
+                methods['readfile'].call(this, options.data.values, options.separator, data.cells, false, options, obj);
             }
 
         },
@@ -2410,206 +2619,9 @@ var console = console || {"log":function () {
         init:function (options) {
             var obj = $(this);
 
-            obj.ajaxStop(function () {
-                if (!data.sync) {
-
-                    data.loading(function () {
-
-                        // Two columns matrix format
-                        if (options.data.type == "tdm") {
-
-                            var cellValues = [];
-
-                            // Try to deduce with column is the row primary key.
-                            var rowKey;
-                            var valuesRowKey;
-                            if (options.data.rows != undefined) {
-                                for (var i = 0; i < data.rows.header.length; i++) {
-                                    if ((valuesRowKey = $.inArray(data.rows.header[i], data.cells.header)) > -1) {
-                                        rowKey = i;
-                                        break;
-                                    }
-                                }
-                            } else {
-                                rowKey = 0;
-
-                                if (options.data.rows_annotations != undefined) {
-                                    var rowAnn = options.data.rows_annotations;
-
-                                    valuesRowKey = rowAnn[0];
-                                    data.rows.header = [];
-
-                                    for (var i = 0; i < rowAnn.length; i++) {
-                                        data.rows.header.push(data.cells.header[rowAnn[i]]);
-                                        data.cells.header[rowAnn[i]] = undefined;
-                                    }
-                                } else {
-                                    valuesRowKey = 1;
-                                    data.rows.header = [ data.cells.header[ valuesRowKey ] ];
-                                }
-                            }
-
-                            // Try to deduce with column is the column primary
-                            // key.
-                            var colKey;
-                            var valuesColKey;
-
-                            if (options.data.cols != undefined) {
-                                for (var i = 0; i < data.cols.header.length; i++) {
-                                    if ((valuesColKey = $.inArray(data.cols.header[i], data.cells.header)) > -1) {
-                                        if (valuesColKey != valuesRowKey) {
-                                            colKey = i;
-                                            break;
-                                        }
-                                    }
-                                }
-                            } else {
-                                colKey = 0;
-
-                                if (options.data.cols_annotations != undefined) {
-                                    var colAnn = options.data.cols_annotations;
-
-                                    valuesColKey = colAnn[0];
-                                    data.cols.header = [];
-
-                                    for (var i = 0; i < colAnn.length; i++) {
-                                        data.cols.header.push(data.cells.header[colAnn[i]]);
-                                        data.cells.header[colAnn[i]] = undefined;
-                                    }
-
-                                } else {
-                                    valuesColKey = 0;
-                                    data.cols.header = [ data.cells.header[ valuesColKey ]];
-                                }
-                            }
-
-                            // Build hashes
-                            var rowHash = {};
-                            var colHash = {};
-
-                            if (options.data.rows != undefined && options.data.cols != undefined) {
-
-                                for (var i = 0; i < data.rows.values.length; i++) {
-                                    rowHash[(data.rows.values[i][rowKey]).toString()] = i;
-                                }
-
-                                for (var i = 0; i < data.cols.values.length; i++) {
-                                    colHash[(data.cols.values[i][colKey]).toString()] = i;
-                                }
-
-                            } else {
-                                console.log((new Date().getTime()) + " Building columns and rows hashes...");
-                                for (var i = 0; i < data.cells.values.length; i++) {
-                                    var values = data.cells.values[i];
-
-                                    if (values != null) {
-                                        var rowValues;
-                                        if (options.data.rows_annotations != undefined) {
-                                            rowValues = options.data.rows_annotations;
-                                        } else {
-                                            rowValues = [ valuesRowKey ];
-                                        }
-                                        if (rowHash[(values[valuesRowKey]).toString()] == undefined) {
-
-                                            var pos = data.rows.values.length;
-                                            rowHash[(values[valuesRowKey]).toString()] = pos;
-                                            data.rows.values[pos] = [];
-
-                                            for (var r = 0; r < rowValues.length; r++) {
-                                                data.rows.values[pos][r] = values[rowValues[r]];
-                                            }
-                                        }
-
-                                        var colValues;
-                                        if (options.data.cols_annotations != undefined) {
-                                            colValues = options.data.cols_annotations;
-                                        } else {
-                                            colValues = [ valuesColKey ];
-                                        }
-                                        if (colHash[(values[valuesColKey]).toString()] == undefined) {
-                                            var pos = data.cols.values.length;
-                                            colHash[(values[valuesColKey]).toString()] = pos;
-                                            data.cols.values[pos] = [];
-
-                                            for (var c = 0; c < colValues.length; c++) {
-                                                data.cols.values[pos][c] = values[colValues[c]];
-                                            }
-                                        }
-                                    }
-                                }
-                                console.log((new Date().getTime()) + " Hashes ready");
-                            }
-
-                            // Create a null matrix
-                            var totalPos = data.rows.values.length * data.cols.values.length;
-                            for (var pos = 0; pos < totalPos; pos++) {
-                                cellValues[pos] = null;
-                            }
-
-                            var cl = data.cols.values.length;
-
-                            console.log((new Date().getTime()) + " Loading cell values...");
-                            for (var i = 0; i < data.cells.values.length; i++) {
-
-                                var value = data.cells.values[i];
-
-                                if (value != null) {
-                                    var rowIndex = rowHash[value[valuesRowKey]];
-                                    var colIndex = colHash[value[valuesColKey]];
-
-                                    var pos = rowIndex * cl + colIndex;
-
-                                    cellValues[pos] = value;
-                                }
-                            }
-                            console.log((new Date().getTime()) + " Cells ready");
-
-                            delete data.cells.values;
-                            data.cells.values = cellValues;
-
-                            // Continuous data matrix format
-                        } else if (options.data.type == "cdm") {
-
-                            data.cols.header = [ "Column" ];
-                            for (var i = 0; i < data.cells.header.length; i++) {
-                                data.cols.values[data.cols.values.length] = [ data.cells.header[i] ];
-                            }
-
-                            var cellValues = [];
-                            data.rows.header = [ "Row" ];
-                            for (var row = 0; row < data.cells.values.length; row++) {
-                                data.rows.values[data.rows.values.length] = [ data.cells.values[row][0] ];
-                                for (var col = 0; col < data.cols.values.length; col++) {
-                                    cellValues[cellValues.length] = [ data.cells.values[row][col + 1] ];
-                                }
-                            }
-
-                            delete data.cells.header;
-                            delete data.cells.values;
-                            data.cells.header = [ "Value" ];
-                            data.cells.values = cellValues;
-                        }
-
-                        // Reset orders
-                        data.init(obj);
-
-                        // Call init function
-                        options.init.call(this, data);
-
-                        // Paint the heatmap
-                        data.build();
-                        data.paint();
-                        data.sync = true;
-
-                    });
-                }
-
-            });
-
-
             // Load all the data files on init
             data.loading(function () {
-                methods['load'].call(this, data, options);
+                methods['load'].call(this, data, options, obj);
             });
 
         }
@@ -2630,6 +2642,9 @@ var console = console || {"log":function () {
             }
         };
         var options = $.extend(defaults, options);
+        data = new jheatmap.Heatmap();
+        data.sync = true;
+
         return this.each(methods['init'].call(this, options));
     };
 

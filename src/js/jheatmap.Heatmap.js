@@ -434,7 +434,7 @@ jheatmap.Heatmap = function () {
             for (var r = 0; r < this.rows.order.length; r++) {
                 var values = [];
                 for (var i = 0; i < this.rows.sort.item.length; i++) {
-                    var pos = this.rows.order[r] * cl + this.cols.order[this.rows.sort.item[i]];
+                    var pos = this.rows.order[r] * cl + this.rows.sort.item[i];
                     var value = this.cells.values[pos];
                     if (value != null) {
                         values.push(value[this.rows.sort.field]);
@@ -461,12 +461,20 @@ jheatmap.Heatmap = function () {
                 var v_a = (value_a == null ? null : parseFloat(value_a[heatmap.rows.sort.field]));
                 var v_b = (value_b == null ? null : parseFloat(value_b[heatmap.rows.sort.field]));
 
-                if (v_a == null) {
+                if (isNaN(v_a) && v_b == null) {
+                    return -1;
+                }
+
+                if (isNaN(v_b) && v_a == null) {
                     return 1;
                 }
 
-                if (v_b == null) {
-                    return 0;
+                if (v_a == null || isNaN(v_a)) {
+                    return 1;
+                }
+
+                if (v_b == null || isNaN(v_b)) {
+                    return -1;
                 }
 
                 var val = (heatmap.rows.sort.asc ? 1 : -1);
@@ -501,7 +509,6 @@ jheatmap.Heatmap = function () {
             var cl = this.cols.values.length;
 
             var cols = this.cols.order;
-            var rows = this.rows.order;
 
             if (this.cols.sort.item == undefined) {
                 this.cols.sort.item = this.rows.order;
@@ -509,7 +516,7 @@ jheatmap.Heatmap = function () {
             for (var c = 0; c < cols.length; c++) {
                 var values = [];
                 for (var i = 0; i < this.cols.sort.item.length; i++) {
-                    var pos = rows[this.cols.sort.item[i]] * cl + cols[c];
+                    var pos = this.cols.sort.item[i] * cl + cols[c];
                     var value = this.cells.values[pos];
                     if (value != null) {
                         values.push(value[this.cols.sort.field]);
@@ -534,15 +541,25 @@ jheatmap.Heatmap = function () {
                 var v_a = (value_a == null ? null : parseFloat(value_a[heatmap.cols.sort.field]));
                 var v_b = (value_b == null ? null : parseFloat(value_b[heatmap.cols.sort.field]));
 
-                if (v_a == null) {
-                    return 1;
-                };
 
-                if (v_b == null) {
-                    return 0;
-                };
+                if (isNaN(v_a) && v_b == null) {
+                    return -1;
+                }
+
+                if (isNaN(v_b) && v_a == null) {
+                    return 1;
+                }
+
+                if (v_a == null || isNaN(v_a)) {
+                    return 1;
+                }
+
+                if (v_b == null || isNaN(v_b)) {
+                    return -1;
+                }
 
                 var val = (heatmap.cols.sort.asc ? 1 : -1);
+
                 return (v_a == v_b) ? 0 : ((v_a > v_b) ? val : -val);
             });
         }
@@ -1121,8 +1138,8 @@ jheatmap.Heatmap = function () {
             "<h3>Keys help</h3></div>" +
             "<div class='modal-body'>" +
             "<dl class='dl-horizontal'>" +
-            "<dt>Supr</dt><dd>Hide selected rows/columns</dd>" +
-            "<dt>Insert</dt><dd>Show hidden rows/columns</dd>" +
+            "<dt>H</dt><dd>Hide selected rows/columns</dd>" +
+            "<dt>S</dt><dd>Show hidden rows/columns</dd>" +
             "</dl>" +
             "</div>" +
             "<div class='modal-footer'>" +
@@ -1578,8 +1595,8 @@ jheatmap.Heatmap = function () {
 
     this.onRowsKeyPress = function(e) {
 
-        // Supr
-        if (e.keyCode == 46) {
+        // 'H' or 'h'
+        if (e.charCode == 72 || e.charCode == 104) {
             var heatmap = this;
             if (heatmap.rows.selected.length > 0) {
                 heatmap.rows.order = $.grep(heatmap.rows.order, function (value) {
@@ -1589,8 +1606,8 @@ jheatmap.Heatmap = function () {
             }
         }
 
-        // Insert
-        if (e.keyCode == 45) {
+        // 'S' or 's'
+        if (e.keyCode == 83 || e.charCode == 115) {
             var heatmap = this;
             heatmap.rows.order = [];
             for (var c = 0; c < heatmap.rows.values.length; c++) {
@@ -1729,8 +1746,8 @@ jheatmap.Heatmap = function () {
 
     this.onColsKeyPress = function(e) {
 
-        // Supr
-        if (e.keyCode == 46) {
+        // 'H' or 'h'
+        if (e.charCode == 72 || e.charCode == 104) {
             var heatmap = this;
             if (heatmap.cols.selected.length > 0) {
                 heatmap.cols.order = $.grep(heatmap.cols.order, function (value) {
@@ -1740,8 +1757,8 @@ jheatmap.Heatmap = function () {
             }
         }
 
-        // Insert
-        if (e.keyCode == 45) {
+        // 'S' or 's'
+        if (e.keyCode == 83 || e.charCode == 115) {
             var heatmap = this;
             heatmap.cols.order = [];
             for (var c = 0; c < heatmap.cols.values.length; c++) {
