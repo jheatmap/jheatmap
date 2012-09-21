@@ -93,25 +93,40 @@ jheatmap.decorators.Categorical.prototype.toColor = function (value) {
  * Linear decorator
  *
  * @example
- * new jheatmap.decorators.Linear({ maxValue: 0.05 });
+ * new jheatmap.decorators.Linear({});
  *
  * @class
- * @param {Array}   [minColor=[255,255,255]]    Minimum color [r,g,b]
- * @param {number}  [minValue=0]                Minimum value
- * @param {Array}   [maxColor=[0,255,0]]        Maximum color [r,g,b]
- * @param {number}  [maxValue=1]                Maximum value
- * @param {Array}   [nullColor=[255,255,255]]   NaN values color [r,g,b]
- * @param {Array}   [outColor=[187,187,187]]    Color for values outside range [r,g,b]
+ * @param {Array}   [ranges=[[-2,0],[0,2]]]              All the ranges wanted starting with the most negative range upwards
+ * @param {Array}   [colors=[ [[0,0,255],[255,255,255]],
+ *                            [[255,255,255],[255,0,0]]
+ *                  ]                                    Min and max colors for each defined range that produce gradient
+ * @param {Array}   [outColor=[0,0,0]]                   A specific color if the value is out of the range bounds. If not defined by user, the min and max colors will be used.
+ * @param {Array}   [betweenColor=[187,187,187]]         A specific color if a value is between defined ranges. If not defined user it is set to black or outColor.
  *
  */
 jheatmap.decorators.Linear = function (options) {
     options = options || {};
-    this.minColor = options.minColor || [255, 255, 255];
-    this.minValue = options.minValue || 0;
-    this.maxColor = options.maxColor || [0, 255, 0];
-    this.maxValue = options.maxValue || 1;
-    this.nullColor = options.nullColor || [255, 255, 255];
-    this.outColor = options.outColor || [187, 187, 187];
+
+    this.ranges = (options.ranges == undefined ? [[-2,0],[0,2]] : options.ranges);
+    this.colors = (options.colors == undefined ? [[[0,0,255],[255,255,255]], [[255,255,255],[255,0,0]]] : options.colors);
+
+    this.nullColor = (options.nullColor == undefined ? [255, 255, 255] : options.nullColor);
+    this.outColor = (options.outColor == undefined ?  null : options.outColor);
+    this.betweenColor = (options.betweenColor == undefined) ? null : options.betweenColor;
+    if (this.betweenColor == null) {
+        this.betweenColor = (options.outColor != null) ? options.outColor : [0,0,0];
+    }
+
+    this.minValue = this.ranges.reduce(function(min, arr) {
+        return Math.min(min, arr[0]);
+    }, Infinity);
+
+    this.maxValue = this.ranges.reduce(function(max, arr) {
+        return Math.max(max, arr[1]);
+    }, -Infinity);
+
+    this.minColor = this.colors[0][0];
+    this.maxColor = this.colors[this.colors.length-1][1];
 
 };
 
@@ -127,22 +142,53 @@ jheatmap.decorators.Linear.prototype.toColor = function (value) {
     }
 
     if (value > this.maxValue || value < this.minValue) {
-        return (new jheatmap.utils.RGBColor(this.outColor)).toRGB();
+        if (this.outColor != null) {
+            return (new jheatmap.utils.RGBColor(this.outColor)).toRGB();
+        }
+        else if (value > this.maxValue) {
+            return (new jheatmap.utils.RGBColor(this.maxColor)).toRGB();
+        }
+        else {
+            return (new jheatmap.utils.RGBColor(this.minColor)).toRGB();
+        }
     }
 
-    var fact = (value - this.minValue) / (this.maxValue - this.minValue);
+    var minColor;
+    var rangeMin;
+    var maxColor;
+    var rangeMax;
+
+    var allColors = this.colors;
+
+    var lastMax;
+
+    $.each(this.ranges,function(index,range){
+        if (value >= range[0] && value <= range[1]) {
+            minColor = allColors[index][0];
+            rangeMin = range[0];
+            maxColor = allColors[index][1];
+            rangeMax = range[1];
+            return (true);
+        }
+    });
+
+    if (minColor == undefined || maxColor == undefined)  {
+        return (new jheatmap.utils.RGBColor(this.betweenColor)).toRGB();
+    }
+
+    var fact = (value - rangeMin) / (rangeMax - rangeMin);
 
     var r, g, b;
 
-    r = this.minColor[0] + Math.round(fact * (this.maxColor[0] - this.minColor[0]));
-    g = this.minColor[1] + Math.round(fact * (this.maxColor[1] - this.minColor[1]));
-    b = this.minColor[2] + Math.round(fact * (this.maxColor[2] - this.minColor[2]));
+    r = minColor[0] + Math.round(fact * (maxColor[0] - minColor[0]));
+    g = minColor[1] + Math.round(fact * (maxColor[1] - minColor[1]));
+    b = minColor[2] + Math.round(fact * (maxColor[2] - minColor[2]));
 
     return (new jheatmap.utils.RGBColor([r, g, b])).toRGB();
 };
 
 /**
- * Linear decorator
+ * Heat decorator
  *
  * @example
  * new jheatmap.decorators.Heat({ minValue: -5, midValue: 0, maxValue: 5 });
