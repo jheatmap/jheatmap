@@ -67,6 +67,8 @@ table.heatmap th.topleft {
 table.heatmap th.topleft select {
     color: #0088cc;
     font-weight: bold;
+    background-color: white;
+    border: 1px dotted #ddd;
 }
 
 table.heatmap th.topleft span {

@@ -281,6 +281,10 @@ jheatmap.decorators.Linear = function (options) {
  */
 jheatmap.decorators.Linear.prototype.toColor = function (value) {
 
+    if (isNaN(value)) {
+        return (new jheatmap.utils.RGBColor(this.nullColor)).toRGB();
+    }
+
     if (value > this.maxValue || value < this.minValue) {
         return (new jheatmap.utils.RGBColor(this.outColor)).toRGB();
     }
@@ -292,6 +296,76 @@ jheatmap.decorators.Linear.prototype.toColor = function (value) {
     r = this.minColor[0] + Math.round(fact * (this.maxColor[0] - this.minColor[0]));
     g = this.minColor[1] + Math.round(fact * (this.maxColor[1] - this.minColor[1]));
     b = this.minColor[2] + Math.round(fact * (this.maxColor[2] - this.minColor[2]));
+
+    return (new jheatmap.utils.RGBColor([r, g, b])).toRGB();
+};
+
+/**
+ * Linear decorator
+ *
+ * @example
+ * new jheatmap.decorators.Heat({ minValue: -5, midValue: 0, maxValue: 5 });
+ *
+ * @class
+ * @param {Array}   [minColor=[0,0,255]]    Minimum color [r,g,b]
+ * @param {number}  [minValue=-1]                Minimum value
+ * @param {Array}   [midColor=[255,255,0]]        Maximum color [r,g,b]
+ * @param {number}  [midValue=0]                Maximum value
+ * @param {Array}   [maxColor=[255,0,0]]        Maximum color [r,g,b]
+ * @param {number}  [maxValue=1]                Maximum value
+ * @param {Array}   [nullColor=[187,187,187]]   NaN values color [r,g,b]
+ *
+ */
+jheatmap.decorators.Heat = function (options) {
+    options = options || {};
+    this.minColor = (options.minColor == undefined ? [0, 0, 255] : options.minColor);
+    this.minValue = (options.minValue == undefined ? -1 : options.minValue);
+    this.midColor = (options.midColor == undefined ? [255, 255, 0]: options.midColor);
+    this.midValue = (options.midValue == undefined ? 0 : options.midValue);
+    this.maxColor = (options.maxColor == undefined ? [255, 0, 0] : options.maxColor);
+    this.maxValue = (options.maxValue == undefined ? 1 : options.maxValue);
+    this.nullColor = (options.nullColor == undefined ? [187, 187, 187] : options.nullColor);
+};
+
+/**
+ * Convert a value to a color
+ * @param value The cell value
+ * @return The corresponding color string definition.
+ */
+jheatmap.decorators.Heat.prototype.toColor = function (value) {
+
+    if (isNaN(value)) {
+        return (new jheatmap.utils.RGBColor(this.nullColor)).toRGB();
+    }
+
+    if (value > this.maxValue) {
+        return (new jheatmap.utils.RGBColor(this.maxColor)).toRGB();
+    }
+
+    if (value < this.minValue) {
+        return (new jheatmap.utils.RGBColor(this.minColor)).toRGB();
+    }
+
+    var maxV, minV, maxC, minC;
+    if (value < this.midValue) {
+        minV = this.minValue;
+        minC = this.minColor;
+        maxV = this.midValue;
+        maxC = this.midColor;
+    } else {
+        minV = this.midValue;
+        minC = this.midColor;
+        maxV = this.maxValue;
+        maxC = this.maxColor;
+    }
+
+    var fact = (value - minV) / (maxV - minV);
+
+    var r, g, b;
+
+    r = minC[0] + Math.round(fact * (maxC[0] - minC[0]));
+    g = minC[1] + Math.round(fact * (maxC[1] - minC[1]));
+    b = minC[2] + Math.round(fact * (maxC[2] - minC[2]));
 
     return (new jheatmap.utils.RGBColor([r, g, b])).toRGB();
 };
@@ -374,7 +448,7 @@ jheatmap.decorators.PValue.prototype.toColor = function (value) {
         b = 187;
     } else {
         r = 255;
-        g = (value == 0) ? 0 : Math.round((value / this.cutoff) * 255);
+        g = (value == 0) ? 0 : Math.round((1 - (Math.log(100 - (99*(value / this.cutoff))) / 4.6052)) * 255);
         b = 0;
     }
 
@@ -1225,8 +1299,9 @@ jheatmap.Heatmap = function () {
             colCtx.save();
             colCtx.translate(Math.round(((c - this.startCol) * cz) + (cz/2)), 146)
             colCtx.rotate(Math.PI / 4);
-            if ((this.rows.sort.type == "single" && this.rows.sort.item == this.cols.order[c]) ||
-                (this.rows.sort.type == "value" && $.inArray(this.cols.order[c], this.rows.sort.item) > -1)) {
+            if ((this.rows.sort.field == this.cells.selectedValue) &&
+                ((this.rows.sort.type == "single" && this.rows.sort.item == this.cols.order[c]) ||
+                (this.rows.sort.type == "value" && $.inArray(this.cols.order[c], this.rows.sort.item) > -1))) {
                 jheatmap.utils.drawOrderSymbol(colCtx, this.rows.sort.asc);
             } else {
                 if (this.cols.zoom < 6) {
@@ -1267,8 +1342,9 @@ jheatmap.Heatmap = function () {
             rowCtx.save();
             rowCtx.translate(226, ((row - this.startRow) * rz) + (rz / 2));
             rowCtx.rotate( -Math.PI / 4);
-            if ((this.cols.sort.type == "single" && this.cols.sort.item == this.rows.order[row]) ||
-                (this.cols.sort.type == "value" && $.inArray(this.rows.order[row], this.cols.sort.item) > -1)) {
+            if ((this.cols.sort.field == this.cells.selectedValue) &&
+                ((this.cols.sort.type == "single" && this.cols.sort.item == this.rows.order[row]) ||
+                (this.cols.sort.type == "value" && $.inArray(this.rows.order[row], this.cols.sort.item) > -1))) {
                 jheatmap.utils.drawOrderSymbol(rowCtx, this.cols.sort.asc);
             } else {
                 if (this.rows.zoom < 6) {
@@ -2107,9 +2183,12 @@ jheatmap.Heatmap = function () {
             }
         }
 
+        lastRowSelected = null;
+
         this.paint();
     }
 
+    var lastRowSelected = null;
     this.onRowsMouseMove = function (e) {
 
         if (rowsMouseDown) {
@@ -2119,6 +2198,17 @@ jheatmap.Heatmap = function () {
                 var index = $.inArray(this.rows.order[row], this.rows.selected);
                 if (index == -1) {
                     this.rows.selected[this.rows.selected.length] = this.rows.order[row];
+
+                    // Select the gap
+                    if (lastRowSelected != null && Math.abs(lastRowSelected - row) > 1) {
+                        var upRow = (lastRowSelected < row ? lastRowSelected : row );
+                        var downRow = (lastRowSelected < row ? row : lastRowSelected );
+                        for (var i = upRow + 1; i < downRow; i++) {
+                            this.rows.selected[this.rows.selected.length] = this.rows.order[i];
+                        }
+                    }
+                    lastRowSelected = row;
+
                 }
             } else {
                 var diff = row - rowsShiftColumn;
@@ -2258,8 +2348,12 @@ jheatmap.Heatmap = function () {
             }
         }
 
+        lastColSelected = null;
+
         this.paint();
     }
+
+    var lastColSelected = null;
 
     this.onColsMouseMove = function (e) {
 
@@ -2270,6 +2364,16 @@ jheatmap.Heatmap = function () {
                 var index = $.inArray(this.cols.order[col], this.cols.selected);
                 if (index == -1) {
                     this.cols.selected[this.cols.selected.length] = this.cols.order[col];
+
+                    // Select the gap
+                    if (lastColSelected != null && Math.abs(lastColSelected - col) > 1) {
+                        var upCol = (lastColSelected < col ? lastColSelected : col );
+                        var downCol = (lastColSelected < col ? col : lastColSelected );
+                        for (var i = upCol + 1; i < downCol; i++) {
+                            this.cols.selected[this.cols.selected.length] = this.cols.order[i];
+                        }
+                    }
+                    lastColSelected = col;
                 }
             } else {
                 var diff = col - colsShiftColumn;

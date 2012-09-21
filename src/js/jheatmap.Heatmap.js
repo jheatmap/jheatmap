@@ -664,8 +664,9 @@ jheatmap.Heatmap = function () {
             colCtx.save();
             colCtx.translate(Math.round(((c - this.startCol) * cz) + (cz/2)), 146)
             colCtx.rotate(Math.PI / 4);
-            if ((this.rows.sort.type == "single" && this.rows.sort.item == this.cols.order[c]) ||
-                (this.rows.sort.type == "value" && $.inArray(this.cols.order[c], this.rows.sort.item) > -1)) {
+            if ((this.rows.sort.field == this.cells.selectedValue) &&
+                ((this.rows.sort.type == "single" && this.rows.sort.item == this.cols.order[c]) ||
+                (this.rows.sort.type == "value" && $.inArray(this.cols.order[c], this.rows.sort.item) > -1))) {
                 jheatmap.utils.drawOrderSymbol(colCtx, this.rows.sort.asc);
             } else {
                 if (this.cols.zoom < 6) {
@@ -706,8 +707,9 @@ jheatmap.Heatmap = function () {
             rowCtx.save();
             rowCtx.translate(226, ((row - this.startRow) * rz) + (rz / 2));
             rowCtx.rotate( -Math.PI / 4);
-            if ((this.cols.sort.type == "single" && this.cols.sort.item == this.rows.order[row]) ||
-                (this.cols.sort.type == "value" && $.inArray(this.rows.order[row], this.cols.sort.item) > -1)) {
+            if ((this.cols.sort.field == this.cells.selectedValue) &&
+                ((this.cols.sort.type == "single" && this.cols.sort.item == this.rows.order[row]) ||
+                (this.cols.sort.type == "value" && $.inArray(this.rows.order[row], this.cols.sort.item) > -1))) {
                 jheatmap.utils.drawOrderSymbol(rowCtx, this.cols.sort.asc);
             } else {
                 if (this.rows.zoom < 6) {
@@ -1546,9 +1548,12 @@ jheatmap.Heatmap = function () {
             }
         }
 
+        lastRowSelected = null;
+
         this.paint();
     }
 
+    var lastRowSelected = null;
     this.onRowsMouseMove = function (e) {
 
         if (rowsMouseDown) {
@@ -1558,6 +1563,17 @@ jheatmap.Heatmap = function () {
                 var index = $.inArray(this.rows.order[row], this.rows.selected);
                 if (index == -1) {
                     this.rows.selected[this.rows.selected.length] = this.rows.order[row];
+
+                    // Select the gap
+                    if (lastRowSelected != null && Math.abs(lastRowSelected - row) > 1) {
+                        var upRow = (lastRowSelected < row ? lastRowSelected : row );
+                        var downRow = (lastRowSelected < row ? row : lastRowSelected );
+                        for (var i = upRow + 1; i < downRow; i++) {
+                            this.rows.selected[this.rows.selected.length] = this.rows.order[i];
+                        }
+                    }
+                    lastRowSelected = row;
+
                 }
             } else {
                 var diff = row - rowsShiftColumn;
@@ -1697,8 +1713,12 @@ jheatmap.Heatmap = function () {
             }
         }
 
+        lastColSelected = null;
+
         this.paint();
     }
+
+    var lastColSelected = null;
 
     this.onColsMouseMove = function (e) {
 
@@ -1709,6 +1729,16 @@ jheatmap.Heatmap = function () {
                 var index = $.inArray(this.cols.order[col], this.cols.selected);
                 if (index == -1) {
                     this.cols.selected[this.cols.selected.length] = this.cols.order[col];
+
+                    // Select the gap
+                    if (lastColSelected != null && Math.abs(lastColSelected - col) > 1) {
+                        var upCol = (lastColSelected < col ? lastColSelected : col );
+                        var downCol = (lastColSelected < col ? col : lastColSelected );
+                        for (var i = upCol + 1; i < downCol; i++) {
+                            this.cols.selected[this.cols.selected.length] = this.cols.order[i];
+                        }
+                    }
+                    lastColSelected = col;
                 }
             } else {
                 var diff = col - colsShiftColumn;

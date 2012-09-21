@@ -62,12 +62,15 @@
             <fileset dir="." includes="src/js/jheatmap.Heatmap.js" />
             <fileset dir="." includes="src/js/jquery.jheatmap.js" />
 		</concat>
+        <copyfile src="src/js/bootstrap.min.js" dest="js/bootstrap.min.js"/>
 
 		<!-- concatenation of cascading stylesheets -->
 		<echo message="Building global cascading stylesheets" />
 		<concat destfile="css/jheatmap-${jheatmap.version}.css" force="no">
 			<fileset dir="." includes="src/css/jheatmap.css" />
 		</concat>
+        <copyfile src="src/css/bootstrap.min.css" dest="css/bootstrap.min.css"/>
+
 	</target>
 
 	<target name="yuicompressor">
