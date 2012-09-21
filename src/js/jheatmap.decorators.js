@@ -335,7 +335,7 @@ jheatmap.decorators.PValue.prototype.toColor = function (value) {
         b = 187;
     } else {
         r = 255;
-        g = (value == 0) ? 0 : Math.round((1 - (Math.log(100 - (99*(value / this.cutoff))) / 4.6052)) * 255);
+        g = (value == 0) ? 0 : Math.round((Math.log(value*(9/this.cutoff)+1)/2.3026) *255);
         b = 0;
     }
 
