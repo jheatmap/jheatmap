@@ -645,7 +645,7 @@ jheatmap.Heatmap = function () {
 
         // Column headers
         var colCtx = this.canvasCols.get()[0].getContext('2d');
-        colCtx.clearRect(0,0,colCtx.canvas.width,colCtx.canvas.height)
+        colCtx.clearRect(0,0,colCtx.canvas.width,colCtx.canvas.height);
 
         colCtx.fillStyle = "black";
         colCtx.textAlign = "right";
@@ -693,7 +693,7 @@ jheatmap.Heatmap = function () {
 
         // Rows headers
         var rowCtx = this.canvasRows.get()[0].getContext('2d');
-        rowCtx.clearRect(0,0,colCtx.canvas.width,rowCtx.canvas.height)
+        rowCtx.clearRect(0,0,colCtx.canvas.width,rowCtx.canvas.height);
         rowCtx.fillStyle = "black";
         rowCtx.textAlign = "right";
         rowCtx.textBaseline = "middle";
@@ -739,7 +739,7 @@ jheatmap.Heatmap = function () {
         if (this.rows.annotations.length > 0) {
 
             var annRowHeadCtx = this.canvasAnnRowHeader.get()[0].getContext('2d');
-            annRowHeadCtx.clearRect(0,0,annRowHeadCtx.canvas.width,annRowHeadCtx.canvas.height)
+            annRowHeadCtx.clearRect(0,0,annRowHeadCtx.canvas.width,annRowHeadCtx.canvas.height);
             annRowHeadCtx.fillStyle =  "rgb(51,51,51)";
             annRowHeadCtx.textAlign = "right";
             annRowHeadCtx.textBaseline = "middle";
@@ -756,7 +756,7 @@ jheatmap.Heatmap = function () {
             }
 
             var rowsAnnValuesCtx = this.canvasAnnRows.get()[0].getContext('2d');
-            rowsAnnValuesCtx.clearRect(0,0,rowsAnnValuesCtx.canvas.width,rowsAnnValuesCtx.canvas.height)
+            rowsAnnValuesCtx.clearRect(0,0,rowsAnnValuesCtx.canvas.width,rowsAnnValuesCtx.canvas.height);
             for (var row = this.startRow; row < this.endRow; row++) {
 
                 for (var i = 0; i < this.rows.annotations.length; i++) {
@@ -782,7 +782,7 @@ jheatmap.Heatmap = function () {
         if (this.cols.annotations.length > 0) {
 
             var colAnnHeaderCtx =  this.canvasAnnColHeader.get()[0].getContext('2d');
-            colAnnHeaderCtx.clearRect(0,0,colAnnHeaderCtx.canvas.width,colAnnHeaderCtx.canvas.height)
+            colAnnHeaderCtx.clearRect(0,0,colAnnHeaderCtx.canvas.width,colAnnHeaderCtx.canvas.height);
             colAnnHeaderCtx.fillStyle = "rgb(51,51,51)";
             colAnnHeaderCtx.textAlign = "right";
             colAnnHeaderCtx.textBaseline = "middle";
@@ -794,7 +794,7 @@ jheatmap.Heatmap = function () {
             }
 
             var colAnnValuesCtx = this.canvasAnnCols.get()[0].getContext('2d');
-            colAnnValuesCtx.clearRect(0,0,colAnnValuesCtx.canvas.width,colAnnValuesCtx.canvas.height)
+            colAnnValuesCtx.clearRect(0,0,colAnnValuesCtx.canvas.width,colAnnValuesCtx.canvas.height);
             for (i = 0; i < this.cols.annotations.length; i++) {
                 for (var col = this.startCol; col < this.endCol; col++) {
 
