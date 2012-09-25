@@ -794,6 +794,7 @@ jheatmap.Heatmap = function () {
             }
 
             var colAnnValuesCtx = this.canvasAnnCols.get()[0].getContext('2d');
+            colAnnValuesCtx.clearRect(0,0,colAnnValuesCtx.canvas.width,colAnnValuesCtx.canvas.height)
             for (i = 0; i < this.cols.annotations.length; i++) {
                 for (var col = this.startCol; col < this.endCol; col++) {
 
