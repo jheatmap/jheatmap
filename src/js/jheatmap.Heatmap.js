@@ -623,8 +623,8 @@ jheatmap.Heatmap = function () {
         if (top < 0) {
             top = 0;
         }
-        if (top > (this.rows.order.length - maxRows)) {
-            top = (this.rows.order.length - maxRows);
+        if (top > (this.rows.order.length - maxRows + 1)) {
+            top = (this.rows.order.length - maxRows + 1);
         }
         this.offset.top = top;
 
@@ -632,8 +632,8 @@ jheatmap.Heatmap = function () {
         if (left < 0) {
             left = 0;
         }
-        if (left > (this.cols.order.length - maxCols)) {
-            left = (this.cols.order.length - maxCols);
+        if (left > (this.cols.order.length - maxCols + 1)) {
+            left = (this.cols.order.length - maxCols + 1);
         }
         this.offset.left = left;
 
