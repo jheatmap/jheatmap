@@ -136,7 +136,7 @@ table.heatmap div.detailsbox {
 }
 
 /* Loader */
-div.heatmap-loader div.background {
+#heatmap-loader div.background {
 	background-color: #FFF;
         opacity: 0.75;
         position: fixed;
@@ -147,10 +147,12 @@ div.heatmap-loader div.background {
         height: 100%;
 }
 
-div.heatmap-loader div.progress {
+#heatmap-loader div.progress {
 	position: fixed;
 	top: 50%;
 	left: 50%;
+    width: 66px;
+    height: 66px;
 	margin-top: -30px;
 	margin-left: -30px;
 	z-index: 9003;

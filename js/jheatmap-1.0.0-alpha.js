@@ -252,25 +252,40 @@ jheatmap.decorators.Categorical.prototype.toColor = function (value) {
  * Linear decorator
  *
  * @example
- * new jheatmap.decorators.Linear({ maxValue: 0.05 });
+ * new jheatmap.decorators.Linear({});
  *
  * @class
- * @param {Array}   [minColor=[255,255,255]]    Minimum color [r,g,b]
- * @param {number}  [minValue=0]                Minimum value
- * @param {Array}   [maxColor=[0,255,0]]        Maximum color [r,g,b]
- * @param {number}  [maxValue=1]                Maximum value
- * @param {Array}   [nullColor=[255,255,255]]   NaN values color [r,g,b]
- * @param {Array}   [outColor=[187,187,187]]    Color for values outside range [r,g,b]
+ * @param {Array}   [ranges=[[-2,0],[0,2]]]              All the ranges wanted starting with the most negative range upwards
+ * @param {Array}   [colors=[ [[0,0,255],[255,255,255]],
+ *                            [[255,255,255],[255,0,0]]
+ *                  ]                                    Min and max colors for each defined range that produce gradient
+ * @param {Array}   [outColor=[0,0,0]]                   A specific color if the value is out of the range bounds. If not defined by user, the min and max colors will be used.
+ * @param {Array}   [betweenColor=[187,187,187]]         A specific color if a value is between defined ranges. If not defined user it is set to black or outColor.
  *
  */
 jheatmap.decorators.Linear = function (options) {
     options = options || {};
-    this.minColor = options.minColor || [255, 255, 255];
-    this.minValue = options.minValue || 0;
-    this.maxColor = options.maxColor || [0, 255, 0];
-    this.maxValue = options.maxValue || 1;
-    this.nullColor = options.nullColor || [255, 255, 255];
-    this.outColor = options.outColor || [187, 187, 187];
+
+    this.ranges = (options.ranges == undefined ? [[-2,0],[0,2]] : options.ranges);
+    this.colors = (options.colors == undefined ? [[[0,0,255],[255,255,255]], [[255,255,255],[255,0,0]]] : options.colors);
+
+    this.nullColor = (options.nullColor == undefined ? [255, 255, 255] : options.nullColor);
+    this.outColor = (options.outColor == undefined ?  null : options.outColor);
+    this.betweenColor = (options.betweenColor == undefined) ? null : options.betweenColor;
+    if (this.betweenColor == null) {
+        this.betweenColor = (options.outColor != null) ? options.outColor : [0,0,0];
+    }
+
+    this.minValue = this.ranges.reduce(function(min, arr) {
+        return Math.min(min, arr[0]);
+    }, Infinity);
+
+    this.maxValue = this.ranges.reduce(function(max, arr) {
+        return Math.max(max, arr[1]);
+    }, -Infinity);
+
+    this.minColor = this.colors[0][0];
+    this.maxColor = this.colors[this.colors.length-1][1];
 
 };
 
@@ -286,22 +301,53 @@ jheatmap.decorators.Linear.prototype.toColor = function (value) {
     }
 
     if (value > this.maxValue || value < this.minValue) {
-        return (new jheatmap.utils.RGBColor(this.outColor)).toRGB();
+        if (this.outColor != null) {
+            return (new jheatmap.utils.RGBColor(this.outColor)).toRGB();
+        }
+        else if (value > this.maxValue) {
+            return (new jheatmap.utils.RGBColor(this.maxColor)).toRGB();
+        }
+        else {
+            return (new jheatmap.utils.RGBColor(this.minColor)).toRGB();
+        }
     }
 
-    var fact = (value - this.minValue) / (this.maxValue - this.minValue);
+    var minColor;
+    var rangeMin;
+    var maxColor;
+    var rangeMax;
+
+    var allColors = this.colors;
+
+    var lastMax;
+
+    $.each(this.ranges,function(index,range){
+        if (value >= range[0] && value <= range[1]) {
+            minColor = allColors[index][0];
+            rangeMin = range[0];
+            maxColor = allColors[index][1];
+            rangeMax = range[1];
+            return (true);
+        }
+    });
+
+    if (minColor == undefined || maxColor == undefined)  {
+        return (new jheatmap.utils.RGBColor(this.betweenColor)).toRGB();
+    }
+
+    var fact = (value - rangeMin) / (rangeMax - rangeMin);
 
     var r, g, b;
 
-    r = this.minColor[0] + Math.round(fact * (this.maxColor[0] - this.minColor[0]));
-    g = this.minColor[1] + Math.round(fact * (this.maxColor[1] - this.minColor[1]));
-    b = this.minColor[2] + Math.round(fact * (this.maxColor[2] - this.minColor[2]));
+    r = minColor[0] + Math.round(fact * (maxColor[0] - minColor[0]));
+    g = minColor[1] + Math.round(fact * (maxColor[1] - minColor[1]));
+    b = minColor[2] + Math.round(fact * (maxColor[2] - minColor[2]));
 
     return (new jheatmap.utils.RGBColor([r, g, b])).toRGB();
 };
 
 /**
- * Linear decorator
+ * Heat decorator
  *
  * @example
  * new jheatmap.decorators.Heat({ minValue: -5, midValue: 0, maxValue: 5 });
@@ -448,7 +494,7 @@ jheatmap.decorators.PValue.prototype.toColor = function (value) {
         b = 187;
     } else {
         r = 255;
-        g = (value == 0) ? 0 : Math.round((1 - (Math.log(100 - (99*(value / this.cutoff))) / 4.6052)) * 255);
+        g = (value == 0) ? 0 : Math.round((Math.log(value*(9/this.cutoff)+1)/2.3026) *255);
         b = 0;
     }
 
@@ -1214,10 +1260,10 @@ jheatmap.Heatmap = function () {
      * @param runme Function to execute
      */
     this.loading = function (runme) {
-        $('div.heatmap-loader').show();
+        $('#heatmap-loader').show();
         var interval = window.setInterval(function () {
             runme.call(this);
-            $('div.heatmap-loader').hide();
+            $('#heatmap-loader').hide();
             window.clearInterval(interval);
         }, 1);
     };
@@ -1258,8 +1304,8 @@ jheatmap.Heatmap = function () {
         if (top < 0) {
             top = 0;
         }
-        if (top > (this.rows.order.length - maxRows)) {
-            top = (this.rows.order.length - maxRows);
+        if (top > (this.rows.order.length - maxRows + 1)) {
+            top = (this.rows.order.length - maxRows + 1);
         }
         this.offset.top = top;
 
@@ -1267,8 +1313,8 @@ jheatmap.Heatmap = function () {
         if (left < 0) {
             left = 0;
         }
-        if (left > (this.cols.order.length - maxCols)) {
-            left = (this.cols.order.length - maxCols);
+        if (left > (this.cols.order.length - maxCols + 1)) {
+            left = (this.cols.order.length - maxCols + 1);
         }
         this.offset.left = left;
 
@@ -1280,7 +1326,7 @@ jheatmap.Heatmap = function () {
 
         // Column headers
         var colCtx = this.canvasCols.get()[0].getContext('2d');
-        colCtx.clearRect(0,0,colCtx.canvas.width,colCtx.canvas.height)
+        colCtx.clearRect(0,0,colCtx.canvas.width,colCtx.canvas.height);
 
         colCtx.fillStyle = "black";
         colCtx.textAlign = "right";
@@ -1328,7 +1374,7 @@ jheatmap.Heatmap = function () {
 
         // Rows headers
         var rowCtx = this.canvasRows.get()[0].getContext('2d');
-        rowCtx.clearRect(0,0,colCtx.canvas.width,rowCtx.canvas.height)
+        rowCtx.clearRect(0,0,colCtx.canvas.width,rowCtx.canvas.height);
         rowCtx.fillStyle = "black";
         rowCtx.textAlign = "right";
         rowCtx.textBaseline = "middle";
@@ -1374,7 +1420,7 @@ jheatmap.Heatmap = function () {
         if (this.rows.annotations.length > 0) {
 
             var annRowHeadCtx = this.canvasAnnRowHeader.get()[0].getContext('2d');
-            annRowHeadCtx.clearRect(0,0,annRowHeadCtx.canvas.width,annRowHeadCtx.canvas.height)
+            annRowHeadCtx.clearRect(0,0,annRowHeadCtx.canvas.width,annRowHeadCtx.canvas.height);
             annRowHeadCtx.fillStyle =  "rgb(51,51,51)";
             annRowHeadCtx.textAlign = "right";
             annRowHeadCtx.textBaseline = "middle";
@@ -1391,7 +1437,7 @@ jheatmap.Heatmap = function () {
             }
 
             var rowsAnnValuesCtx = this.canvasAnnRows.get()[0].getContext('2d');
-            rowsAnnValuesCtx.clearRect(0,0,rowsAnnValuesCtx.canvas.width,rowsAnnValuesCtx.canvas.height)
+            rowsAnnValuesCtx.clearRect(0,0,rowsAnnValuesCtx.canvas.width,rowsAnnValuesCtx.canvas.height);
             for (var row = this.startRow; row < this.endRow; row++) {
 
                 for (var i = 0; i < this.rows.annotations.length; i++) {
@@ -1417,7 +1463,7 @@ jheatmap.Heatmap = function () {
         if (this.cols.annotations.length > 0) {
 
             var colAnnHeaderCtx =  this.canvasAnnColHeader.get()[0].getContext('2d');
-            colAnnHeaderCtx.clearRect(0,0,colAnnHeaderCtx.canvas.width,colAnnHeaderCtx.canvas.height)
+            colAnnHeaderCtx.clearRect(0,0,colAnnHeaderCtx.canvas.width,colAnnHeaderCtx.canvas.height);
             colAnnHeaderCtx.fillStyle = "rgb(51,51,51)";
             colAnnHeaderCtx.textAlign = "right";
             colAnnHeaderCtx.textBaseline = "middle";
@@ -1429,6 +1475,7 @@ jheatmap.Heatmap = function () {
             }
 
             var colAnnValuesCtx = this.canvasAnnCols.get()[0].getContext('2d');
+            colAnnValuesCtx.clearRect(0,0,colAnnValuesCtx.canvas.width,colAnnValuesCtx.canvas.height);
             for (i = 0; i < this.cols.annotations.length; i++) {
                 for (var col = this.startCol; col < this.endCol; col++) {
 
@@ -1515,8 +1562,7 @@ jheatmap.Heatmap = function () {
         var obj = this.divHeatmap;
 
         // Loader
-        obj.html('<div class="heatmap-loader"><div class="background"></div><div class="progress"><img src="'
-            + basePath + '/images/loading.gif"></div></div>');
+        obj.html('');
 
         var table = $("<table>", {
             "class":"heatmap"
@@ -1822,7 +1868,7 @@ jheatmap.Heatmap = function () {
         lastRow.append("<td class='border'></td>");
         table.append(lastRow);
         obj.append(table);
-        $('div.heatmap-loader').hide();
+        $('#heatmap-loader').hide();
         $('#helpModal').modal({ show: false });
 
     };

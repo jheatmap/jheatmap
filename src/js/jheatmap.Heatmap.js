@@ -579,10 +579,10 @@ jheatmap.Heatmap = function () {
      * @param runme Function to execute
      */
     this.loading = function (runme) {
-        $('div.heatmap-loader').show();
+        $('#heatmap-loader').show();
         var interval = window.setInterval(function () {
             runme.call(this);
-            $('div.heatmap-loader').hide();
+            $('#heatmap-loader').hide();
             window.clearInterval(interval);
         }, 1);
     };
@@ -881,8 +881,7 @@ jheatmap.Heatmap = function () {
         var obj = this.divHeatmap;
 
         // Loader
-        obj.html('<div class="heatmap-loader"><div class="background"></div><div class="progress"><img src="'
-            + basePath + '/images/loading.gif"></div></div>');
+        obj.html('');
 
         var table = $("<table>", {
             "class":"heatmap"
@@ -1188,7 +1187,7 @@ jheatmap.Heatmap = function () {
         lastRow.append("<td class='border'></td>");
         table.append(lastRow);
         obj.append(table);
-        $('div.heatmap-loader').hide();
+        $('#heatmap-loader').hide();
         $('#helpModal').modal({ show: false });
 
     };
