@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>JSDoc: Class: Heatmap</title>
-    
-    <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
+	<meta charset="utf-8">
+	<title>JSDoc: Class: Heatmap</title>
+	
+	<script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    
     <link type="text/css" rel="stylesheet" href="styles/node-dark.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
@@ -20,27 +18,17 @@
     <h1 class="page-title">Class: Heatmap</h1>
     
     
-
-
-
-<section>
     
-<header>
-    <h2>
-        <span class="ancestors"><a href="jheatmap.html">jheatmap</a>.</span>
-    
-    Heatmap
-    </h2>
-    
-</header>  
-
-<article>
-    <div class="container-overview">
-    
-    
-    
+    <section>
+     
+    <header>
+        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a>.</span>Heatmap</h2>
         
-<dt>
+    </header>  
+    
+    <article>
+        <div class="container-overview">
+        <dt>
     <h4 class="name" id="Heatmap"><span class="type-signature"></span>new Heatmap</h4>
     
     
@@ -48,23 +36,20 @@
 <dd>
     
     
-    <div class="description">
+    <p class="description">
         Heatmap interactive viewer
-    </div>
+    </p>
     
     
     
     
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -72,9 +57,7 @@
 	
 	<dt class="tag-author">Author:</dt>
 	<dd class="tag-author">
-        <ul>
-            <li>Jordi Deu-Pons</li>
-        </ul>
+        <ul><li>Jordi Deu-Pons</li></ul>
 	</dd>
 	
 	
@@ -86,7 +69,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 643</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 689</li></ul></dd>
 	
     
     
@@ -104,26 +87,26 @@
     
     
     
+
 </dd>
 
-    
-    </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        <h3 class="subsection-title">Members</h3>
+        </div>
         
-        <dl>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
             
+            <h3 class="subsection-title">Members</h3>
+            
+            <dl>
 <dt>
     <h4 class="name" id="cells"><span class="type-signature"></span>cells<span class="type-signature"></span></h4>
     
@@ -131,13 +114,12 @@
 </dt>
 <dd>
     
-    <div class="description">
+    <p class="description">
         Cells configuration
-    </div>
+    </p>
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
         <h5 class="subsection-title">Properties:</h5>
@@ -166,105 +148,90 @@
 	
         <tr>
             
-                <td class="name"><code>Header</code></td>
+                <td class="name"><code>header</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">of the multiple cell values</td>
+            <td class="description last">Header of the multiple cell values</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Array</code></td>
+                <td class="name"><code>values</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">of arrays with all the cell values (one array per cell)</td>
+            <td class="description last">Array of arrays with all the cell values (one array per cell)</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Index</code></td>
+                <td class="name"><code>selectedValue</code></td>
             
             
             <td class="type">
-            
-                        number
-                        
-                    
+            number
             </td>
             
             
             
             
             
-            <td class="description last">of the current visible cell field (zero it's the first)</td>
+            <td class="description last">Index of the current visible cell field (zero it's the first)</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Decorators</code></td>
+                <td class="name"><code>decorators</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">for the cell fields</td>
+            <td class="description last">Decorators for the cell fields</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Aggregators</code></td>
+                <td class="name"><code>aggregators</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">for the cell fields</td>
+            <td class="description last">Aggregators for the cell fields</td>
         </tr>
 	
 	
@@ -275,8 +242,6 @@
         
 	
 	
-	
-
 	
 	
 	
@@ -291,7 +256,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 779</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 825</li></ul></dd>
 	
     
     
@@ -305,8 +270,6 @@
     
 </dd>
 
-        
-            
 <dt>
     <h4 class="name" id="cols"><span class="type-signature"></span>cols<span class="type-signature"></span></h4>
     
@@ -314,13 +277,12 @@
 </dt>
 <dd>
     
-    <div class="description">
+    <p class="description">
         Columns configuration
-    </div>
+    </p>
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
         <h5 class="subsection-title">Properties:</h5>
@@ -349,252 +311,216 @@
 	
         <tr>
             
-                <td class="name"><code>Width</code></td>
+                <td class="name"><code>zoom</code></td>
             
             
             <td class="type">
-            
-                        number
-                        
-                    
+            number
             </td>
             
             
             
             
             
-            <td class="description last">in pixels of one cell (default 20)</td>
+            <td class="description last">Width in pixels of one cell (default 20)</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Header</code></td>
+                <td class="name"><code>header</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">of the columns values</td>
+            <td class="description last">Header of the columns values</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Array</code></td>
+                <td class="name"><code>values</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">of arrays with all the columns values and annotations (one array per line)</td>
+            <td class="description last">Array of arrays with all the columns values and annotations (one array per line)</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Array</code></td>
+                <td class="name"><code>order</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">of index of the visible values sorted as current order</td>
+            <td class="description last">Array of index of the visible values sorted as current order</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Index</code></td>
+                <td class="name"><code>selectedValue</code></td>
             
             
             <td class="type">
-            
-                        number
-                        
-                    
+            number
             </td>
             
             
             
             
             
-            <td class="description last">of the current visible column label (zero it's the first)</td>
+            <td class="description last">Index of the current visible column label (zero it's the first)</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Type</code></td>
+                <td class="name"><code>sort.type</code></td>
             
             
             <td class="type">
-            
-                        string
-                        
-                    
+            string
             </td>
             
             
             
             
             
-            <td class="description last">of sort ('none', 'label', 'single' or 'value')</td>
+            <td class="description last">Type of sort ('none', 'label', 'single' or 'value')</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Index</code></td>
+                <td class="name"><code>sort.field</code></td>
             
             
             <td class="type">
-            
-                        number
-                        
-                    
+            number
             </td>
             
             
             
             
             
-            <td class="description last">of the field that we are sorting</td>
+            <td class="description last">Index of the field that we are sorting</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>true</code></td>
+                <td class="name"><code>sort.asc</code></td>
             
             
             <td class="type">
-            
-                        boolean
-                        
-                    
+            boolean
             </td>
             
             
             
             
             
-            <td class="description last">if ascending order, false if descending</td>
+            <td class="description last">true if ascending order, false if descending</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Active</code></td>
+                <td class="name"><code>filters</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">user filters on columns</td>
+            <td class="description last">Active user filters on columns</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Decorators</code></td>
+                <td class="name"><code>decorators</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">for the columns fields</td>
+            <td class="description last">Decorators for the columns fields</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Array</code></td>
+                <td class="name"><code>annotations</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">with the index of the columns fields to show</td>
+            <td class="description last">Array with the index of the columns fields to show</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Index</code></td>
+                <td class="name"><code>selected</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">of the selected columns</td>
+            <td class="description last">Index of the selected columns</td>
         </tr>
 	
 	
@@ -605,8 +531,6 @@
         
 	
 	
-	
-
 	
 	
 	
@@ -621,7 +545,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 754</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 800</li></ul></dd>
 	
     
     
@@ -635,8 +559,6 @@
     
 </dd>
 
-        
-            
 <dt>
     <h4 class="name" id="filters"><span class="type-signature"></span>filters<span class="type-signature"></span></h4>
     
@@ -644,19 +566,16 @@
 </dt>
 <dd>
     
-    <div class="description">
+    <p class="description">
         User defined filters
-    </div>
+    </p>
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -671,7 +590,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 697</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 743</li></ul></dd>
 	
     
     
@@ -685,8 +604,6 @@
     
 </dd>
 
-        
-            
 <dt>
     <h4 class="name" id="offset"><span class="type-signature"></span>offset<span class="type-signature"></span></h4>
     
@@ -694,13 +611,12 @@
 </dt>
 <dd>
     
-    <div class="description">
+    <p class="description">
         Position of the first cell on the top left corner
-    </div>
+    </p>
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
         <h5 class="subsection-title">Properties:</h5>
@@ -729,42 +645,36 @@
 	
         <tr>
             
-                <td class="name"><code>Position</code></td>
+                <td class="name"><code>top</code></td>
             
             
             <td class="type">
-            
-                        number
-                        
-                    
+            number
             </td>
             
             
             
             
             
-            <td class="description last">of the first row to show on the top of the heatmap</td>
+            <td class="description last">Position of the first row to show on the top of the heatmap</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Position</code></td>
+                <td class="name"><code>left</code></td>
             
             
             <td class="type">
-            
-                        number
-                        
-                    
+            number
             </td>
             
             
             
             
             
-            <td class="description last">of the first column to show on the left of the heatmap</td>
+            <td class="description last">Position of the first column to show on the left of the heatmap</td>
         </tr>
 	
 	
@@ -775,8 +685,6 @@
         
 	
 	
-	
-
 	
 	
 	
@@ -791,7 +699,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 681</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 727</li></ul></dd>
 	
     
     
@@ -805,8 +713,6 @@
     
 </dd>
 
-        
-            
 <dt>
     <h4 class="name" id="rows"><span class="type-signature"></span>rows<span class="type-signature"></span></h4>
     
@@ -814,13 +720,12 @@
 </dt>
 <dd>
     
-    <div class="description">
+    <p class="description">
         Rows configuration
-    </div>
+    </p>
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
         <h5 class="subsection-title">Properties:</h5>
@@ -849,252 +754,216 @@
 	
         <tr>
             
-                <td class="name"><code>Height</code></td>
+                <td class="name"><code>zoom</code></td>
             
             
             <td class="type">
-            
-                        number
-                        
-                    
+            number
             </td>
             
             
             
             
             
-            <td class="description last">in pixels of one cell (default 20)</td>
+            <td class="description last">Height in pixels of one cell (default 20)</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Header</code></td>
+                <td class="name"><code>header</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">of the rows values</td>
+            <td class="description last">Header of the rows values</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Array</code></td>
+                <td class="name"><code>values</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">with all the rows values and annotations (one array per line)</td>
+            <td class="description last">Array with all the rows values and annotations (one array per line)</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Array</code></td>
+                <td class="name"><code>order</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">of index of the visible values sorted as current order</td>
+            <td class="description last">Array of index of the visible values sorted as current order</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Index</code></td>
+                <td class="name"><code>selectedValue</code></td>
             
             
             <td class="type">
-            
-                        number
-                        
-                    
+            number
             </td>
             
             
             
             
             
-            <td class="description last">of the current visible row label (zero it's the first)</td>
+            <td class="description last">Index of the current visible row label (zero it's the first)</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Type</code></td>
+                <td class="name"><code>sort.type</code></td>
             
             
             <td class="type">
-            
-                        string
-                        
-                    
+            string
             </td>
             
             
             
             
             
-            <td class="description last">of sort ('none', 'label', 'single' or 'value')</td>
+            <td class="description last">Type of sort ('none', 'label', 'single' or 'value')</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Index</code></td>
+                <td class="name"><code>sort.field</code></td>
             
             
             <td class="type">
-            
-                        number
-                        
-                    
+            number
             </td>
             
             
             
             
             
-            <td class="description last">of the field that we are sorting</td>
+            <td class="description last">Index of the field that we are sorting</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>true</code></td>
+                <td class="name"><code>sort.asc</code></td>
             
             
             <td class="type">
-            
-                        boolean
-                        
-                    
+            boolean
             </td>
             
             
             
             
             
-            <td class="description last">if ascending order, false if descending</td>
+            <td class="description last">true if ascending order, false if descending</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Active</code></td>
+                <td class="name"><code>filters</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">user filters on rows</td>
+            <td class="description last">Active user filters on rows</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Decorators</code></td>
+                <td class="name"><code>decorators</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">for the rows fields</td>
+            <td class="description last">Decorators for the rows fields</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Array</code></td>
+                <td class="name"><code>annotations</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">with the index of the rows fields to show</td>
+            <td class="description last">Array with the index of the rows fields to show</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Index</code></td>
+                <td class="name"><code>selected</code></td>
             
             
             <td class="type">
-            
-                        Array
-                        
-                    
+            Array
             </td>
             
             
             
             
             
-            <td class="description last">of the selected rows</td>
+            <td class="description last">Index of the selected rows</td>
         </tr>
 	
 	
@@ -1105,8 +974,6 @@
         
 	
 	
-	
-
 	
 	
 	
@@ -1121,7 +988,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 721</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 767</li></ul></dd>
 	
     
     
@@ -1135,8 +1002,6 @@
     
 </dd>
 
-        
-            
 <dt>
     <h4 class="name" id="search"><span class="type-signature"></span>search<span class="type-signature"></span></h4>
     
@@ -1144,20 +1009,17 @@
 </dt>
 <dd>
     
-    <div class="description">
+    <p class="description">
         Current search string to highlight matching rows and columns.
 Default 'null' means no search.
-    </div>
+    </p>
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -1172,7 +1034,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 703</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 749</li></ul></dd>
 	
     
     
@@ -1186,8 +1048,6 @@ Default 'null' means no search.
     
 </dd>
 
-        
-            
 <dt>
     <h4 class="name" id="size"><span class="type-signature"></span>size<span class="type-signature"></span></h4>
     
@@ -1195,13 +1055,12 @@ Default 'null' means no search.
 </dt>
 <dd>
     
-    <div class="description">
+    <p class="description">
         Size of the cells panel
-    </div>
+    </p>
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
         <h5 class="subsection-title">Properties:</h5>
@@ -1230,42 +1089,36 @@ Default 'null' means no search.
 	
         <tr>
             
-                <td class="name"><code>Cells</code></td>
+                <td class="name"><code>width</code></td>
             
             
             <td class="type">
-            
-                        number
-                        
-                    
+            number
             </td>
             
             
             
             
             
-            <td class="description last">panel width</td>
+            <td class="description last">Cells panel width</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Cells</code></td>
+                <td class="name"><code>height</code></td>
             
             
             <td class="type">
-            
-                        number
-                        
-                    
+            number
             </td>
             
             
             
             
             
-            <td class="description last">panel heigth</td>
+            <td class="description last">Cells panel heigth</td>
         </tr>
 	
 	
@@ -1276,8 +1129,6 @@ Default 'null' means no search.
         
 	
 	
-	
-
 	
 	
 	
@@ -1292,7 +1143,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 670</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 716</li></ul></dd>
 	
     
     
@@ -1305,16 +1156,15 @@ Default 'null' means no search.
     
     
 </dd>
-
-        </dl>
-    
-    
-    
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl>
+</dl>
             
-<dt>
+        
+        
+        
+            
+            <h3 class="subsection-title">Methods</h3>
+            
+            <dl><dt>
     <h4 class="name" id="addRowsFilter"><span class="type-signature"></span>addRowsFilter</h4>
     
     
@@ -1322,16 +1172,14 @@ Default 'null' means no search.
 <dd>
     
     
-    <div class="description">
+    <p class="description">
         Activate one filter for the rows
-    </div>
+    </p>
     
     
     
     
-    
-        <h5>Parameters:</h5>
-        
+    <h5>Parameters:</h5>
 
 <table class="params">
     <thead>
@@ -1373,15 +1221,11 @@ Default 'null' means no search.
 	</tbody>
 </table>
     
-    
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -1396,7 +1240,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 792</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 838</li></ul></dd>
 	
     
     
@@ -1414,10 +1258,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="applyColsSort"><span class="type-signature"></span>applyColsSort</h4>
     
@@ -1426,23 +1268,20 @@ Default 'null' means no search.
 <dd>
     
     
-    <div class="description">
+    <p class="description">
         Sort all the columns
-    </div>
+    </p>
     
     
     
     
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -1457,7 +1296,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 1124</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1170</li></ul></dd>
 	
     
     
@@ -1475,10 +1314,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="applyFilters"><span class="type-signature"></span>applyFilters</h4>
     
@@ -1487,23 +1324,20 @@ Default 'null' means no search.
 <dd>
     
     
-    <div class="description">
+    <p class="description">
         Apply all the filters
-    </div>
+    </p>
     
     
     
     
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -1518,7 +1352,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 874</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 920</li></ul></dd>
 	
     
     
@@ -1536,10 +1370,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="applyRowsFilters"><span class="type-signature"></span>applyRowsFilters</h4>
     
@@ -1548,23 +1380,20 @@ Default 'null' means no search.
 <dd>
     
     
-    <div class="description">
+    <p class="description">
         Apply all the active filters on the rows.
-    </div>
+    </p>
     
     
     
     
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -1579,7 +1408,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 827</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 873</li></ul></dd>
 	
     
     
@@ -1597,10 +1426,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="applyRowsSort"><span class="type-signature"></span>applyRowsSort</h4>
     
@@ -1609,23 +1436,20 @@ Default 'null' means no search.
 <dd>
     
     
-    <div class="description">
+    <p class="description">
         Sort all the rows
-    </div>
+    </p>
     
     
     
     
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -1640,7 +1464,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 1043</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1089</li></ul></dd>
 	
     
     
@@ -1658,10 +1482,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="applySort"><span class="type-signature"></span>applySort</h4>
     
@@ -1670,23 +1492,20 @@ Default 'null' means no search.
 <dd>
     
     
-    <div class="description">
+    <p class="description">
         Sort rows and columns
-    </div>
+    </p>
     
     
     
     
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -1701,7 +1520,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 1206</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1252</li></ul></dd>
 	
     
     
@@ -1719,10 +1538,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="build"><span class="type-signature"></span>build</h4>
     
@@ -1731,23 +1548,20 @@ Default 'null' means no search.
 <dd>
     
     
-    <div class="description">
+    <p class="description">
         Build the heatmap.
-    </div>
+    </p>
     
     
     
     
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -1762,7 +1576,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 1513</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1560</li></ul></dd>
 	
     
     
@@ -1780,10 +1594,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="getCellValue"><span class="type-signature"></span>getCellValue</h4>
     
@@ -1795,9 +1607,7 @@ Default 'null' means no search.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
+    <h5>Parameters:</h5>
 
 <table class="params">
     <thead>
@@ -1875,15 +1685,11 @@ Default 'null' means no search.
 	</tbody>
 </table>
     
-    
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -1898,7 +1704,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 884</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 930</li></ul></dd>
 	
     
     
@@ -1916,10 +1722,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="getCellValueSelected"><span class="type-signature"></span>getCellValueSelected</h4>
     
@@ -1931,9 +1735,7 @@ Default 'null' means no search.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
+    <h5>Parameters:</h5>
 
 <table class="params">
     <thead>
@@ -1993,15 +1795,11 @@ Default 'null' means no search.
 	</tbody>
 </table>
     
-    
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -2016,7 +1814,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 902</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 948</li></ul></dd>
 	
     
     
@@ -2034,10 +1832,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="getColValue"><span class="type-signature"></span>getColValue</h4>
     
@@ -2049,9 +1845,7 @@ Default 'null' means no search.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
+    <h5>Parameters:</h5>
 
 <table class="params">
     <thead>
@@ -2111,15 +1905,11 @@ Default 'null' means no search.
 	</tbody>
 </table>
     
-    
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -2134,7 +1924,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 928</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 974</li></ul></dd>
 	
     
     
@@ -2152,10 +1942,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="getColValueSelected"><span class="type-signature"></span>getColValueSelected</h4>
     
@@ -2167,9 +1955,7 @@ Default 'null' means no search.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
+    <h5>Parameters:</h5>
 
 <table class="params">
     <thead>
@@ -2211,15 +1997,11 @@ Default 'null' means no search.
 	</tbody>
 </table>
     
-    
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -2234,7 +2016,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 936</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 982</li></ul></dd>
 	
     
     
@@ -2252,228 +2034,8 @@ Default 'null' means no search.
     
     
     
+
 </dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getRowValue"><span class="type-signature"></span>getRowValue</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>row</code></td>
-            
-            
-            <td class="type">
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last"></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>field</code></td>
-            
-            
-            <td class="type">
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last"></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 911</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getRowValueSelected"><span class="type-signature"></span>getRowValueSelected</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>row</code></td>
-            
-            
-            <td class="type">
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last"></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 919</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
 <dt>
     <h4 class="name" id="getRowsFilter"><span class="type-signature"></span>getRowsFilter</h4>
     
@@ -2485,9 +2047,7 @@ Default 'null' means no search.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
+    <h5>Parameters:</h5>
 
 <table class="params">
     <thead>
@@ -2529,15 +2089,11 @@ Default 'null' means no search.
 	</tbody>
 </table>
     
-    
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -2552,7 +2108,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 806</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 852</li></ul></dd>
 	
     
     
@@ -2570,10 +2126,210 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
+</dd>
+<dt>
+    <h4 class="name" id="getRowValue"><span class="type-signature"></span>getRowValue</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+    
+    
+    <h5>Parameters:</h5>
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
             
+                <td class="name"><code>row</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>field</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    <dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 957</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+
+</dd>
+<dt>
+    <h4 class="name" id="getRowValueSelected"><span class="type-signature"></span>getRowValueSelected</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+    
+    
+    <h5>Parameters:</h5>
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>row</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    <dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 965</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+
+</dd>
 <dt>
     <h4 class="name" id="init"><span class="type-signature"></span>init</h4>
     
@@ -2582,23 +2338,20 @@ Default 'null' means no search.
 <dd>
     
     
-    <div class="description">
+    <p class="description">
         Initialize the Heatmap
-    </div>
+    </p>
     
     
     
     
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -2613,7 +2366,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 946</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 992</li></ul></dd>
 	
     
     
@@ -2631,10 +2384,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="loading"><span class="type-signature"></span>loading</h4>
     
@@ -2643,16 +2394,14 @@ Default 'null' means no search.
 <dd>
     
     
-    <div class="description">
+    <p class="description">
         Show loading image while running 'runme'
-    </div>
+    </p>
     
     
     
     
-    
-        <h5>Parameters:</h5>
-        
+    <h5>Parameters:</h5>
 
 <table class="params">
     <thead>
@@ -2694,15 +2443,11 @@ Default 'null' means no search.
 	</tbody>
 </table>
     
-    
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -2717,7 +2462,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 1216</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1262</li></ul></dd>
 	
     
     
@@ -2735,10 +2480,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="paint"><span class="type-signature"></span>paint</h4>
     
@@ -2747,23 +2490,20 @@ Default 'null' means no search.
 <dd>
     
     
-    <div class="description">
+    <p class="description">
         Paint the heatmap.
-    </div>
+    </p>
     
     
     
     
     
     
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -2778,7 +2518,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 1230</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1276</li></ul></dd>
 	
     
     
@@ -2796,10 +2536,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="removeRowsFilter"><span class="type-signature"></span>removeRowsFilter</h4>
     
@@ -2811,9 +2549,7 @@ Default 'null' means no search.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
+    <h5>Parameters:</h5>
 
 <table class="params">
     <thead>
@@ -2855,15 +2591,11 @@ Default 'null' means no search.
 	</tbody>
 </table>
     
-    
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -2878,7 +2610,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 820</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 866</li></ul></dd>
 	
     
     
@@ -2896,10 +2628,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="sortColsByLabel"><span class="type-signature"></span>sortColsByLabel</h4>
     
@@ -2911,9 +2641,7 @@ Default 'null' means no search.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
+    <h5>Parameters:</h5>
 
 <table class="params">
     <thead>
@@ -2973,15 +2701,11 @@ Default 'null' means no search.
 	</tbody>
 </table>
     
-    
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -2996,7 +2720,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 999</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1045</li></ul></dd>
 	
     
     
@@ -3014,10 +2738,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="sortColsByValue"><span class="type-signature"></span>sortColsByValue</h4>
     
@@ -3029,9 +2751,7 @@ Default 'null' means no search.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
+    <h5>Parameters:</h5>
 
 <table class="params">
     <thead>
@@ -3073,15 +2793,11 @@ Default 'null' means no search.
 	</tbody>
 </table>
     
-    
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -3096,7 +2812,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 1010</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1056</li></ul></dd>
 	
     
     
@@ -3114,10 +2830,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="sortRowsByLabel"><span class="type-signature"></span>sortRowsByLabel</h4>
     
@@ -3129,9 +2843,7 @@ Default 'null' means no search.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
+    <h5>Parameters:</h5>
 
 <table class="params">
     <thead>
@@ -3191,15 +2903,11 @@ Default 'null' means no search.
 	</tbody>
 </table>
     
-    
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -3214,7 +2922,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 1022</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1068</li></ul></dd>
 	
     
     
@@ -3232,10 +2940,8 @@ Default 'null' means no search.
     
     
     
-</dd>
 
-        
-            
+</dd>
 <dt>
     <h4 class="name" id="sortRowsByValue"><span class="type-signature"></span>sortRowsByValue</h4>
     
@@ -3247,9 +2953,7 @@ Default 'null' means no search.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
+    <h5>Parameters:</h5>
 
 <table class="params">
     <thead>
@@ -3291,15 +2995,11 @@ Default 'null' means no search.
 	</tbody>
 </table>
     
-    
-    
-<dl class="details">
+    <dl class="details">
     
         
 	
 	
-	
-
 	
 	
 	
@@ -3314,7 +3014,7 @@ Default 'null' means no search.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>jheatmap-1.0.0-alpha.js, line 1033</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1079</li></ul></dd>
 	
     
     
@@ -3332,31 +3032,29 @@ Default 'null' means no search.
     
     
     
+
 </dd>
-
-        </dl>
+</dl>
+            
+        
+        
+        
+        
+        
+    </article>
     
+    </section>  
     
-    
-    
-    
-</article>
-
-</section>  
-
-
-
-
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="jheatmap.aggregators.Addition.html">Addition</a></li><li><a href="jheatmap.decorators.Categorical.html">Categorical</a></li><li><a href="jheatmap.decorators.Constant.html">Constant</a></li><li><a href="jheatmap.decorators.Heat.html">Heat</a></li><li><a href="jheatmap.Heatmap.html">Heatmap</a></li><li><a href="jheatmap.decorators.Linear.html">Linear</a></li><li><a href="jheatmap.aggregators.Median.html">Median</a></li><li><a href="jheatmap.decorators.Median.html">Median</a></li><li><a href="jheatmap.filters.NonExpressed.html">NonExpressed</a></li><li><a href="jheatmap.filters.NonSignificance.html">NonSignificance</a></li><li><a href="jheatmap.aggregators.PValue.html">PValue</a></li><li><a href="jheatmap.decorators.PValue.html">PValue</a></li><li><a href="jheatmap.utils.RGBColor.html">RGBColor</a></li></ul><h3>Namespaces</h3><ul><li><a href="jheatmap.aggregators.html">aggregators</a></li><li><a href="jheatmap.decorators.html">decorators</a></li><li><a href="jheatmap.filters.html">filters</a></li><li><a href="jheatmap.html">jheatmap</a></li><li><a href="jheatmap.utils.html">utils</a></li></ul>
+    <h3>Classes</h3><ul><li><a href="jheatmap.aggregators.Addition.html">Addition</a></li><li><a href="jheatmap.aggregators.Median.html">Median</a></li><li><a href="jheatmap.aggregators.PValue.html">PValue</a></li><li><a href="jheatmap.decorators.Categorical.html">Categorical</a></li><li><a href="jheatmap.decorators.Constant.html">Constant</a></li><li><a href="jheatmap.decorators.Heat.html">Heat</a></li><li><a href="jheatmap.decorators.Linear.html">Linear</a></li><li><a href="jheatmap.decorators.Median.html">Median</a></li><li><a href="jheatmap.decorators.PValue.html">PValue</a></li><li><a href="jheatmap.filters.NonExpressed.html">NonExpressed</a></li><li><a href="jheatmap.filters.NonSignificance.html">NonSignificance</a></li><li><a href="jheatmap.Heatmap.html">Heatmap</a></li><li><a href="jheatmap.utils.RGBColor.html">RGBColor</a></li></ul><h3>Namespaces</h3><ul><li><a href="jheatmap.html">jheatmap</a></li><li><a href="jheatmap.aggregators.html">aggregators</a></li><li><a href="jheatmap.decorators.html">decorators</a></li><li><a href="jheatmap.filters.html">filters</a></li><li><a href="jheatmap.utils.html">utils</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Fri Sep 21 2012 12:11:44 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/micmath/jsdoc">JSDoc 3</a> on Sat Nov 24 2012 20:51:37 GMT+0100 (CET)
 </footer>
 
 <script> sh_highlightDocument(); </script>

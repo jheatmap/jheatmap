@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>JSDoc: Class: PValue</title>
+	<title>JSDoc: Class: Heat</title>
 	
 	<script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -15,21 +15,21 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: PValue</h1>
+    <h1 class="page-title">Class: Heat</h1>
     
     
     
     <section>
      
     <header>
-        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.decorators.html">.decorators</a>.</span>PValue</h2>
+        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.decorators.html">.decorators</a>.</span>Heat</h2>
         
     </header>  
     
     <article>
         <div class="container-overview">
         <dt>
-    <h4 class="name" id="PValue"><span class="type-signature"></span>new PValue</h4>
+    <h4 class="name" id="Heat"><span class="type-signature"></span>new Heat</h4>
     
     
 </dt>
@@ -37,7 +37,7 @@
     
     
     <p class="description">
-        pValue decorator
+        Heat decorator
     </p>
     
     
@@ -71,7 +71,33 @@
 	
         <tr>
             
-                <td class="name"><code>cutoff</code></td>
+                <td class="name"><code>minColor</code></td>
+            
+            
+            <td class="type">
+            Array
+            </td>
+            
+            
+                <td class="attributes">
+                &lt;optional><br>
+                </td>
+            
+            
+            
+                <td class="default">
+                [0,0,255]
+                </td>
+            
+            
+            <td class="description last">Minimum color [r,g,b]</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>minValue</code></td>
             
             
             <td class="type">
@@ -86,11 +112,115 @@
             
             
                 <td class="default">
-                0.05
+                -1
                 </td>
             
             
-            <td class="description last">Significance cutoff.</td>
+            <td class="description last">Minimum value</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>midColor</code></td>
+            
+            
+            <td class="type">
+            Array
+            </td>
+            
+            
+                <td class="attributes">
+                &lt;optional><br>
+                </td>
+            
+            
+            
+                <td class="default">
+                [255,255,0]
+                </td>
+            
+            
+            <td class="description last">Maximum color [r,g,b]</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>midValue</code></td>
+            
+            
+            <td class="type">
+            number
+            </td>
+            
+            
+                <td class="attributes">
+                &lt;optional><br>
+                </td>
+            
+            
+            
+                <td class="default">
+                0
+                </td>
+            
+            
+            <td class="description last">Maximum value</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>maxColor</code></td>
+            
+            
+            <td class="type">
+            Array
+            </td>
+            
+            
+                <td class="attributes">
+                &lt;optional><br>
+                </td>
+            
+            
+            
+                <td class="default">
+                [255,0,0]
+                </td>
+            
+            
+            <td class="description last">Maximum color [r,g,b]</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>maxValue</code></td>
+            
+            
+            <td class="type">
+            number
+            </td>
+            
+            
+                <td class="attributes">
+                &lt;optional><br>
+                </td>
+            
+            
+            
+                <td class="default">
+                1
+                </td>
+            
+            
+            <td class="description last">Maximum value</td>
         </tr>
 	
 	
@@ -112,7 +242,7 @@
             
             
                 <td class="default">
-                [255,255,255]
+                [187,187,187]
                 </td>
             
             
@@ -142,7 +272,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 473</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 365</li></ul></dd>
 	
     
     
@@ -160,7 +290,7 @@
     
     
     <h5>Example</h5>
-    <pre class="sh_javascript"><code>new jheatmap.decorators.PValue({ cutoff: 0.01 });</code></pre>
+    <pre class="sh_javascript"><code>new jheatmap.decorators.Heat({ minValue: -5, midValue: 0, maxValue: 5 });</code></pre>
 
 
 </dd>
@@ -259,7 +389,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 484</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 381</li></ul></dd>
 	
     
     
@@ -307,7 +437,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/micmath/jsdoc">JSDoc 3</a> on Sat Nov 24 2012 20:51:37 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/micmath/jsdoc">JSDoc 3</a> on Sat Nov 24 2012 20:51:36 GMT+0100 (CET)
 </footer>
 
 <script> sh_highlightDocument(); </script>
