@@ -410,7 +410,7 @@ jheatmap.Heatmap = function () {
 
         if (this.rows.sort.type == "label") {
 
-            this.rows.order.sort(function (o_a, o_b) {
+            this.rows.order.stableSort(function (o_a, o_b) {
                 var v_a = heatmap.rows.values[o_a][heatmap.rows.sort.field].toLowerCase();
                 var v_b = heatmap.rows.values[o_b][heatmap.rows.sort.field].toLowerCase();
                 var val = (heatmap.rows.sort.asc ? 1 : -1);
@@ -443,7 +443,7 @@ jheatmap.Heatmap = function () {
                 aggregation[this.rows.order[r]] = sum = this.cells.aggregators[this.rows.sort.field].acumulate(values);
             }
 
-            this.rows.order.sort(function (o_a, o_b) {
+            this.rows.order.stableSort(function (o_a, o_b) {
                 var v_a = aggregation[o_a];
                 var v_b = aggregation[o_b];
                 var val = (heatmap.rows.sort.asc ? 1 : -1);
@@ -451,7 +451,7 @@ jheatmap.Heatmap = function () {
             });
         } else if (this.rows.sort.type == "single") {
 
-            this.rows.order.sort(function (o_a, o_b) {
+            this.rows.order.stableSort(function (o_a, o_b) {
                 var pos_a = (o_a * heatmap.cols.values.length) + heatmap.rows.sort.item;
                 var pos_b = (o_b * heatmap.cols.values.length) + heatmap.rows.sort.item;
 
@@ -490,7 +490,7 @@ jheatmap.Heatmap = function () {
         var heatmap = this;
 
         if (this.cols.sort.type == "label") {
-            this.cols.order.sort(function (o_a, o_b) {
+            this.cols.order.stableSort(function (o_a, o_b) {
                 var v_a = heatmap.cols.values[o_a][heatmap.cols.sort.field].toLowerCase();
                 var v_b = heatmap.cols.values[o_b][heatmap.cols.sort.field].toLowerCase();
 
@@ -525,7 +525,7 @@ jheatmap.Heatmap = function () {
                 aggregation[cols[c]] = this.cells.aggregators[this.cells.selectedValue].acumulate(values);
             }
 
-            this.cols.order.sort(function (o_a, o_b) {
+            this.cols.order.stableSort(function (o_a, o_b) {
                 var v_a = aggregation[o_a];
                 var v_b = aggregation[o_b];
                 var val = (heatmap.cols.sort.asc ? 1 : -1);
@@ -535,7 +535,7 @@ jheatmap.Heatmap = function () {
         } else if (this.cols.sort.type == "single") {
 
             pos = this.cols.sort.item * this.cols.values.length;
-            this.cols.order.sort(function (o_a, o_b) {
+            this.cols.order.stableSort(function (o_a, o_b) {
                 var value_a = heatmap.cells.values[pos + o_a];
                 var value_b = heatmap.cells.values[pos + o_b];
                 var v_a = (value_a == null ? null : parseFloat(value_a[heatmap.cols.sort.field]));
