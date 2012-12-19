@@ -900,6 +900,25 @@ jheatmap.Heatmap = function () {
         firstRow.append(topleftPanel);
         topleftPanel.append('<td><div class="detailsbox">cell details here</div></td>');
 
+        topleftPanel.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 70px; padding-bottom: 4px;'>" +
+            "<div><a href='#helpModal' data-toggle='modal'>Keyboard shortcuts</a></div>" +
+            "<div class='modal hide' id='helpModal' tabindex='-1' role='dialog'>" +
+            "<div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button>" +
+            "<h3>Keyboard shortcuts</h3></div>" +
+            "<div class='modal-body'>" +
+            "<dl class='dl-horizontal'>" +
+            "<dd><strong>Place the mouse over rows or columns and press the key:</strong></dd>" +
+            "<dt>H</dt><dd>Hide selected rows/columns</dd>" +
+            "<dt>S</dt><dd>Show hidden rows/columns</dd>" +
+            "<dt>R</dt><dd>Remove selection from rows/columns</dd>" +
+            "</dl>" +
+            "</div>" +
+            "<div class='modal-footer'>" +
+            "<button class='btn' data-dismiss='modal'>Close</button>" +
+            "</div>" +
+            "</div>" +
+            "</td>");
+
         // Add filters
         for (var filterId in heatmap.filters) {
 
@@ -1133,21 +1152,8 @@ jheatmap.Heatmap = function () {
          * Horizontal scroll
          ******************************************************************/
         var scrollRow = $("<tr class='horizontalScroll'>");
-        scrollRow.append("<td class='border' style='font-size: 10px; vertical-align: middle; padding-left: 10px;'>" +
-            "<a href='#helpModal' data-toggle='modal'>keys help</a>" +
-            "<div class='modal hide' id='helpModal' tabindex='-1' role='dialog'>" +
-            "<div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button>" +
-            "<h3>Keys help</h3></div>" +
-            "<div class='modal-body'>" +
-            "<dl class='dl-horizontal'>" +
-            "<dt>H</dt><dd>Hide selected rows/columns</dd>" +
-            "<dt>S</dt><dd>Show hidden rows/columns</dd>" +
-            "</dl>" +
-            "</div>" +
-            "<div class='modal-footer'>" +
-            "<button class='btn' data-dismiss='modal'>Close</button>" +
-            "</div>" +
-            "</div>" +
+        scrollRow.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 10px; padding-top: 7px;'>" +
+            "<span>visualized with <a href='http://bg.upf.edu/jheatmap/' target='_blank'>jHeatmap</a></span>" +
             "</td>");
 
         var scrollHor = $("<td class='borderT'>");
@@ -1612,7 +1618,7 @@ jheatmap.Heatmap = function () {
     this.onRowsKeyPress = function(e) {
 
         // 'H' or 'h'
-        if (e.charCode == 72 || e.charCode == 104) {
+        if (e.keyCode == 72 || e.charCode == 104) {
             var heatmap = this;
             if (heatmap.rows.selected.length > 0) {
                 heatmap.rows.order = $.grep(heatmap.rows.order, function (value) {
@@ -1633,6 +1639,19 @@ jheatmap.Heatmap = function () {
             heatmap.paint();
         }
 
+        // 'R' or 'r'
+        if (e.keyCode == 82 || e.charCode == 114) {
+            var heatmap = this;
+            heatmap.rows.selected = [];
+            heatmap.paint();
+        }
+
+        // 'D' or 'd'
+//        if (e.keyCode == 68 || e.charCode == 100) {
+//            var heatmap = this;
+//            heatmap.applySort();
+//            heatmap.paint();
+//        }
     }
 
 
@@ -1795,6 +1814,13 @@ jheatmap.Heatmap = function () {
                 heatmap.cols.order[heatmap.cols.order.length] = c;
             }
             heatmap.applyColsSort();
+            heatmap.paint();
+        }
+
+        // 'R' or 'r'
+        if (e.keyCode == 82 || e.charCode == 114) {
+            var heatmap = this;
+            heatmap.cols.selected = [];
             heatmap.paint();
         }
 
