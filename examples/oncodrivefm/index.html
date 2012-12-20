@@ -7,12 +7,12 @@
 
 <link href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" rel="stylesheet" type="text/css" />
 <link href="../../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<link id="jheatmap.css" href="../../css/jheatmap-1.0.0-alpha-min.css" rel="stylesheet" type="text/css" />
+<link id="jheatmap.css" href="../../css/jheatmap-1.0.0-alpha.css" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js"></script>
 <script src="../../js/bootstrap.min.js" type="text/javascript"></script>
-<script id="jheatmap.js" src="../../js/jheatmap-1.0.0-alpha-min.js" type="text/javascript"></script>
+<script id="jheatmap.js" src="../../js/jheatmap-1.0.0-alpha.js" type="text/javascript"></script>
 
 <script>
 	$(document).ready(function() {
@@ -34,8 +34,8 @@
 				heatmap.cells.selectedValue = 2;
 
 				// Configure decorators and aggregators
-				heatmap.cells.decorators[2] = new jheatmap.decorators.Median();
-				heatmap.cells.aggregators[2] = new jheatmap.aggregators.Median();
+				heatmap.cells.decorators[2] = new jheatmap.decorators.Linear();
+				heatmap.cells.aggregators[2] = new jheatmap.aggregators.AbsoluteAddition();
 
 				// Column annotations
 				heatmap.cols.decorators[1] = new jheatmap.decorators.PValue( { cutoff: 0.8 } );
@@ -49,6 +49,22 @@
 				heatmap.cols.zoom = 6;
 				heatmap.rows.zoom = 6;
 
+                // Mutually exclusive sorting
+                heatmap.applySort = function() {
+                    heatmap.rows.sort.type = "value";
+                    heatmap.rows.sort.field = 2;
+                    heatmap.rows.sort.asc = false;
+                    heatmap.applyRowsSort();
+
+                    heatmap.cols.sort.type = "value";
+                    heatmap.cols.sort.field = 2;
+                    heatmap.cols.sort.asc = false;
+                    for (var i = heatmap.rows.order.length - 1; i >= 0; i--) {
+                        heatmap.cols.sort.item = [heatmap.rows.order[i]];
+                        heatmap.applyColsSort();
+                    }
+                }
+                heatmap.applySort();
 			}
 		});
 	});
