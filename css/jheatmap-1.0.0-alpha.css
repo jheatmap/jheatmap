@@ -147,7 +147,7 @@ table.heatmap div.detailsbox {
         height: 100%;
 }
 
-#heatmap-loader div.progress {
+#heatmap-loader div.loader {
 	position: fixed;
 	top: 50%;
 	left: 50%;
