@@ -34,8 +34,8 @@
 				heatmap.cells.selectedValue = 2;
 
 				// Configure decorators and aggregators
-				heatmap.cells.decorators[2] = new jheatmap.decorators.Median();
-				heatmap.cells.aggregators[2] = new jheatmap.aggregators.Median();
+				heatmap.cells.decorators[2] = new jheatmap.decorators.Linear();
+				heatmap.cells.aggregators[2] = new jheatmap.aggregators.AbsoluteAddition();
 
 				// Column annotations
 				heatmap.cols.decorators[1] = new jheatmap.decorators.PValue( { cutoff: 0.8 } );
@@ -49,6 +49,22 @@
 				heatmap.cols.zoom = 6;
 				heatmap.rows.zoom = 6;
 
+                // Mutually exclusive sorting
+                heatmap.applySort = function() {
+                    heatmap.rows.sort.type = "value";
+                    heatmap.rows.sort.field = 2;
+                    heatmap.rows.sort.asc = false;
+                    heatmap.applyRowsSort();
+
+                    heatmap.cols.sort.type = "value";
+                    heatmap.cols.sort.field = 2;
+                    heatmap.cols.sort.asc = false;
+                    for (var i = heatmap.rows.order.length - 1; i >= 0; i--) {
+                        heatmap.cols.sort.item = [heatmap.rows.order[i]];
+                        heatmap.applyColsSort();
+                    }
+                }
+                heatmap.applySort();
 			}
 		});
 	});

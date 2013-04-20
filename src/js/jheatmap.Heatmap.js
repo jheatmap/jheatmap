@@ -410,7 +410,7 @@ jheatmap.Heatmap = function () {
 
         if (this.rows.sort.type == "label") {
 
-            this.rows.order.sort(function (o_a, o_b) {
+            this.rows.order.stableSort(function (o_a, o_b) {
                 var v_a = heatmap.rows.values[o_a][heatmap.rows.sort.field].toLowerCase();
                 var v_b = heatmap.rows.values[o_b][heatmap.rows.sort.field].toLowerCase();
                 var val = (heatmap.rows.sort.asc ? 1 : -1);
@@ -443,7 +443,7 @@ jheatmap.Heatmap = function () {
                 aggregation[this.rows.order[r]] = sum = this.cells.aggregators[this.rows.sort.field].acumulate(values);
             }
 
-            this.rows.order.sort(function (o_a, o_b) {
+            this.rows.order.stableSort(function (o_a, o_b) {
                 var v_a = aggregation[o_a];
                 var v_b = aggregation[o_b];
                 var val = (heatmap.rows.sort.asc ? 1 : -1);
@@ -451,7 +451,7 @@ jheatmap.Heatmap = function () {
             });
         } else if (this.rows.sort.type == "single") {
 
-            this.rows.order.sort(function (o_a, o_b) {
+            this.rows.order.stableSort(function (o_a, o_b) {
                 var pos_a = (o_a * heatmap.cols.values.length) + heatmap.rows.sort.item;
                 var pos_b = (o_b * heatmap.cols.values.length) + heatmap.rows.sort.item;
 
@@ -490,7 +490,7 @@ jheatmap.Heatmap = function () {
         var heatmap = this;
 
         if (this.cols.sort.type == "label") {
-            this.cols.order.sort(function (o_a, o_b) {
+            this.cols.order.stableSort(function (o_a, o_b) {
                 var v_a = heatmap.cols.values[o_a][heatmap.cols.sort.field].toLowerCase();
                 var v_b = heatmap.cols.values[o_b][heatmap.cols.sort.field].toLowerCase();
 
@@ -525,7 +525,7 @@ jheatmap.Heatmap = function () {
                 aggregation[cols[c]] = this.cells.aggregators[this.cells.selectedValue].acumulate(values);
             }
 
-            this.cols.order.sort(function (o_a, o_b) {
+            this.cols.order.stableSort(function (o_a, o_b) {
                 var v_a = aggregation[o_a];
                 var v_b = aggregation[o_b];
                 var val = (heatmap.cols.sort.asc ? 1 : -1);
@@ -535,7 +535,7 @@ jheatmap.Heatmap = function () {
         } else if (this.cols.sort.type == "single") {
 
             pos = this.cols.sort.item * this.cols.values.length;
-            this.cols.order.sort(function (o_a, o_b) {
+            this.cols.order.stableSort(function (o_a, o_b) {
                 var value_a = heatmap.cells.values[pos + o_a];
                 var value_b = heatmap.cells.values[pos + o_b];
                 var v_a = (value_a == null ? null : parseFloat(value_a[heatmap.cols.sort.field]));
@@ -900,6 +900,25 @@ jheatmap.Heatmap = function () {
         firstRow.append(topleftPanel);
         topleftPanel.append('<td><div class="detailsbox">cell details here</div></td>');
 
+        topleftPanel.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 70px; padding-bottom: 4px;'>" +
+            "<div><a href='#helpModal' data-toggle='modal'>Keyboard shortcuts</a></div>" +
+            "<div class='modal hide' id='helpModal' tabindex='-1' role='dialog'>" +
+            "<div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button>" +
+            "<h3>Keyboard shortcuts</h3></div>" +
+            "<div class='modal-body'>" +
+            "<dl class='dl-horizontal'>" +
+            "<dd><strong>Place the mouse over rows or columns and press the key:</strong></dd>" +
+            "<dt>H</dt><dd>Hide selected rows/columns</dd>" +
+            "<dt>S</dt><dd>Show hidden rows/columns</dd>" +
+            "<dt>R</dt><dd>Remove selection from rows/columns</dd>" +
+            "</dl>" +
+            "</div>" +
+            "<div class='modal-footer'>" +
+            "<button class='btn' data-dismiss='modal'>Close</button>" +
+            "</div>" +
+            "</div>" +
+            "</td>");
+
         // Add filters
         for (var filterId in heatmap.filters) {
 
@@ -1133,21 +1152,8 @@ jheatmap.Heatmap = function () {
          * Horizontal scroll
          ******************************************************************/
         var scrollRow = $("<tr class='horizontalScroll'>");
-        scrollRow.append("<td class='border' style='font-size: 10px; vertical-align: middle; padding-left: 10px;'>" +
-            "<a href='#helpModal' data-toggle='modal'>keys help</a>" +
-            "<div class='modal hide' id='helpModal' tabindex='-1' role='dialog'>" +
-            "<div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button>" +
-            "<h3>Keys help</h3></div>" +
-            "<div class='modal-body'>" +
-            "<dl class='dl-horizontal'>" +
-            "<dt>H</dt><dd>Hide selected rows/columns</dd>" +
-            "<dt>S</dt><dd>Show hidden rows/columns</dd>" +
-            "</dl>" +
-            "</div>" +
-            "<div class='modal-footer'>" +
-            "<button class='btn' data-dismiss='modal'>Close</button>" +
-            "</div>" +
-            "</div>" +
+        scrollRow.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 10px; padding-top: 7px;'>" +
+            "<span>visualized with <a href='http://bg.upf.edu/jheatmap/' target='_blank'>jHeatmap</a></span>" +
             "</td>");
 
         var scrollHor = $("<td class='borderT'>");
@@ -1610,7 +1616,7 @@ jheatmap.Heatmap = function () {
     this.onRowsKeyPress = function(e) {
 
         // 'H' or 'h'
-        if (e.charCode == 72 || e.charCode == 104) {
+        if (e.keyCode == 72 || e.charCode == 104) {
             var heatmap = this;
             if (heatmap.rows.selected.length > 0) {
                 heatmap.rows.order = $.grep(heatmap.rows.order, function (value) {
@@ -1631,6 +1637,19 @@ jheatmap.Heatmap = function () {
             heatmap.paint();
         }
 
+        // 'R' or 'r'
+        if (e.keyCode == 82 || e.charCode == 114) {
+            var heatmap = this;
+            heatmap.rows.selected = [];
+            heatmap.paint();
+        }
+
+        // 'D' or 'd'
+//        if (e.keyCode == 68 || e.charCode == 100) {
+//            var heatmap = this;
+//            heatmap.applySort();
+//            heatmap.paint();
+//        }
     }
 
 
@@ -1793,6 +1812,13 @@ jheatmap.Heatmap = function () {
                 heatmap.cols.order[heatmap.cols.order.length] = c;
             }
             heatmap.applyColsSort();
+            heatmap.paint();
+        }
+
+        // 'R' or 'r'
+        if (e.keyCode == 82 || e.charCode == 114) {
+            var heatmap = this;
+            heatmap.cols.selected = [];
             heatmap.paint();
         }
 
