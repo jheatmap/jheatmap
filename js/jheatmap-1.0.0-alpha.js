@@ -2073,9 +2073,7 @@ jheatmap.Heatmap = function () {
 
         // Last border row
         var lastRow = $('<tr>');
-        lastRow.append($("<td class='border'>").append($('<img>', {
-            'src':basePath + "/images/sep.png"
-        })));
+        lastRow.append($("<td class='border'>").append($('<span>&nbsp;</span>')));
         lastRow.append("<td class='borderT'></td>");
         if (heatmap.rows.annotations.length > 0) {
             lastRow.append("<td class='border'></td>");

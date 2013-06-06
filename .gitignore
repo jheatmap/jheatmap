@@ -12,5 +12,6 @@
 .settings/
 .externalToolBuilders/
 
-# Maven files
-target/
+# Site files
+site/
+documentation/out/*

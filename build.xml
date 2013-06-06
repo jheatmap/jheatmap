@@ -1,101 +1,101 @@
 <?xml version="1.0"?>
 <project name="jheatmap" default="release">
-	<description>Interactive heatmap viewer</description>
+    <description>Interactive heatmap viewer</description>
 
-	<property name="jheatmap.version" value="1.0.0-alpha" />
+    <property name="jheatmap.version" value="1.0.0-alpha"/>
 
-	<target name="release" depends="purge, concat, yuicompressor, examples-release, jsdoc">
-	</target>
-	
-	<target name="develop" depends="purge, concat, examples-develop">	
-	</target>
+    <target name="release" depends="purge, concat, yuicompressor, examples-release, jsdoc">
+    </target>
 
-	<target name="examples-release">
-		<!-- update examples heads -->
-		<echo message="Update examples heads" />
-		<replaceregexp match='link id="jheatmap.css" href="(.*)"'
-			replace='link id="jheatmap.css" href="../../css/jheatmap-${jheatmap.version}-min.css" rel="stylesheet" type="text/css"'
-			flags="g" byline="true">
-			<fileset dir="./examples" includes="**/index.html" />
-		</replaceregexp>
+    <target name="develop" depends="purge, concat, examples-develop">
+    </target>
 
-		<replaceregexp match='script id="jheatmap.js" src="(.*)"'
-			replace='script id="jheatmap.js" src="../../js/jheatmap-${jheatmap.version}-min.js" type="text/javascript"'
-			flags="g" byline="true">
-			<fileset dir="./examples" includes="**/index.html" />
-		</replaceregexp>
-	</target>
-	
-	<target name="examples-develop">
-		<!-- update examples heads -->
-		<echo message="Update examples heads" />
-		<replaceregexp match='link id="jheatmap.css" href="(.*)"'
-			replace='link id="jheatmap.css" href="../../css/jheatmap-${jheatmap.version}.css" rel="stylesheet" type="text/css"'
-			flags="g" byline="true">
-			<fileset dir="./examples" includes="**/index.html" />
-		</replaceregexp>
+    <target name="examples-release">
+        <!-- update examples heads -->
+        <echo message="Update examples heads"/>
+        <replaceregexp match='link id="jheatmap.css" href="(.*)"'
+                       replace='link id="jheatmap.css" href="../../css/jheatmap-${jheatmap.version}-min.css" rel="stylesheet" type="text/css"'
+                       flags="g" byline="true">
+            <fileset dir="./examples" includes="**/index.html"/>
+        </replaceregexp>
 
-		<replaceregexp match='script id="jheatmap.js" src="(.*)"'
-			replace='script id="jheatmap.js" src="../../js/jheatmap-${jheatmap.version}.js" type="text/javascript"'
-			flags="g" byline="true">
-			<fileset dir="./examples" includes="**/index.html" />
-		</replaceregexp>
-	</target>
+        <replaceregexp match='script id="jheatmap.js" src="(.*)"'
+                       replace='script id="jheatmap.js" src="../../js/jheatmap-${jheatmap.version}-min.js" type="text/javascript"'
+                       flags="g" byline="true">
+            <fileset dir="./examples" includes="**/index.html"/>
+        </replaceregexp>
+    </target>
 
-	<target name="purge">
-		<!-- Remove previous compilation -->
-		<echo message="Purging javascript and stylesheet sources" />
-		<delete dir="css" />
-		<delete dir="js" />
-	</target>
+    <target name="examples-develop">
+        <!-- update examples heads -->
+        <echo message="Update examples heads"/>
+        <replaceregexp match='link id="jheatmap.css" href="(.*)"'
+                       replace='link id="jheatmap.css" href="../../css/jheatmap-${jheatmap.version}.css" rel="stylesheet" type="text/css"'
+                       flags="g" byline="true">
+            <fileset dir="./examples" includes="**/index.html"/>
+        </replaceregexp>
 
-	<target name="concat">
-		<!-- concatenation of javascript -->
-		<echo message="Building global javascript" />
-		<concat destfile="js/jheatmap-${jheatmap.version}.js" force="no">
-			<!-- explicitly order js concat because ordering matters here -->
-			<fileset dir="." includes="src/js/jquery.mousewheel.js" />
-            <fileset dir="." includes="src/js/jheatmap.utils.js" />
-            <fileset dir="." includes="src/js/jheatmap.decorators.js" />
-            <fileset dir="." includes="src/js/jheatmap.aggregators.js" />
-            <fileset dir="." includes="src/js/jheatmap.filters.js" />
-            <fileset dir="." includes="src/js/jheatmap.Heatmap.js" />
-            <fileset dir="." includes="src/js/jquery.jheatmap.js" />
-		</concat>
+        <replaceregexp match='script id="jheatmap.js" src="(.*)"'
+                       replace='script id="jheatmap.js" src="../../js/jheatmap-${jheatmap.version}.js" type="text/javascript"'
+                       flags="g" byline="true">
+            <fileset dir="./examples" includes="**/index.html"/>
+        </replaceregexp>
+    </target>
+
+    <target name="purge">
+        <!-- Remove previous compilation -->
+        <echo message="Purging javascript and stylesheet sources"/>
+        <delete dir="css"/>
+        <delete dir="js"/>
+    </target>
+
+    <target name="concat">
+        <!-- concatenation of javascript -->
+        <echo message="Building global javascript"/>
+        <concat destfile="js/jheatmap-${jheatmap.version}.js" force="no">
+            <!-- explicitly order js concat because ordering matters here -->
+            <fileset dir="." includes="src/js/jquery.mousewheel.js"/>
+            <fileset dir="." includes="src/js/jheatmap.utils.js"/>
+            <fileset dir="." includes="src/js/jheatmap.decorators.js"/>
+            <fileset dir="." includes="src/js/jheatmap.aggregators.js"/>
+            <fileset dir="." includes="src/js/jheatmap.filters.js"/>
+            <fileset dir="." includes="src/js/jheatmap.Heatmap.js"/>
+            <fileset dir="." includes="src/js/jquery.jheatmap.js"/>
+        </concat>
         <copyfile src="src/js/bootstrap.min.js" dest="js/bootstrap.min.js"/>
 
-		<!-- concatenation of cascading stylesheets -->
-		<echo message="Building global cascading stylesheets" />
-		<concat destfile="css/jheatmap-${jheatmap.version}.css" force="no">
-			<fileset dir="." includes="src/css/jheatmap.css" />
-		</concat>
+        <!-- concatenation of cascading stylesheets -->
+        <echo message="Building global cascading stylesheets"/>
+        <concat destfile="css/jheatmap-${jheatmap.version}.css" force="no">
+            <fileset dir="." includes="src/css/jheatmap.css"/>
+        </concat>
         <copyfile src="src/css/bootstrap.min.css" dest="css/bootstrap.min.css"/>
 
-	</target>
+    </target>
 
-	<target name="yuicompressor">
+    <target name="yuicompressor">
 
-		<path id="task.classpath">
-			<pathelement location="lib/yui-compressor-2.4.2.jar" />
-			<pathelement location="lib/yui-compressor-ant-task-0.5.jar" />
-		</path>
+        <path id="task.classpath">
+            <pathelement location="lib/yui-compressor-2.4.2.jar"/>
+            <pathelement location="lib/yui-compressor-ant-task-0.5.jar"/>
+        </path>
 
-		<!-- yui-compressor task definition -->
-		<taskdef name="yui-compressor"
-			classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask">
-			<classpath refid="task.classpath" />
-		</taskdef>
+        <!-- yui-compressor task definition -->
+        <taskdef name="yui-compressor"
+                 classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask">
+            <classpath refid="task.classpath"/>
+        </taskdef>
 
-		<!-- invoke compressor -->
-		<yui-compressor warn="false" charset="UTF-8" fromdir="."
-			todir=".">
-			<include name="js/jheatmap-${jheatmap.version}.js" />
-			<include name="css/jheatmap-${jheatmap.version}.css" />
-		</yui-compressor>
-	</target>
+        <!-- invoke compressor -->
+        <yui-compressor warn="false" charset="UTF-8" fromdir="."
+                        todir=".">
+            <include name="js/jheatmap-${jheatmap.version}.js"/>
+            <include name="css/jheatmap-${jheatmap.version}.css"/>
+        </yui-compressor>
+    </target>
 
     <target name="jsdoc">
-        <echo message="Creating the documentation" />
+        <echo message="Creating the documentation"/>
         <exec executable="documentation/jsdoc"
               failonerror="true"
               osfamily="unix"/>
