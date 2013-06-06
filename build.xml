@@ -11,35 +11,39 @@
     </target>
 
     <target name="examples-release">
-        <!-- update examples heads -->
-        <echo message="Update examples heads"/>
-        <replaceregexp match='link id="jheatmap.css" href="(.*)"'
-                       replace='link id="jheatmap.css" href="../../css/jheatmap-${jheatmap.version}-min.css" rel="stylesheet" type="text/css"'
-                       flags="g" byline="true">
-            <fileset dir="./site/examples" includes="**/index.html"/>
-        </replaceregexp>
 
-        <replaceregexp match='script id="jheatmap.js" src="(.*)"'
-                       replace='script id="jheatmap.js" src="../../js/jheatmap-${jheatmap.version}-min.js" type="text/javascript"'
-                       flags="g" byline="true">
-            <fileset dir="./site/examples" includes="**/index.html"/>
-        </replaceregexp>
+        <echo message="Update examples heads"/>
+
+        <filter token="jheatmap.css" value="../../css/jheatmap-${jheatmap.version}.css"/>
+        <filter token="jheatmap.js" value="../../css/jheatmap-${jheatmap.version}.css"/>
+
+        <filter token="jquery.js" value="//code.jquery.com/jquery-1.7.1.min.js" />
+        <filter token="jquery.mobile.css" value="//code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+        <filter token="jquery.mobile.js" value="//code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js" />
+
+        <copy todir="site/examples" filtering="true">
+            <fileset dir="examples">
+                <include name="**/*.html"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="examples-develop">
-        <!-- update examples heads -->
-        <echo message="Update examples heads"/>
-        <replaceregexp match='link id="jheatmap.css" href="(.*)"'
-                       replace='link id="jheatmap.css" href="../../css/jheatmap-${jheatmap.version}.css" rel="stylesheet" type="text/css"'
-                       flags="g" byline="true">
-            <fileset dir="./site/examples" includes="**/index.html"/>
-        </replaceregexp>
 
-        <replaceregexp match='script id="jheatmap.js" src="(.*)"'
-                       replace='script id="jheatmap.js" src="../../js/jheatmap-${jheatmap.version}.js" type="text/javascript"'
-                       flags="g" byline="true">
-            <fileset dir="./site/examples" includes="**/index.html"/>
-        </replaceregexp>
+        <echo message="Update examples heads"/>
+
+        <filter token="jheatmap.css" value="../../css/jheatmap-${jheatmap.version}-min.css"/>
+        <filter token="jheatmap.js" value="../../js/jheatmap-${jheatmap.version}-min.js"/>
+
+        <filter token="jquery.js" value="http://code.jquery.com/jquery-1.7.1.min.js" />
+        <filter token="jquery.mobile.css" value="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+        <filter token="jquery.mobile.js" value="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js" />
+
+        <copy todir="site/examples" filtering="true">
+            <fileset dir="examples">
+                <include name="**/*.html"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="concat">
@@ -73,7 +77,9 @@
         <mkdir dir="site" />
 
         <copy todir="site/examples" >
-            <fileset dir="examples" includes="**"/>
+            <fileset dir="examples">
+                <exclude name="**/*.html"/>
+            </fileset>
         </copy>
 
         <copy todir="site/documentation" >
