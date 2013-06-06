@@ -4,10 +4,10 @@
 
     <property name="jheatmap.version" value="1.0.0-alpha"/>
 
-    <target name="release" depends="purge, concat, yuicompressor, examples-release, jsdoc">
+    <target name="release" depends="reset-site, concat, yuicompressor, examples-release, jsdoc">
     </target>
 
-    <target name="develop" depends="purge, concat, examples-develop">
+    <target name="develop" depends="reset-site, concat, examples-develop">
     </target>
 
     <target name="examples-release">
@@ -16,13 +16,13 @@
         <replaceregexp match='link id="jheatmap.css" href="(.*)"'
                        replace='link id="jheatmap.css" href="../../css/jheatmap-${jheatmap.version}-min.css" rel="stylesheet" type="text/css"'
                        flags="g" byline="true">
-            <fileset dir="./examples" includes="**/index.html"/>
+            <fileset dir="./site/examples" includes="**/index.html"/>
         </replaceregexp>
 
         <replaceregexp match='script id="jheatmap.js" src="(.*)"'
                        replace='script id="jheatmap.js" src="../../js/jheatmap-${jheatmap.version}-min.js" type="text/javascript"'
                        flags="g" byline="true">
-            <fileset dir="./examples" includes="**/index.html"/>
+            <fileset dir="./site/examples" includes="**/index.html"/>
         </replaceregexp>
     </target>
 
@@ -32,27 +32,20 @@
         <replaceregexp match='link id="jheatmap.css" href="(.*)"'
                        replace='link id="jheatmap.css" href="../../css/jheatmap-${jheatmap.version}.css" rel="stylesheet" type="text/css"'
                        flags="g" byline="true">
-            <fileset dir="./examples" includes="**/index.html"/>
+            <fileset dir="./site/examples" includes="**/index.html"/>
         </replaceregexp>
 
         <replaceregexp match='script id="jheatmap.js" src="(.*)"'
                        replace='script id="jheatmap.js" src="../../js/jheatmap-${jheatmap.version}.js" type="text/javascript"'
                        flags="g" byline="true">
-            <fileset dir="./examples" includes="**/index.html"/>
+            <fileset dir="./site/examples" includes="**/index.html"/>
         </replaceregexp>
-    </target>
-
-    <target name="purge">
-        <!-- Remove previous compilation -->
-        <echo message="Purging javascript and stylesheet sources"/>
-        <delete dir="css"/>
-        <delete dir="js"/>
     </target>
 
     <target name="concat">
         <!-- concatenation of javascript -->
         <echo message="Building global javascript"/>
-        <concat destfile="js/jheatmap-${jheatmap.version}.js" force="no">
+        <concat destfile="site/js/jheatmap-${jheatmap.version}.js" force="no">
             <!-- explicitly order js concat because ordering matters here -->
             <fileset dir="." includes="src/js/jquery.mousewheel.js"/>
             <fileset dir="." includes="src/js/jheatmap.utils.js"/>
@@ -62,15 +55,41 @@
             <fileset dir="." includes="src/js/jheatmap.Heatmap.js"/>
             <fileset dir="." includes="src/js/jquery.jheatmap.js"/>
         </concat>
-        <copyfile src="src/js/bootstrap.min.js" dest="js/bootstrap.min.js"/>
+        <copy file="src/js/bootstrap.min.js" tofile="site/js/bootstrap.min.js"/>
 
         <!-- concatenation of cascading stylesheets -->
         <echo message="Building global cascading stylesheets"/>
-        <concat destfile="css/jheatmap-${jheatmap.version}.css" force="no">
+        <concat destfile="site/css/jheatmap-${jheatmap.version}.css" force="no">
             <fileset dir="." includes="src/css/jheatmap.css"/>
         </concat>
-        <copyfile src="src/css/bootstrap.min.css" dest="css/bootstrap.min.css"/>
+        <copy file="src/css/bootstrap.min.css" tofile="site/css/bootstrap.min.css"/>
+    </target>
 
+    <target name="reset-site">
+
+        <echo message="Preparing site" />
+        <delete dir="site"/>
+
+        <mkdir dir="site" />
+
+        <copy todir="site/examples" >
+            <fileset dir="examples" includes="**"/>
+        </copy>
+
+        <copy todir="site/documentation" >
+            <fileset dir="documentation" includes="**"/>
+        </copy>
+
+        <chmod file="site/documentation/jsdoc" perm="+x"/>
+
+        <copy todir="site/images" >
+            <fileset dir="images" includes="**"/>
+        </copy>
+
+        <mkdir dir="site/css" />
+        <mkdir dir="site/js" />
+
+        <copy file="index.html" tofile="site/index.html" />
     </target>
 
     <target name="yuicompressor">
@@ -89,14 +108,14 @@
         <!-- invoke compressor -->
         <yui-compressor warn="false" charset="UTF-8" fromdir="."
                         todir=".">
-            <include name="js/jheatmap-${jheatmap.version}.js"/>
-            <include name="css/jheatmap-${jheatmap.version}.css"/>
+            <include name="site/js/jheatmap-${jheatmap.version}.js"/>
+            <include name="site/css/jheatmap-${jheatmap.version}.css"/>
         </yui-compressor>
     </target>
 
     <target name="jsdoc">
         <echo message="Creating the documentation"/>
-        <exec executable="documentation/jsdoc"
+        <exec executable="site/documentation/jsdoc"
               failonerror="true"
               osfamily="unix"/>
     </target>
