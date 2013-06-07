@@ -1,8 +1,54 @@
-#!/bin/sh
+#! /bin/bash
 
-cp -r ../css .
-cp -r ../documentation .
-cp -r ../images .
-cp -r ../js .
-cp -r ../examples .
-cp ../index.html .
+set -eu
+
+if [ "x$(git status --porcelain)" != "x" ]; then
+  echo "error:  git repo has uncommited changes." >&2
+  exit 1
+fi
+
+echo "Checking out doc branch in ./.gh-pages..."
+
+if [ ! -e .gh-pages ]; then
+  git clone -b gh-pages https://github.com/jheatmap/jheatmap.git .gh-pages
+  cd .gh-pages
+else
+  cd .gh-pages
+  git pull
+fi
+
+if [ "x$(git status --porcelain)" != "x" ]; then
+  echo "error:  .gh-pages is not clean." >&2
+  exit 1
+fi
+
+cd ..
+
+echo "Regenerating site..."
+
+rm -rf _site .gh-pages/*
+
+ant release
+cp -r site/* .gh-pages
+
+REV="$(git rev-parse HEAD)"
+
+cd .gh-pages
+git add *
+git commit -m "site generated @$REV"
+
+if [ "x$(git status --porcelain)" != "x" ]; then
+  echo "error:  .gh-pages is not clean after commit." >&2
+  exit 1
+fi
+
+echo -n "Push now? (y/N)"
+read -n 1 YESNO
+echo
+
+if [ "$YESNO" == "y" ]; then
+  git push
+  cd ..
+else
+  echo "Did not push.  You may want to delete .gh-pages."
+fi
