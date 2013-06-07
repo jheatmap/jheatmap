@@ -14,12 +14,10 @@
 
         <echo message="Update examples heads"/>
 
-        <filter token="jheatmap.css" value="../../css/jheatmap-${jheatmap.version}.css"/>
-        <filter token="jheatmap.js" value="../../css/jheatmap-${jheatmap.version}.css"/>
+        <filter token="jheatmap.css" value="../../css/jheatmap-${jheatmap.version}-min.css"/>
+        <filter token="jheatmap.js" value="../../js/jheatmap-${jheatmap.version}-min.js"/>
 
-        <filter token="jquery.js" value="//code.jquery.com/jquery-1.7.1.min.js" />
-        <filter token="jquery.mobile.css" value="//code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
-        <filter token="jquery.mobile.js" value="//code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js" />
+        <filter token="jquery.js" value="http://code.jquery.com/jquery-1.9.1.min.js" />
 
         <copy todir="site/examples" filtering="true">
             <fileset dir="examples">
@@ -32,12 +30,10 @@
 
         <echo message="Update examples heads"/>
 
-        <filter token="jheatmap.css" value="../../css/jheatmap-${jheatmap.version}-min.css"/>
-        <filter token="jheatmap.js" value="../../js/jheatmap-${jheatmap.version}-min.js"/>
+        <filter token="jheatmap.css" value="../../css/jheatmap-${jheatmap.version}.css"/>
+        <filter token="jheatmap.js" value="../../js/jheatmap-${jheatmap.version}.js"/>
 
-        <filter token="jquery.js" value="http://code.jquery.com/jquery-1.7.1.min.js" />
-        <filter token="jquery.mobile.css" value="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
-        <filter token="jquery.mobile.js" value="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js" />
+        <filter token="jquery.js" value="http://code.jquery.com/jquery-1.9.1.js" />
 
         <copy todir="site/examples" filtering="true">
             <fileset dir="examples">
@@ -51,6 +47,7 @@
         <echo message="Building global javascript"/>
         <concat destfile="site/js/jheatmap-${jheatmap.version}.js" force="no">
             <!-- explicitly order js concat because ordering matters here -->
+            <fileset dir="." includes="src/js/bootstrap.js"/>
             <fileset dir="." includes="src/js/jquery.mousewheel.js"/>
             <fileset dir="." includes="src/js/jheatmap.utils.js"/>
             <fileset dir="." includes="src/js/jheatmap.decorators.js"/>
@@ -59,14 +56,13 @@
             <fileset dir="." includes="src/js/jheatmap.Heatmap.js"/>
             <fileset dir="." includes="src/js/jquery.jheatmap.js"/>
         </concat>
-        <copy file="src/js/bootstrap.min.js" tofile="site/js/bootstrap.min.js"/>
 
         <!-- concatenation of cascading stylesheets -->
         <echo message="Building global cascading stylesheets"/>
         <concat destfile="site/css/jheatmap-${jheatmap.version}.css" force="no">
+            <fileset dir="." includes="src/css/bootstrap.css"/>
             <fileset dir="." includes="src/css/jheatmap.css"/>
         </concat>
-        <copy file="src/css/bootstrap.min.css" tofile="site/css/bootstrap.min.css"/>
     </target>
 
     <target name="reset-site">

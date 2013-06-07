@@ -1,3 +1,11 @@
+
+table.heatmap div.modal-window
+{
+    position:absolute;
+    z-index:101;
+
+}
+
 /* CSV Table Classes */
 canvas {
     background-color: #EEE;
