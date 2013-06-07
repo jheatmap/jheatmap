@@ -6,14 +6,14 @@ Website
 
 Check the documentation and online examples here: 
 
-http://bg.upf.edu/jheatmap
+http://jheatmap.github.io/jheatmap
 
 Bug tracker
 -----------
 
 Have a bug? Please create an issue here on GitHub!
 
-https://github.com/jordeu/jheatmap/issues
+https://github.com/jheatmap/jheatmap/issues
 
 Versioning
 ----------
@@ -38,6 +38,8 @@ Authors
 + <http://github.com/jordeu>
 
 **Michael Schroeder**
+
++ <https://github.com/mpschr>
 
 
 Copyright and license

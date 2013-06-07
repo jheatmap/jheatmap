@@ -10,7 +10,7 @@ fi
 echo "Checking out doc branch in ./.gh-pages..."
 
 if [ ! -e .gh-pages ]; then
-  git clone -b gh-pages https://github.com/jheatmap/jheatmap.git .gh-pages
+  git clone -b gh-pages git@github.com:jheatmap/jheatmap.git .gh-pages
   cd .gh-pages
 else
   cd .gh-pages
