@@ -26,50 +26,57 @@
                 				heatmap.rows.zoom = 12;
                 				
                 				// Default cell value
-                				heatmap.cells.selectedValue = 8;
+                				heatmap.cells.selectedValue = "left-p-value";
                 				
                 				// Configure decorators and aggregators
                                 var decoratorPValue = new jheatmap.decorators.PValue();
                                 var aggregatorPValue = new jheatmap.aggregators.PValue({});
-                				$.each( [8, 9, 10, 11, 12, 13], function(pos, value) {
+                				$.each( [
+                                    "left-p-value",
+                                    "right-p-value",
+                                    "two-tail-p-value",
+                                    "corrected-left-p-value",
+                                    "corrected-right-p-value",
+                                    "corrected-two-tail-p-value"], function(pos, value) {
                 					heatmap.cells.decorators[value] = decoratorPValue;
                     				heatmap.cells.aggregators[value] = aggregatorPValue;
                 				});
                 				
                 				// Column annotations
-                				heatmap.cols.decorators[1] = new jheatmap.decorators.Constant({});
-                				heatmap.cols.decorators[2] = new jheatmap.decorators.Categorical({
+                				heatmap.cols.decorators["Ratio"] = new jheatmap.decorators.Constant({});
+                				heatmap.cols.decorators["Sex"] = new jheatmap.decorators.Categorical({
                                         values: ["F", "M"],
                                         colors: ["pink", "blue"]
                                         });
-                				heatmap.cols.annotations = [1, 2];
+                				heatmap.cols.annotations = ["Ratio", "Sex"];
                 				
                 				// Row annotations
-                				heatmap.rows.decorators[1] = decoratorPValue;
-                				heatmap.rows.annotations = [1];
-                				
-                				
+                				heatmap.rows.decorators["p-value"] = decoratorPValue;
+                				heatmap.rows.annotations = ["p-value"];
                 				
                 				// Add filters
                 				heatmap.filters = {
                 						'non-significant-rows' : {
                 							title : "Hide non-significant rows",
                 							filter : new jheatmap.filters.NonSignificance(),
-                							fields : [8, 9, 10, 11, 12, 13]
+                							fields : [
+                                                "left-p-value",
+                                                "right-p-value",
+                                                "two-tail-p-value",
+                                                "corrected-left-p-value",
+                                                "corrected-right-p-value",
+                                                "corrected-two-tail-p-value"
+                                            ]
                 						}
                 				}
-                				
-                				heatmap.addRowsFilter('non-significant-rows');
-                				heatmap.applyFilters();
-                				
+
                 				// Default sorting
                 				heatmap.rows.sort.type = "value";
-								heatmap.rows.sort.field = 8;
+								heatmap.rows.sort.field = "left-p-value";
 								heatmap.rows.sort.asc = false;
 								heatmap.cols.sort.type = "value";
-								heatmap.cols.sort.field = 8;
-								heatmap.cols.sort.asc = false;                				
-                				heatmap.applySort();
+								heatmap.cols.sort.field = "left-p-value";
+								heatmap.cols.sort.asc = false;
                 				                				
                 			}
                 		}

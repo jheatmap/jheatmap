@@ -866,6 +866,7 @@ jheatmap.Heatmap = function (options) {
      * Build the heatmap.
      */
     this.build = function () {
+
         var heatmap = this;
         var obj = this.divHeatmap;
 
@@ -1825,5 +1826,71 @@ jheatmap.Heatmap = function (options) {
 
         return true;
     };
+
+    this.reindexArray = function(values, headers) {
+        for(var index in values) {
+            if (isNaN(index)) {
+                i = jQuery.inArray(index, headers);
+                values[i] = values[index];
+                values[index] = undefined;
+            }
+        }
+    }
+
+    this.convertToIndexArray = function(values, headers) {
+        for (var index in values) {
+            values[index] = this.reindexField(values[index], headers);
+        }
+    }
+
+    this.reindexField = function(value, headers) {
+        if (isNaN(value)) {
+            i = jQuery.inArray(value, headers);
+
+            if (i > -1) {
+                return i;
+            }
+        }
+
+        return value;
+    }
+
+    this.reindex = function() {
+
+        var heatmap = this;
+
+        // Reindex configuration. Needed to let the user use position or header id interchangeably
+        this.reindexArray(heatmap.cells.decorators, heatmap.cells.header);
+        this.reindexArray(heatmap.cells.aggregators, heatmap.cells.header);
+        this.reindexArray(heatmap.cols.decorators, heatmap.cols.header);
+        this.reindexArray(heatmap.cols.aggregators, heatmap.cols.header);
+        this.convertToIndexArray(heatmap.cols.annotations, heatmap.cols.header);
+        this.reindexArray(heatmap.rows.decorators, heatmap.rows.header);
+        this.reindexArray(heatmap.rows.aggregators, heatmap.rows.header);
+        this.convertToIndexArray(heatmap.rows.annotations, heatmap.rows.header);
+
+        if (heatmap.filters != undefined) {
+            for(var key in heatmap.filters) {
+                this.convertToIndexArray(heatmap.filters[key].fields, heatmap.cells.header);
+            }
+        }
+
+        if (heatmap.rows.filters != undefined) {
+            for(var key in heatmap.rows.filters) {
+                this.convertToIndexArray(heatmap.rows.filters[key].fields, heatmap.cells.header);
+            }
+        }
+
+        if (heatmap.cols.filters != undefined) {
+            for(var key in heatmap.cols.filters) {
+                this.convertToIndexArray(heatmap.cols.filters[key].fields, heatmap.cells.header);
+            }
+        }
+
+        heatmap.rows.sort.field = this.reindexField(heatmap.rows.sort.field, heatmap.cells.header);
+        heatmap.cols.sort.field = this.reindexField(heatmap.cols.sort.field, heatmap.cells.header);
+        heatmap.cells.selectedValue = this.reindexField(heatmap.cells.selectedValue, heatmap.cells.header)
+
+    }
 
 };
