@@ -15,10 +15,10 @@ jheatmap.aggregators.Addition = function () {
 };
 
 /**
- * Acumulates all the values
- * @param {Array}   values  The values to acumulate
+ * accumulates all the values
+ * @param {Array}   values  The values to accumulate
  */
-jheatmap.aggregators.Addition.prototype.acumulate = function (values) {
+jheatmap.aggregators.Addition.prototype.accumulate = function (values) {
     var sum = 0;
     for (var i = 0; i < values.length; i++) {
         var value = values[i];
@@ -43,7 +43,7 @@ jheatmap.aggregators.AbsoluteAddition = function () {
  * Accumulates all the values as absolute
  * @param {Array}   values  The values to accumulate
  */
-jheatmap.aggregators.AbsoluteAddition.prototype.acumulate = function (values) {
+jheatmap.aggregators.AbsoluteAddition.prototype.accumulate = function (values) {
     var sum = 0;
     for (var i = 0; i < values.length; i++) {
         var value = values[i];
@@ -59,18 +59,17 @@ jheatmap.aggregators.AbsoluteAddition.prototype.acumulate = function (values) {
  * Average aggregator.
  *
  * @example
- * new jheatmap.aggregators.Median({ maxValue: 4 });
+ * new jheatmap.aggregators.Average();
  *
  */
 jheatmap.aggregators.Average = function (options) {
-    options = options || {};
-}
+};
 
 /**
- * Acumulates all the values
- * @param {Array}   values  The values to acumulate
+ * Accumulates all the values
+ * @param {Array}   values  The values to accumulate
  */
-jheatmap.aggregators.Average.prototype.acumulate = function (values) {
+jheatmap.aggregators.Average.prototype.accumulate = function (values) {
     var avg = 0;
     var count = 0;
     for (var i = 0; i < values.length; i++) {
@@ -92,18 +91,18 @@ jheatmap.aggregators.Average.prototype.acumulate = function (values) {
  * new jheatmap.aggregators.Median({ maxValue: 4 });
  *
  * @class
- * @param {number}  [maxValue=3]    Absolute maximum and minimum median value.
+ * @param {number}  [p.maxValue=3]    Absolute maximum and minimum median value.
  */
-jheatmap.aggregators.Median = function (options) {
-    options = options || {};
-    this.maxValue = options.maxValue || 3;
+jheatmap.aggregators.Median = function (p) {
+    p = p || {};
+    this.maxValue = p.maxValue || 3;
 };
 
 /**
- * Acumulates all the values
- * @param {Array}   values  The values to acumulate
+ * accumulates all the values
+ * @param {Array}   values  The values to accumulate
  */
-jheatmap.aggregators.Median.prototype.acumulate = function (values) {
+jheatmap.aggregators.Median.prototype.accumulate = function (values) {
     var sum = 0;
 
     for (var i = 0; i < values.length; i++) {
@@ -122,18 +121,18 @@ jheatmap.aggregators.Median.prototype.acumulate = function (values) {
  * new jheatmap.aggregators.PValue({ cutoff: 0.01 });
  *
  * @class
- * @param   {number}    [cutoff=0.05]   Significance cutoff
+ * @param   {number}    [p.cutoff=0.05]   Significance cutoff
  */
-jheatmap.aggregators.PValue = function (options) {
-    options = options || {};
-    this.cutoff = options.cutoff || 0.05;
+jheatmap.aggregators.PValue = function (p) {
+    p = p || {};
+    this.cutoff = p.cutoff || 0.05;
 };
 
 /**
- * Acumulates all the values
- * @param {Array}   values  The values to acumulate
+ * accumulates all the values
+ * @param {Array}   values  The values to accumulate
  */
-jheatmap.aggregators.PValue.prototype.acumulate = function (values) {
+jheatmap.aggregators.PValue.prototype.accumulate = function (values) {
     var sum = 0;
     for (var i = 0; i < values.length; i++) {
         if (values[i] && !isNaN(values[i])) {

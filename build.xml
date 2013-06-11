@@ -3,6 +3,7 @@
     <description>Interactive heatmap viewer</description>
 
     <property name="jheatmap.version" value="1.0.0-alpha"/>
+    <property name="jquery.version" value="1.10.1"/>
 
     <target name="release" depends="reset-site, concat, yuicompressor, examples-release, jsdoc">
     </target>
@@ -17,7 +18,7 @@
         <filter token="jheatmap.css" value="../../css/jheatmap-${jheatmap.version}-min.css"/>
         <filter token="jheatmap.js" value="../../js/jheatmap-${jheatmap.version}-min.js"/>
 
-        <filter token="jquery.js" value="http://code.jquery.com/jquery-1.9.1.min.js" />
+        <filter token="jquery.js" value="http://code.jquery.com/jquery-${jquery.version}.min.js" />
 
         <copy todir="site/examples" filtering="true">
             <fileset dir="examples">
@@ -33,7 +34,7 @@
         <filter token="jheatmap.css" value="../../css/jheatmap-${jheatmap.version}.css"/>
         <filter token="jheatmap.js" value="../../js/jheatmap-${jheatmap.version}.js"/>
 
-        <filter token="jquery.js" value="http://code.jquery.com/jquery-1.9.1.js" />
+        <filter token="jquery.js" value="http://code.jquery.com/jquery-${jquery.version}.js" />
 
         <copy todir="site/examples" filtering="true">
             <fileset dir="examples">
@@ -50,6 +51,7 @@
             <fileset dir="." includes="src/js/bootstrap.js"/>
             <fileset dir="." includes="src/js/jquery.mousewheel.js"/>
             <fileset dir="." includes="src/js/jheatmap.utils.js"/>
+            <fileset dir="." includes="src/js/jheatmap.readers.js"/>
             <fileset dir="." includes="src/js/jheatmap.decorators.js"/>
             <fileset dir="." includes="src/js/jheatmap.aggregators.js"/>
             <fileset dir="." includes="src/js/jheatmap.filters.js"/>

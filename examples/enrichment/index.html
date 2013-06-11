@@ -8,13 +8,11 @@
 <script>
         $(document).ready(function() {
                 $('#heatmap').heatmap(
-                		 
                 		{
                 			data : {
-                				type : 'raw',
-                				rows : 'analysis-rows.tsv',
-                        		cols : 'analysis-columns.tsv',
-                        		values : 'analysis-results.tsv'
+                				rows : new jheatmap.readers.TsvTableReader({ url: "analysis-rows.tsv" }),
+                        		cols : new jheatmap.readers.TsvTableReader({ url: "analysis-columns.tsv" }),
+                        		values : new jheatmap.readers.TsvMatrixReader({ url: "analysis-results.tsv", orderedValues: true })
                 			},
                 			
                 			init : function(heatmap) {

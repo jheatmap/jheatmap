@@ -1,4 +1,4 @@
-"column"	"row"	"observed"	"expected-mean"	"expected-stdev"	"distribution"	"probability"	"N"	"left-p-value"	"right-p-value"	"two-tail-p-value"	"corrected-left-p-value"	"corrected-right-p-value"	"corrected-two-tail-p-value"
+"Topography"	"Pathway"	"observed"	"expected-mean"	"expected-stdev"	"distribution"	"probability"	"N"	"left-p-value"	"right-p-value"	"two-tail-p-value"	"corrected-left-p-value"	"corrected-right-p-value"	"corrected-two-tail-p-value"
 "adrenal cortex"	"ABC transporters"	10	6.579613252655186	2.3655273896029287	"BINOMIAL"	0.1495366648330724	44	0.9444550740053083	0.1118359112409525	1	1	0.34411049612600775	1
 "bones and joints"	"ABC transporters"	1	3.4190469965357213	1.7590702208740057	"BINOMIAL"	0.09497352768154782	36	0.13153397865216968	0.9724700022913514	1	0.9771095557018319	1	1
 "brain, nos"	"ABC transporters"	5	4.356619980535691	1.9812251804511796	"BINOMIAL"	0.09901409046672026	44	0.733150467342288	0.44399090405039293	1	1	1	1

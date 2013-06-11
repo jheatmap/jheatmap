@@ -10,8 +10,7 @@
                 $('#heatmap').heatmap(
                 		{ 
                 			data : {
-                				type : 'cdm',
-                				values : 'analysis-results.cdm'
+                				values : new jheatmap.readers.CdmMatrixReader({ url: "analysis-results.cdm" })
                 			},
                 			
                 			init : function(heatmap) {

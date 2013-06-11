@@ -11,10 +11,9 @@
                 		 
                 		{
                 			data : {
-                				type : 'tdm',
-                				rows : 'analysis-rows.tsv',
-                        		cols : 'analysis-columns.tsv',
-                        		values : 'analysis-results.tdm'
+                				rows : new jheatmap.readers.TsvTableReader({ url: "analysis-rows.tsv" }),
+                        		cols : new jheatmap.readers.TsvTableReader({ url: "analysis-columns.tsv" }),
+                        		values : new jheatmap.readers.TsvMatrixReader({ url: "analysis-results.tdm" })
                 			},
                 			
                 			init : function(heatmap) {

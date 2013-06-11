@@ -5,10 +5,12 @@
  * @author Jordi Deu-Pons
  * @class
  */
-jheatmap.Heatmap = function () {
+jheatmap.Heatmap = function (options) {
+
+    this.options = options || {};
 
     // Components
-    this.divHeatmap = null;
+    this.divHeatmap = options.container || null;
     this.canvasCols = null;
     this.canvasRows = null;
     this.canvasCells = null;
@@ -47,14 +49,6 @@ jheatmap.Heatmap = function () {
         top:0,
         left:0
     };
-
-    /**
-     * Internal property to track when the loaded files
-     * are ready
-     *
-     * @private
-     */
-    this.sync = false;
 
     /**
      * User defined filters
@@ -302,15 +296,10 @@ jheatmap.Heatmap = function () {
         return this.getColValue(col, this.cols.selectedValue);
     };
 
-
-
-
     /**
      * Initialize the Heatmap
      */
-    this.init = function (targetDiv) {
-
-        this.divHeatmap = targetDiv;
+    this.init = function () {
 
         // Loop iterators
         var r, c, f;
@@ -440,7 +429,7 @@ jheatmap.Heatmap = function () {
                         values.push(value[this.rows.sort.field]);
                     }
                 }
-                aggregation[this.rows.order[r]] = sum = this.cells.aggregators[this.rows.sort.field].acumulate(values);
+                aggregation[this.rows.order[r]] = sum = this.cells.aggregators[this.rows.sort.field].accumulate(values);
             }
 
             this.rows.order.stableSort(function (o_a, o_b) {
@@ -522,7 +511,7 @@ jheatmap.Heatmap = function () {
                         values.push(value[this.cols.sort.field]);
                     }
                 }
-                aggregation[cols[c]] = this.cells.aggregators[this.cells.selectedValue].acumulate(values);
+                aggregation[cols[c]] = this.cells.aggregators[this.cells.selectedValue].accumulate(values);
             }
 
             this.cols.order.stableSort(function (o_a, o_b) {

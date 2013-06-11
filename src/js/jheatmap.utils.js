@@ -37,27 +37,27 @@ jheatmap.utils.RGBColor = function (color) {
 /**
  * @return Hexadecimal representation of the color. Example: #FF0323
  */
-jheatmap.utils.RGBColor.prototype.toHex = function() {
-        var r = this.r.toString(16);
-        var g = this.g.toString(16);
-        var b = this.b.toString(16);
-        if (r.length == 1)
-            r = '0' + r;
-        if (g.length == 1)
-            g = '0' + g;
-        if (b.length == 1)
-            b = '0' + b;
-        return '#' + r + g + b;
+jheatmap.utils.RGBColor.prototype.toHex = function () {
+    var r = this.r.toString(16);
+    var g = this.g.toString(16);
+    var b = this.b.toString(16);
+    if (r.length == 1)
+        r = '0' + r;
+    if (g.length == 1)
+        g = '0' + g;
+    if (b.length == 1)
+        b = '0' + b;
+    return '#' + r + g + b;
 };
 
 /**
  * @return RGB representation of the color. Example: rgb(255,123,42)
  */
-jheatmap.utils.RGBColor.prototype.toRGB = function() {
-        return 'rgb(' + this.r + ', ' + this.g + ', ' + this.b + ')';
+jheatmap.utils.RGBColor.prototype.toRGB = function () {
+    return 'rgb(' + this.r + ', ' + this.g + ', ' + this.b + ')';
 };
 
-jheatmap.utils.drawOrderSymbol = function(ctx, asc) {
+jheatmap.utils.drawOrderSymbol = function (ctx, asc) {
     ctx.fillStyle = "rgba(130,2,2,1)";
     ctx.beginPath();
     if (asc) {
@@ -77,7 +77,7 @@ jheatmap.utils.drawOrderSymbol = function(ctx, asc) {
 
 
 /*
-   Browser detection
+ Browser detection
  */
 
 var BrowserDetect = {
@@ -89,7 +89,7 @@ var BrowserDetect = {
         this.OS = this.searchString(this.dataOS) || "an unknown OS";
     },
     searchString: function (data) {
-        for (var i=0;i<data.length;i++)	{
+        for (var i = 0; i < data.length; i++) {
             var dataString = data[i].string;
             var dataProp = data[i].prop;
             this.versionSearchString = data[i].versionSearch || data[i].identity;
@@ -104,7 +104,7 @@ var BrowserDetect = {
     searchVersion: function (dataString) {
         var index = dataString.indexOf(this.versionSearchString);
         if (index == -1) return;
-        return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
+        return parseFloat(dataString.substring(index + this.versionSearchString.length + 1));
     },
     dataBrowser: [
         {
@@ -112,7 +112,7 @@ var BrowserDetect = {
             subString: "Chrome",
             identity: "Chrome"
         },
-        { 	string: navigator.userAgent,
+        {    string: navigator.userAgent,
             subString: "OmniWeb",
             versionSearch: "OmniWeb/",
             identity: "OmniWeb"
@@ -172,7 +172,7 @@ var BrowserDetect = {
             versionSearch: "Mozilla"
         }
     ],
-    dataOS : [
+    dataOS: [
         {
             string: navigator.platform,
             subString: "Win",
@@ -199,8 +199,6 @@ var BrowserDetect = {
 BrowserDetect.init();
 
 
-
-
 /*
  ---
 
@@ -222,38 +220,57 @@ BrowserDetect.init();
  ...
  */
 
-(function() {
+(function () {
 
-        Array.prototype.stableSort = function(compare) {
-            // I would love some real feature recognition. Problem is that an unstable algorithm sometimes/often gives the same result as an unstable algorithm.
-            return (BrowserDetect.browser == "Chrome") ? this.mergeSort(compare) : this.sort(compare);
+    Array.prototype.stableSort = function (compare) {
+        // I would love some real feature recognition. Problem is that an unstable algorithm sometimes/often gives the same result as an unstable algorithm.
+        return (BrowserDetect.browser == "Chrome") ? this.mergeSort(compare) : this.sort(compare);
 
-        }
+    }
 
+    if (!Array.mergeSort) {
+        Array.prototype.mergeSort = function (compare, token) {
+            compare = compare || function (a, b) {
+                return a > b ? 1 : (a < b ? -1 : 0);
+            };
+            if (this.length > 1) {
+                // Split and sort both parts
+                var right = this.splice(Math.floor(this.length / 2)).mergeSort(compare);
+                var left = this.splice(0).mergeSort(compare); // 'this' is now empty.
 
-        if (!Array.mergeSort) {
-            Array.prototype.mergeSort = function(compare, token) {
-                compare = compare || function(a, b) {
-                    return a > b ? 1 : (a < b ? -1 : 0);
-                };
-                if (this.length > 1) {
-                    // Split and sort both parts
-                    var right = this.splice(Math.floor(this.length / 2)).mergeSort(compare);
-                    var left = this.splice(0).mergeSort(compare); // 'this' is now empty.
-
-                    // Merge parts together
-                    while (left.length > 0 || right.length > 0) {
-                        this.push(
-                            right.length === 0 ? left.shift()
-                                : left.length === 0 ? right.shift()
-                                : compare(left[0], right[0]) > 0 ? right.shift()
-                                : left.shift());
-                    }
+                // Merge parts together
+                while (left.length > 0 || right.length > 0) {
+                    this.push(
+                        right.length === 0 ? left.shift()
+                            : left.length === 0 ? right.shift()
+                            : compare(left[0], right[0]) > 0 ? right.shift()
+                            : left.shift());
                 }
-                return this;
             }
+            return this;
         }
+    }
+
+    String.prototype.splitCSV = function (sep) {
+        for (var thisCSV = this.split(sep = sep || ","), x = thisCSV.length - 1, tl; x >= 0; x--) {
+            if (thisCSV[x].replace(/"\s+$/, '"').charAt(thisCSV[x].length - 1) == '"') {
+                if ((tl = thisCSV[x].replace(/^\s+"/, '"')).length > 1 && tl.charAt(0) == '"') {
+                    thisCSV[x] = thisCSV[x].replace(/^\s*"|"\s*$/g, '').replace(/""/g, '"');
+                } else if (x) {
+                    thisCSV.splice(x - 1, 2, [ thisCSV[x - 1], thisCSV[x] ].join(sep));
+                } else
+                    thisCSV = thisCSV.shift().split(sep).concat(thisCSV);
+            } else
+                thisCSV[x].replace(/""/g, '"');
+        }
+        return thisCSV;
+    };
+
+    String.prototype.startsWith = function (str) {
+        return (this.match("^" + str) == str);
+    };
 
 })();
+
 
 

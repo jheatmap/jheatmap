@@ -12,6 +12,9 @@
 .settings/
 .externalToolBuilders/
 
+# Ignore jquery
+lib/jquery*.js
+
 # Site files
 site/
 .gh-pages

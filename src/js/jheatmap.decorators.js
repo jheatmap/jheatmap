@@ -9,18 +9,16 @@ jheatmap.decorators = {};
  * @example
  * new jheatmap.decorators.Constant({ color: "red" });
  * @class
- * @param {string}  [color="white"] Color for all the values
+ * @param {string}  [p.color="white"] Color for all the values
  */
-jheatmap.decorators.Constant = function (options) {
-    options = options || {};
-    this.color = options.color || "white";
+jheatmap.decorators.Constant = function (p) {
+    p = p || {};
+    this.color = p.color || "white";
 
 };
 
 /**
  * Convert a value to a color
- * @param {string} value    The cell value
- * @return {string} The corresponding color string definition.
  */
 jheatmap.decorators.Constant.prototype.toColor = function () {
     return this.color;
@@ -29,9 +27,8 @@ jheatmap.decorators.Constant.prototype.toColor = function () {
 /**
  * String to color decorator. The color is calculated from the ASCII code of the String
  */
-jheatmap.decorators.StringColor = function (options) {
-    options = options || {};
-}
+jheatmap.decorators.StringColor = function () {
+};
 
 jheatmap.decorators.StringColor.prototype.toColor = function (value) {
     var color = [0,0,0];
@@ -52,7 +49,7 @@ jheatmap.decorators.StringColor.prototype.toColor = function (value) {
 
     return (new jheatmap.utils.RGBColor(color)).toRGB();
 
-}
+};
 
 
 /**
@@ -64,15 +61,15 @@ jheatmap.decorators.StringColor.prototype.toColor = function (value) {
  *                            colors: ["pink", "blue"]
  *                         });
  * @class
- * @param {Array} values                All posible values
- * @param {Array} colors                Corresponding colors
- * @param {string} [unknown="white"]    Color for values not in options.values
+ * @param {Array} p.values                All posible values
+ * @param {Array} p.colors                Corresponding colors
+ * @param {string} [p.unknown="white"]    Color for values not in options.values
  */
-jheatmap.decorators.Categorical = function (options) {
-    options = options || {};
-    this.values = options.values || [];
-    this.colors = options.colors || [];
-    this.unknown = options.unknown || "white";
+jheatmap.decorators.Categorical = function (p) {
+    p = p || {};
+    this.values = p.values || [];
+    this.colors = p.colors || [];
+    this.unknown = p.unknown || "white";
 
 };
 
@@ -96,25 +93,25 @@ jheatmap.decorators.Categorical.prototype.toColor = function (value) {
  * new jheatmap.decorators.Linear({});
  *
  * @class
- * @param {Array}   [ranges=[[-2,0],[0,2]]]              All the ranges wanted starting with the most negative range upwards
- * @param {Array}   [colors=[ [[0,0,255],[255,255,255]],
+ * @param {Array}   [p.ranges=[[-2,0],[0,2]]]              All the ranges wanted starting with the most negative range upwards
+ * @param {Array}   [p.colors=[ [[0,0,255],[255,255,255]],
  *                            [[255,255,255],[255,0,0]]
  *                  ]                                    Min and max colors for each defined range that produce gradient
- * @param {Array}   [outColor=[0,0,0]]                   A specific color if the value is out of the range bounds. If not defined by user, the min and max colors will be used.
- * @param {Array}   [betweenColor=[187,187,187]]         A specific color if a value is between defined ranges. If not defined user it is set to black or outColor.
+ * @param {Array}   [p.outColor=[0,0,0]]                   A specific color if the value is out of the range bounds. If not defined by user, the min and max colors will be used.
+ * @param {Array}   [p.betweenColor=[187,187,187]]         A specific color if a value is between defined ranges. If not defined user it is set to black or outColor.
  *
  */
-jheatmap.decorators.Linear = function (options) {
-    options = options || {};
+jheatmap.decorators.Linear = function (p) {
+    p = p || {};
 
-    this.ranges = (options.ranges == undefined ? [[-2,0],[0,2]] : options.ranges);
-    this.colors = (options.colors == undefined ? [[[0,0,255],[255,255,255]], [[255,255,255],[255,0,0]]] : options.colors);
+    this.ranges = (p.ranges == undefined ? [[-2,0],[0,2]] : p.ranges);
+    this.colors = (p.colors == undefined ? [[[0,0,255],[255,255,255]], [[255,255,255],[255,0,0]]] : p.colors);
 
-    this.nullColor = (options.nullColor == undefined ? [255, 255, 255] : options.nullColor);
-    this.outColor = (options.outColor == undefined ?  null : options.outColor);
-    this.betweenColor = (options.betweenColor == undefined) ? null : options.betweenColor;
+    this.nullColor = (p.nullColor == undefined ? [255, 255, 255] : p.nullColor);
+    this.outColor = (p.outColor == undefined ?  null : p.outColor);
+    this.betweenColor = (p.betweenColor == undefined) ? null : p.betweenColor;
     if (this.betweenColor == null) {
-        this.betweenColor = (options.outColor != null) ? options.outColor : [0,0,0];
+        this.betweenColor = (p.outColor != null) ? p.outColor : [0,0,0];
     }
 
     this.minValue = this.ranges.reduce(function(min, arr) {
@@ -157,12 +154,9 @@ jheatmap.decorators.Linear.prototype.toColor = function (value) {
     var rangeMin;
     var maxColor;
     var rangeMax;
-
     var allColors = this.colors;
 
-    var lastMax;
-
-    $.each(this.ranges,function(index,range){
+    jQuery.each(this.ranges,function(index,range){
         if (value >= range[0] && value <= range[1]) {
             minColor = allColors[index][0];
             rangeMin = range[0];
@@ -194,24 +188,24 @@ jheatmap.decorators.Linear.prototype.toColor = function (value) {
  * new jheatmap.decorators.Heat({ minValue: -5, midValue: 0, maxValue: 5 });
  *
  * @class
- * @param {Array}   [minColor=[0,0,255]]    Minimum color [r,g,b]
- * @param {number}  [minValue=-1]                Minimum value
- * @param {Array}   [midColor=[255,255,0]]        Maximum color [r,g,b]
- * @param {number}  [midValue=0]                Maximum value
- * @param {Array}   [maxColor=[255,0,0]]        Maximum color [r,g,b]
- * @param {number}  [maxValue=1]                Maximum value
- * @param {Array}   [nullColor=[187,187,187]]   NaN values color [r,g,b]
+ * @param {Array}   [p.minColor=[0,0,255]]    Minimum color [r,g,b]
+ * @param {number}  [p.minValue=-1]                Minimum value
+ * @param {Array}   [p.midColor=[255,255,0]]        Maximum color [r,g,b]
+ * @param {number}  [p.midValue=0]                Maximum value
+ * @param {Array}   [p.maxColor=[255,0,0]]        Maximum color [r,g,b]
+ * @param {number}  [p.maxValue=1]                Maximum value
+ * @param {Array}   [p.nullColor=[187,187,187]]   NaN values color [r,g,b]
  *
  */
-jheatmap.decorators.Heat = function (options) {
-    options = options || {};
-    this.minColor = (options.minColor == undefined ? [0, 0, 255] : options.minColor);
-    this.minValue = (options.minValue == undefined ? -1 : options.minValue);
-    this.midColor = (options.midColor == undefined ? [255, 255, 0]: options.midColor);
-    this.midValue = (options.midValue == undefined ? 0 : options.midValue);
-    this.maxColor = (options.maxColor == undefined ? [255, 0, 0] : options.maxColor);
-    this.maxValue = (options.maxValue == undefined ? 1 : options.maxValue);
-    this.nullColor = (options.nullColor == undefined ? [187, 187, 187] : options.nullColor);
+jheatmap.decorators.Heat = function (p) {
+    p = p || {};
+    this.minColor = (p.minColor == undefined ? [0, 0, 255] : p.minColor);
+    this.minValue = (p.minValue == undefined ? -1 : p.minValue);
+    this.midColor = (p.midColor == undefined ? [255, 255, 0]: p.midColor);
+    this.midValue = (p.midValue == undefined ? 0 : p.midValue);
+    this.maxColor = (p.maxColor == undefined ? [255, 0, 0] : p.maxColor);
+    this.maxValue = (p.maxValue == undefined ? 1 : p.maxValue);
+    this.nullColor = (p.nullColor == undefined ? [187, 187, 187] : p.nullColor);
 };
 
 /**
@@ -265,13 +259,13 @@ jheatmap.decorators.Heat.prototype.toColor = function (value) {
  * new jheatmap.decorators.Median({ maxValue: 4 });
  *
  * @class
- * @param {number}  [maxValue=3]    Absolute maximum and minimum of the median
- * @param {Array}   [nullColor=[255,255,255]]   NaN values color [r,g,b]
+ * @param {number}  [p.maxValue=3]    Absolute maximum and minimum of the median
+ * @param {Array}   [p.nullColor=[255,255,255]]   NaN values color [r,g,b]
  */
-jheatmap.decorators.Median = function (options) {
-    options = options || {};
-    this.maxValue = options.maxValue || 3;
-    this.nullColor = options.nullColor || [255,255,255]
+jheatmap.decorators.Median = function (p) {
+    p = p || {};
+    this.maxValue = p.maxValue || 3;
+    this.nullColor = p.nullColor || [255,255,255]
 
 };
 
@@ -308,13 +302,13 @@ jheatmap.decorators.Median.prototype.toColor = function (value) {
  * new jheatmap.decorators.PValue({ cutoff: 0.01 });
  *
  * @class
- * @param {number}  [cutoff=0.05]   Significance cutoff.
- * @param {Array}   [nullColor=[255,255,255]]   NaN values color [r,g,b]
+ * @param {number}  [p.cutoff=0.05]   Significance cutoff.
+ * @param {Array}   [p.nullColor=[255,255,255]]   NaN values color [r,g,b]
  */
-jheatmap.decorators.PValue = function (options) {
-    options = options || {};
-    this.cutoff = options.cutoff || 0.05;
-    this.nullColor = options.nullColor || [255,255,255]
+jheatmap.decorators.PValue = function (p) {
+    p = p || {};
+    this.cutoff = p.cutoff || 0.05;
+    this.nullColor = p.nullColor || [255,255,255]
 };
 
 /**
