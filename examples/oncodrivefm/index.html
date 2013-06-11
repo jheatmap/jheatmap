@@ -4,17 +4,16 @@
 <title>jHeatmap</title>
 
 <link href="../../css/jheatmap-1.0.0-alpha-min.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="../../js/jheatmap-1.0.0-alpha-min.js" type="text/javascript"></script>
 
 <script>
 	$(document).ready(function() {
 		$('#heatmap').heatmap({
 			data : {
-				type : "tdm",
-				rows : 'analysis-rows.tsv',
-				cols : 'analysis-columns.tsv',
-				values : 'analysis-results.tsv'
+				rows : new jheatmap.readers.TsvTableReader({ url: "analysis-rows.tsv" }),
+				cols : new jheatmap.readers.TsvTableReader({ url: "analysis-columns.tsv" }),
+				values : new jheatmap.readers.TsvMatrixReader({ url: "analysis-results.tsv" })
 			},
 
 			init : function(heatmap) {

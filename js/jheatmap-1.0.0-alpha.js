@@ -245,90 +245,123 @@
   })
 
 }(window.jQuery);
-/*! Copyright (c) 2011 Brandon Aaron (http://brandonaaron.net)
+/*! Copyright (c) 2013 Brandon Aaron (http://brandonaaron.net)
  * Licensed under the MIT License (LICENSE.txt).
  *
  * Thanks to: http://adomas.org/javascript-mouse-wheel/ for some pointers.
  * Thanks to: Mathias Bank(http://www.mathias-bank.de) for a scope bug fix.
  * Thanks to: Seamus Leahy for adding deltaX and deltaY
  *
- * Version: 3.0.6
- * 
+ * Version: 3.1.3
+ *
  * Requires: 1.2.2+
  */
 
-(function($) {
-
-var types = ['DOMMouseScroll', 'mousewheel'];
-
-if ($.event.fixHooks) {
-    for ( var i=types.length; i; ) {
-        $.event.fixHooks[ types[--i] ] = $.event.mouseHooks;
+(function (factory) {
+    if ( typeof define === 'function' && define.amd ) {
+        // AMD. Register as an anonymous module.
+        define(['jquery'], factory);
+    } else if (typeof exports === 'object') {
+        // Node/CommonJS style for Browserify
+        module.exports = factory;
+    } else {
+        // Browser globals
+        factory(jQuery);
     }
-}
+}(function ($) {
 
-$.event.special.mousewheel = {
-    setup: function() {
-        if ( this.addEventListener ) {
-            for ( var i=types.length; i; ) {
-                this.addEventListener( types[--i], handler, false );
-            }
-        } else {
-            this.onmousewheel = handler;
-        }
-    },
-    
-    teardown: function() {
-        if ( this.removeEventListener ) {
-            for ( var i=types.length; i; ) {
-                this.removeEventListener( types[--i], handler, false );
-            }
-        } else {
-            this.onmousewheel = null;
+    var toFix = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'];
+    var toBind = 'onwheel' in document || document.documentMode >= 9 ? ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'];
+    var lowestDelta, lowestDeltaXY;
+
+    if ( $.event.fixHooks ) {
+        for ( var i = toFix.length; i; ) {
+            $.event.fixHooks[ toFix[--i] ] = $.event.mouseHooks;
         }
     }
-};
 
-$.fn.extend({
-    mousewheel: function(fn) {
-        return fn ? this.bind("mousewheel", fn) : this.trigger("mousewheel");
-    },
-    
-    unmousewheel: function(fn) {
-        return this.unbind("mousewheel", fn);
+    $.event.special.mousewheel = {
+        setup: function() {
+            if ( this.addEventListener ) {
+                for ( var i = toBind.length; i; ) {
+                    this.addEventListener( toBind[--i], handler, false );
+                }
+            } else {
+                this.onmousewheel = handler;
+            }
+        },
+
+        teardown: function() {
+            if ( this.removeEventListener ) {
+                for ( var i = toBind.length; i; ) {
+                    this.removeEventListener( toBind[--i], handler, false );
+                }
+            } else {
+                this.onmousewheel = null;
+            }
+        }
+    };
+
+    $.fn.extend({
+        mousewheel: function(fn) {
+            return fn ? this.bind("mousewheel", fn) : this.trigger("mousewheel");
+        },
+
+        unmousewheel: function(fn) {
+            return this.unbind("mousewheel", fn);
+        }
+    });
+
+
+    function handler(event) {
+        var orgEvent = event || window.event,
+            args = [].slice.call(arguments, 1),
+            delta = 0,
+            deltaX = 0,
+            deltaY = 0,
+            absDelta = 0,
+            absDeltaXY = 0,
+            fn;
+        event = $.event.fix(orgEvent);
+        event.type = "mousewheel";
+
+        // Old school scrollwheel delta
+        if ( orgEvent.wheelDelta ) { delta = orgEvent.wheelDelta; }
+        if ( orgEvent.detail )     { delta = orgEvent.detail * -1; }
+
+        // New school wheel delta (wheel event)
+        if ( orgEvent.deltaY ) {
+            deltaY = orgEvent.deltaY * -1;
+            delta  = deltaY;
+        }
+        if ( orgEvent.deltaX ) {
+            deltaX = orgEvent.deltaX;
+            delta  = deltaX * -1;
+        }
+
+        // Webkit
+        if ( orgEvent.wheelDeltaY !== undefined ) { deltaY = orgEvent.wheelDeltaY; }
+        if ( orgEvent.wheelDeltaX !== undefined ) { deltaX = orgEvent.wheelDeltaX * -1; }
+
+        // Look for lowest delta to normalize the delta values
+        absDelta = Math.abs(delta);
+        if ( !lowestDelta || absDelta < lowestDelta ) { lowestDelta = absDelta; }
+        absDeltaXY = Math.max(Math.abs(deltaY), Math.abs(deltaX));
+        if ( !lowestDeltaXY || absDeltaXY < lowestDeltaXY ) { lowestDeltaXY = absDeltaXY; }
+
+        // Get a whole value for the deltas
+        fn = delta > 0 ? 'floor' : 'ceil';
+        delta  = Math[fn](delta / lowestDelta);
+        deltaX = Math[fn](deltaX / lowestDeltaXY);
+        deltaY = Math[fn](deltaY / lowestDeltaXY);
+
+        // Add event and delta to the front of the arguments
+        args.unshift(event, delta, deltaX, deltaY);
+
+        return ($.event.dispatch || $.event.handle).apply(this, args);
     }
-});
 
-
-function handler(event) {
-    var orgEvent = event || window.event, args = [].slice.call( arguments, 1 ), delta = 0, returnValue = true, deltaX = 0, deltaY = 0;
-    event = $.event.fix(orgEvent);
-    event.type = "mousewheel";
-    
-    // Old school scrollwheel delta
-    if ( orgEvent.wheelDelta ) { delta = orgEvent.wheelDelta/120; }
-    if ( orgEvent.detail     ) { delta = -orgEvent.detail/3; }
-    
-    // New school multidimensional scroll (touchpads) deltas
-    deltaY = delta;
-    
-    // Gecko
-    if ( orgEvent.axis !== undefined && orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
-        deltaY = 0;
-        deltaX = -1*delta;
-    }
-    
-    // Webkit
-    if ( orgEvent.wheelDeltaY !== undefined ) { deltaY = orgEvent.wheelDeltaY/120; }
-    if ( orgEvent.wheelDeltaX !== undefined ) { deltaX = -1*orgEvent.wheelDeltaX/120; }
-    
-    // Add event and delta to the front of the arguments
-    args.unshift(event, delta, deltaX, deltaY);
-    
-    return ($.event.dispatch || $.event.handle).apply(this, args);
-}
-
-})(jQuery);
+}));
 /**
  *
  * jHeatmap interactive viewer package
@@ -368,27 +401,27 @@ jheatmap.utils.RGBColor = function (color) {
 /**
  * @return Hexadecimal representation of the color. Example: #FF0323
  */
-jheatmap.utils.RGBColor.prototype.toHex = function() {
-        var r = this.r.toString(16);
-        var g = this.g.toString(16);
-        var b = this.b.toString(16);
-        if (r.length == 1)
-            r = '0' + r;
-        if (g.length == 1)
-            g = '0' + g;
-        if (b.length == 1)
-            b = '0' + b;
-        return '#' + r + g + b;
+jheatmap.utils.RGBColor.prototype.toHex = function () {
+    var r = this.r.toString(16);
+    var g = this.g.toString(16);
+    var b = this.b.toString(16);
+    if (r.length == 1)
+        r = '0' + r;
+    if (g.length == 1)
+        g = '0' + g;
+    if (b.length == 1)
+        b = '0' + b;
+    return '#' + r + g + b;
 };
 
 /**
  * @return RGB representation of the color. Example: rgb(255,123,42)
  */
-jheatmap.utils.RGBColor.prototype.toRGB = function() {
-        return 'rgb(' + this.r + ', ' + this.g + ', ' + this.b + ')';
+jheatmap.utils.RGBColor.prototype.toRGB = function () {
+    return 'rgb(' + this.r + ', ' + this.g + ', ' + this.b + ')';
 };
 
-jheatmap.utils.drawOrderSymbol = function(ctx, asc) {
+jheatmap.utils.drawOrderSymbol = function (ctx, asc) {
     ctx.fillStyle = "rgba(130,2,2,1)";
     ctx.beginPath();
     if (asc) {
@@ -408,7 +441,7 @@ jheatmap.utils.drawOrderSymbol = function(ctx, asc) {
 
 
 /*
-   Browser detection
+ Browser detection
  */
 
 var BrowserDetect = {
@@ -420,7 +453,7 @@ var BrowserDetect = {
         this.OS = this.searchString(this.dataOS) || "an unknown OS";
     },
     searchString: function (data) {
-        for (var i=0;i<data.length;i++)	{
+        for (var i = 0; i < data.length; i++) {
             var dataString = data[i].string;
             var dataProp = data[i].prop;
             this.versionSearchString = data[i].versionSearch || data[i].identity;
@@ -435,7 +468,7 @@ var BrowserDetect = {
     searchVersion: function (dataString) {
         var index = dataString.indexOf(this.versionSearchString);
         if (index == -1) return;
-        return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
+        return parseFloat(dataString.substring(index + this.versionSearchString.length + 1));
     },
     dataBrowser: [
         {
@@ -443,7 +476,7 @@ var BrowserDetect = {
             subString: "Chrome",
             identity: "Chrome"
         },
-        { 	string: navigator.userAgent,
+        {    string: navigator.userAgent,
             subString: "OmniWeb",
             versionSearch: "OmniWeb/",
             identity: "OmniWeb"
@@ -503,7 +536,7 @@ var BrowserDetect = {
             versionSearch: "Mozilla"
         }
     ],
-    dataOS : [
+    dataOS: [
         {
             string: navigator.platform,
             subString: "Win",
@@ -530,8 +563,6 @@ var BrowserDetect = {
 BrowserDetect.init();
 
 
-
-
 /*
  ---
 
@@ -553,41 +584,419 @@ BrowserDetect.init();
  ...
  */
 
-(function() {
+(function () {
 
-        Array.prototype.stableSort = function(compare) {
-            // I would love some real feature recognition. Problem is that an unstable algorithm sometimes/often gives the same result as an unstable algorithm.
-            return (BrowserDetect.browser == "Chrome") ? this.mergeSort(compare) : this.sort(compare);
+    Array.prototype.stableSort = function (compare) {
+        // I would love some real feature recognition. Problem is that an unstable algorithm sometimes/often gives the same result as an unstable algorithm.
+        return (BrowserDetect.browser == "Chrome") ? this.mergeSort(compare) : this.sort(compare);
 
-        }
+    }
 
+    if (!Array.mergeSort) {
+        Array.prototype.mergeSort = function (compare, token) {
+            compare = compare || function (a, b) {
+                return a > b ? 1 : (a < b ? -1 : 0);
+            };
+            if (this.length > 1) {
+                // Split and sort both parts
+                var right = this.splice(Math.floor(this.length / 2)).mergeSort(compare);
+                var left = this.splice(0).mergeSort(compare); // 'this' is now empty.
 
-        if (!Array.mergeSort) {
-            Array.prototype.mergeSort = function(compare, token) {
-                compare = compare || function(a, b) {
-                    return a > b ? 1 : (a < b ? -1 : 0);
-                };
-                if (this.length > 1) {
-                    // Split and sort both parts
-                    var right = this.splice(Math.floor(this.length / 2)).mergeSort(compare);
-                    var left = this.splice(0).mergeSort(compare); // 'this' is now empty.
-
-                    // Merge parts together
-                    while (left.length > 0 || right.length > 0) {
-                        this.push(
-                            right.length === 0 ? left.shift()
-                                : left.length === 0 ? right.shift()
-                                : compare(left[0], right[0]) > 0 ? right.shift()
-                                : left.shift());
-                    }
+                // Merge parts together
+                while (left.length > 0 || right.length > 0) {
+                    this.push(
+                        right.length === 0 ? left.shift()
+                            : left.length === 0 ? right.shift()
+                            : compare(left[0], right[0]) > 0 ? right.shift()
+                            : left.shift());
                 }
-                return this;
             }
+            return this;
         }
+    }
+
+    String.prototype.splitCSV = function (sep) {
+        for (var thisCSV = this.split(sep = sep || ","), x = thisCSV.length - 1, tl; x >= 0; x--) {
+            if (thisCSV[x].replace(/"\s+$/, '"').charAt(thisCSV[x].length - 1) == '"') {
+                if ((tl = thisCSV[x].replace(/^\s+"/, '"')).length > 1 && tl.charAt(0) == '"') {
+                    thisCSV[x] = thisCSV[x].replace(/^\s*"|"\s*$/g, '').replace(/""/g, '"');
+                } else if (x) {
+                    thisCSV.splice(x - 1, 2, [ thisCSV[x - 1], thisCSV[x] ].join(sep));
+                } else
+                    thisCSV = thisCSV.shift().split(sep).concat(thisCSV);
+            } else
+                thisCSV[x].replace(/""/g, '"');
+        }
+        return thisCSV;
+    };
+
+    String.prototype.startsWith = function (str) {
+        return (this.match("^" + str) == str);
+    };
 
 })();
 
 
+
+/**
+ * Data readers
+ * @namespace jheatmap.readers
+ */
+jheatmap.readers = {};
+
+/**
+ * A text separated value file table reader
+ *
+ * @example
+ * new jheatmap.readers.TsvTableReader({ url: "filename.tsv" });
+ *
+ * @class
+ * @param {string}  p.url                 File url
+ * @param {string} [p.separator="tab"]    Value separator character
+ */
+jheatmap.readers.TsvTableReader = function (p) {
+    p = p || {};
+    this.url = p.url || "";
+    this.separator = p.separator || "\t";
+};
+
+/**
+ * Asynchronously reads a text separated value file, the result is returned in the 'result' parameter.
+ *
+ * @param {Array} result.header Returns the file header as a string array.
+ * @param {Array} result.values Returns the file values as an array of arrays.
+ * @param {function}    initialize  A callback function that is called when the file is loaded.
+ *
+ */
+jheatmap.readers.TsvTableReader.prototype.read = function (result, initialize) {
+
+    var sep = this.separator;
+    var url = this.url;
+
+    jQuery.ajax({
+
+        url: url,
+
+        dataType: "text",
+
+        success: function (file) {
+
+            var lines = file.replace('\r', '').split('\n');
+            jQuery.each(lines, function (lineCount, line) {
+                if (line.length > 0 && !line.startsWith("#")) {
+                    if (lineCount == 0) {
+                        result.header = line.splitCSV(sep);
+                    } else {
+                        result.values[result.values.length] = line.splitCSV(sep);
+                    }
+                }
+            });
+
+            result.ready = true;
+
+            initialize.call(this);
+
+        }
+
+    });
+};
+
+
+/**
+ * A text separated value file matrix reader.
+ *
+ * @example
+ * new jheatmap.readers.TsvMatrixReader({ url: "filename.tsv" });
+ *
+ * @class
+ * @param {string}  p.url                 File url
+ * @param {string} [p.separator="tab"]    Value separator character
+ * @param {boolean} [p.orderedValues="false"]   The values follow exactly the columns and rows order and there is no need to reorder them.
+ */
+jheatmap.readers.TsvMatrixReader = function (p) {
+    p = p || {};
+    this.url = p.url || "";
+    this.separator = p.separator || "\t";
+    this.orderedValues = p.orderedValues || false;
+};
+
+/**
+ * Asynchronously reads a text separated value file, the result is loaded in the 'heatmap' parameter.
+ *
+ * @param {Heatmap}     heatmap     The destination heatmap.
+ * @param {function}    initialize  A callback function that is called when the file is loaded.
+ *
+ */
+jheatmap.readers.TsvMatrixReader.prototype.read = function (heatmap, initialize) {
+
+    var sep = this.separator;
+    var url = this.url;
+    var orderedValues = this.orderedValues;
+
+    jQuery.ajax({
+
+        url: url,
+
+        dataType: "text",
+
+        success: function (file) {
+
+            var lines = file.replace('\r', '').split('\n');
+            jQuery.each(lines, function (lineCount, line) {
+                if (line.length > 0 && !line.startsWith("#")) {
+                    if (lineCount == 0) {
+                        heatmap.cells.header = line.splitCSV(sep);
+                    } else {
+                        heatmap.cells.values[heatmap.cells.values.length] = line.splitCSV(sep);
+                    }
+                }
+            });
+
+
+            if (!orderedValues) {
+
+                var cellValues = [];
+
+                // Try to deduce with column is the row primary key.
+                var rowKey;
+                var valuesRowKey;
+                if (heatmap.options.data.rows != undefined) {
+                    for (var i = 0; i < heatmap.rows.header.length; i++) {
+                        if ((valuesRowKey = $.inArray(heatmap.rows.header[i], heatmap.cells.header)) > -1) {
+                            rowKey = i;
+                            break;
+                        }
+                    }
+                } else {
+                    rowKey = 0;
+
+                    if (heatmap.options.data.rows_annotations != undefined) {
+                        var rowAnn = heatmap.options.data.rows_annotations;
+
+                        valuesRowKey = rowAnn[0];
+                        heatmap.rows.header = [];
+
+                        for (var i = 0; i < rowAnn.length; i++) {
+                            heatmap.rows.header.push(heatmap.cells.header[rowAnn[i]]);
+                            heatmap.cells.header[rowAnn[i]] = undefined;
+                        }
+                    } else {
+                        valuesRowKey = 1;
+                        heatmap.rows.header = [ heatmap.cells.header[ valuesRowKey ] ];
+                    }
+                }
+
+                // Try to deduce with column is the column primary
+                // key.
+                var colKey;
+                var valuesColKey;
+
+                if (heatmap.options.data.cols != undefined) {
+                    for (var i = 0; i < heatmap.cols.header.length; i++) {
+                        if ((valuesColKey = $.inArray(heatmap.cols.header[i], heatmap.cells.header)) > -1) {
+                            if (valuesColKey != valuesRowKey) {
+                                colKey = i;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    colKey = 0;
+
+                    if (heatmap.options.data.cols_annotations != undefined) {
+                        var colAnn = heatmap.options.data.cols_annotations;
+
+                        valuesColKey = colAnn[0];
+                        heatmap.cols.header = [];
+
+                        for (var i = 0; i < colAnn.length; i++) {
+                            heatmap.cols.header.push(heatmap.cells.header[colAnn[i]]);
+                            heatmap.cells.header[colAnn[i]] = undefined;
+                        }
+
+                    } else {
+                        valuesColKey = 0;
+                        heatmap.cols.header = [ heatmap.cells.header[ valuesColKey ]];
+                    }
+                }
+
+                // Build hashes
+                var rowHash = {};
+                var colHash = {};
+
+                if (heatmap.options.data.rows != undefined && heatmap.options.data.cols != undefined) {
+
+                    for (var i = 0; i < heatmap.rows.values.length; i++) {
+                        rowHash[(heatmap.rows.values[i][rowKey]).toString()] = i;
+                    }
+
+                    for (var i = 0; i < heatmap.cols.values.length; i++) {
+                        colHash[(heatmap.cols.values[i][colKey]).toString()] = i;
+                    }
+
+                } else {
+                    console.log((new Date().getTime()) + " Building columns and rows hashes...");
+                    for (var i = 0; i < heatmap.cells.values.length; i++) {
+                        var values = heatmap.cells.values[i];
+
+                        if (values != null) {
+                            var rowValues;
+                            if (heatmap.options.data.rows_annotations != undefined) {
+                                rowValues = heatmap.options.data.rows_annotations;
+                            } else {
+                                rowValues = [ valuesRowKey ];
+                            }
+                            if (rowHash[(values[valuesRowKey]).toString()] == undefined) {
+
+                                var pos = heatmap.rows.values.length;
+                                rowHash[(values[valuesRowKey]).toString()] = pos;
+                                heatmap.rows.values[pos] = [];
+
+                                for (var r = 0; r < rowValues.length; r++) {
+                                    heatmap.rows.values[pos][r] = values[rowValues[r]];
+                                }
+                            }
+
+                            var colValues;
+                            if (heatmap.options.data.cols_annotations != undefined) {
+                                colValues = heatmap.options.data.cols_annotations;
+                            } else {
+                                colValues = [ valuesColKey ];
+                            }
+                            if (colHash[(values[valuesColKey]).toString()] == undefined) {
+                                var pos = heatmap.cols.values.length;
+                                colHash[(values[valuesColKey]).toString()] = pos;
+                                heatmap.cols.values[pos] = [];
+
+                                for (var c = 0; c < colValues.length; c++) {
+                                    heatmap.cols.values[pos][c] = values[colValues[c]];
+                                }
+                            }
+                        }
+                    }
+                    console.log((new Date().getTime()) + " Hashes ready");
+                }
+
+                // Create a null matrix
+                var totalPos = heatmap.rows.values.length * heatmap.cols.values.length;
+                for (var pos = 0; pos < totalPos; pos++) {
+                    cellValues[pos] = null;
+                }
+
+                var cl = heatmap.cols.values.length;
+
+                console.log((new Date().getTime()) + " Loading cell values...");
+                for (var i = 0; i < heatmap.cells.values.length; i++) {
+
+                    var value = heatmap.cells.values[i];
+
+                    if (value != null) {
+                        var rowIndex = rowHash[value[valuesRowKey]];
+                        var colIndex = colHash[value[valuesColKey]];
+
+                        var pos = rowIndex * cl + colIndex;
+
+                        cellValues[pos] = value;
+                    }
+                }
+                console.log((new Date().getTime()) + " Cells ready");
+
+                delete heatmap.cells.values;
+                heatmap.cells.values = cellValues;
+
+            }
+
+            heatmap.cells.ready = true;
+
+            initialize.call(this);
+
+        }
+
+    });
+};
+
+
+/**
+ * A text separated value file matrix reader. The file has to follow this format:
+ *
+ * <pre><code>
+ *          col1    col2
+ *   row1   0.11    0.12
+ *   row2   0.21    0.22
+ * </code></pre>
+ *
+ * @example
+ * new jheatmap.readers.CdmMatrixReader({ url: "filename.cdm" });
+ *
+ * @class
+ * @param {string}  p.url                 File url
+ * @param {string} [p.separator="tab"]    Value separator character
+ */
+jheatmap.readers.CdmMatrixReader = function (p) {
+    p = p || {};
+    this.url = p.url || "";
+    this.separator = p.separator || "\t";
+};
+
+/**
+ * Asynchronously reads a text separated value file, the result is loaded in the 'heatmap' parameter.
+ *
+ * @param {Heatmap}     heatmap     The destination heatmap.
+ * @param {function}    initialize  A callback function that is called when the file is loaded.
+ *
+ */
+jheatmap.readers.CdmMatrixReader.prototype.read = function (heatmap, initialize) {
+
+    var sep = this.separator;
+    var url = this.url;
+
+    jQuery.ajax({
+
+        url: url,
+
+        dataType: "text",
+
+        success: function (file) {
+
+            var lines = file.replace('\r', '').split('\n');
+            jQuery.each(lines, function (lineCount, line) {
+                if (line.length > 0 && !line.startsWith("#")) {
+                    if (lineCount == 0) {
+                        heatmap.cells.header = line.splitCSV(sep);
+                    } else {
+                        heatmap.cells.values[heatmap.cells.values.length] = line.splitCSV(sep);
+                    }
+                }
+            });
+
+            heatmap.cols.header = [ "Column" ];
+            for (var i = 0; i < heatmap.cells.header.length; i++) {
+                heatmap.cols.values[heatmap.cols.values.length] = [ heatmap.cells.header[i] ];
+            }
+
+            var cellValues = [];
+            heatmap.rows.header = [ "Row" ];
+            for (var row = 0; row < heatmap.cells.values.length; row++) {
+                heatmap.rows.values[heatmap.rows.values.length] = [ heatmap.cells.values[row][0] ];
+                for (var col = 0; col < heatmap.cols.values.length; col++) {
+                    cellValues[cellValues.length] = [ heatmap.cells.values[row][col + 1] ];
+                }
+            }
+
+            delete heatmap.cells.header;
+            delete heatmap.cells.values;
+            heatmap.cells.header = [ "Value" ];
+            heatmap.cells.values = cellValues;
+
+            heatmap.cells.ready = true;
+
+            initialize.call(this);
+
+        }
+
+
+    });
+};
 /**
  * Cell decorators
  * @namespace jheatmap.decorators
@@ -599,18 +1008,16 @@ jheatmap.decorators = {};
  * @example
  * new jheatmap.decorators.Constant({ color: "red" });
  * @class
- * @param {string}  [color="white"] Color for all the values
+ * @param {string}  [p.color="white"] Color for all the values
  */
-jheatmap.decorators.Constant = function (options) {
-    options = options || {};
-    this.color = options.color || "white";
+jheatmap.decorators.Constant = function (p) {
+    p = p || {};
+    this.color = p.color || "white";
 
 };
 
 /**
  * Convert a value to a color
- * @param {string} value    The cell value
- * @return {string} The corresponding color string definition.
  */
 jheatmap.decorators.Constant.prototype.toColor = function () {
     return this.color;
@@ -619,9 +1026,8 @@ jheatmap.decorators.Constant.prototype.toColor = function () {
 /**
  * String to color decorator. The color is calculated from the ASCII code of the String
  */
-jheatmap.decorators.StringColor = function (options) {
-    options = options || {};
-}
+jheatmap.decorators.StringColor = function () {
+};
 
 jheatmap.decorators.StringColor.prototype.toColor = function (value) {
     var color = [0,0,0];
@@ -642,7 +1048,7 @@ jheatmap.decorators.StringColor.prototype.toColor = function (value) {
 
     return (new jheatmap.utils.RGBColor(color)).toRGB();
 
-}
+};
 
 
 /**
@@ -654,15 +1060,15 @@ jheatmap.decorators.StringColor.prototype.toColor = function (value) {
  *                            colors: ["pink", "blue"]
  *                         });
  * @class
- * @param {Array} values                All posible values
- * @param {Array} colors                Corresponding colors
- * @param {string} [unknown="white"]    Color for values not in options.values
+ * @param {Array} p.values                All posible values
+ * @param {Array} p.colors                Corresponding colors
+ * @param {string} [p.unknown="white"]    Color for values not in options.values
  */
-jheatmap.decorators.Categorical = function (options) {
-    options = options || {};
-    this.values = options.values || [];
-    this.colors = options.colors || [];
-    this.unknown = options.unknown || "white";
+jheatmap.decorators.Categorical = function (p) {
+    p = p || {};
+    this.values = p.values || [];
+    this.colors = p.colors || [];
+    this.unknown = p.unknown || "white";
 
 };
 
@@ -686,25 +1092,25 @@ jheatmap.decorators.Categorical.prototype.toColor = function (value) {
  * new jheatmap.decorators.Linear({});
  *
  * @class
- * @param {Array}   [ranges=[[-2,0],[0,2]]]              All the ranges wanted starting with the most negative range upwards
- * @param {Array}   [colors=[ [[0,0,255],[255,255,255]],
+ * @param {Array}   [p.ranges=[[-2,0],[0,2]]]              All the ranges wanted starting with the most negative range upwards
+ * @param {Array}   [p.colors=[ [[0,0,255],[255,255,255]],
  *                            [[255,255,255],[255,0,0]]
  *                  ]                                    Min and max colors for each defined range that produce gradient
- * @param {Array}   [outColor=[0,0,0]]                   A specific color if the value is out of the range bounds. If not defined by user, the min and max colors will be used.
- * @param {Array}   [betweenColor=[187,187,187]]         A specific color if a value is between defined ranges. If not defined user it is set to black or outColor.
+ * @param {Array}   [p.outColor=[0,0,0]]                   A specific color if the value is out of the range bounds. If not defined by user, the min and max colors will be used.
+ * @param {Array}   [p.betweenColor=[187,187,187]]         A specific color if a value is between defined ranges. If not defined user it is set to black or outColor.
  *
  */
-jheatmap.decorators.Linear = function (options) {
-    options = options || {};
+jheatmap.decorators.Linear = function (p) {
+    p = p || {};
 
-    this.ranges = (options.ranges == undefined ? [[-2,0],[0,2]] : options.ranges);
-    this.colors = (options.colors == undefined ? [[[0,0,255],[255,255,255]], [[255,255,255],[255,0,0]]] : options.colors);
+    this.ranges = (p.ranges == undefined ? [[-2,0],[0,2]] : p.ranges);
+    this.colors = (p.colors == undefined ? [[[0,0,255],[255,255,255]], [[255,255,255],[255,0,0]]] : p.colors);
 
-    this.nullColor = (options.nullColor == undefined ? [255, 255, 255] : options.nullColor);
-    this.outColor = (options.outColor == undefined ?  null : options.outColor);
-    this.betweenColor = (options.betweenColor == undefined) ? null : options.betweenColor;
+    this.nullColor = (p.nullColor == undefined ? [255, 255, 255] : p.nullColor);
+    this.outColor = (p.outColor == undefined ?  null : p.outColor);
+    this.betweenColor = (p.betweenColor == undefined) ? null : p.betweenColor;
     if (this.betweenColor == null) {
-        this.betweenColor = (options.outColor != null) ? options.outColor : [0,0,0];
+        this.betweenColor = (p.outColor != null) ? p.outColor : [0,0,0];
     }
 
     this.minValue = this.ranges.reduce(function(min, arr) {
@@ -747,12 +1153,9 @@ jheatmap.decorators.Linear.prototype.toColor = function (value) {
     var rangeMin;
     var maxColor;
     var rangeMax;
-
     var allColors = this.colors;
 
-    var lastMax;
-
-    $.each(this.ranges,function(index,range){
+    jQuery.each(this.ranges,function(index,range){
         if (value >= range[0] && value <= range[1]) {
             minColor = allColors[index][0];
             rangeMin = range[0];
@@ -784,24 +1187,24 @@ jheatmap.decorators.Linear.prototype.toColor = function (value) {
  * new jheatmap.decorators.Heat({ minValue: -5, midValue: 0, maxValue: 5 });
  *
  * @class
- * @param {Array}   [minColor=[0,0,255]]    Minimum color [r,g,b]
- * @param {number}  [minValue=-1]                Minimum value
- * @param {Array}   [midColor=[255,255,0]]        Maximum color [r,g,b]
- * @param {number}  [midValue=0]                Maximum value
- * @param {Array}   [maxColor=[255,0,0]]        Maximum color [r,g,b]
- * @param {number}  [maxValue=1]                Maximum value
- * @param {Array}   [nullColor=[187,187,187]]   NaN values color [r,g,b]
+ * @param {Array}   [p.minColor=[0,0,255]]    Minimum color [r,g,b]
+ * @param {number}  [p.minValue=-1]                Minimum value
+ * @param {Array}   [p.midColor=[255,255,0]]        Maximum color [r,g,b]
+ * @param {number}  [p.midValue=0]                Maximum value
+ * @param {Array}   [p.maxColor=[255,0,0]]        Maximum color [r,g,b]
+ * @param {number}  [p.maxValue=1]                Maximum value
+ * @param {Array}   [p.nullColor=[187,187,187]]   NaN values color [r,g,b]
  *
  */
-jheatmap.decorators.Heat = function (options) {
-    options = options || {};
-    this.minColor = (options.minColor == undefined ? [0, 0, 255] : options.minColor);
-    this.minValue = (options.minValue == undefined ? -1 : options.minValue);
-    this.midColor = (options.midColor == undefined ? [255, 255, 0]: options.midColor);
-    this.midValue = (options.midValue == undefined ? 0 : options.midValue);
-    this.maxColor = (options.maxColor == undefined ? [255, 0, 0] : options.maxColor);
-    this.maxValue = (options.maxValue == undefined ? 1 : options.maxValue);
-    this.nullColor = (options.nullColor == undefined ? [187, 187, 187] : options.nullColor);
+jheatmap.decorators.Heat = function (p) {
+    p = p || {};
+    this.minColor = (p.minColor == undefined ? [0, 0, 255] : p.minColor);
+    this.minValue = (p.minValue == undefined ? -1 : p.minValue);
+    this.midColor = (p.midColor == undefined ? [255, 255, 0]: p.midColor);
+    this.midValue = (p.midValue == undefined ? 0 : p.midValue);
+    this.maxColor = (p.maxColor == undefined ? [255, 0, 0] : p.maxColor);
+    this.maxValue = (p.maxValue == undefined ? 1 : p.maxValue);
+    this.nullColor = (p.nullColor == undefined ? [187, 187, 187] : p.nullColor);
 };
 
 /**
@@ -855,13 +1258,13 @@ jheatmap.decorators.Heat.prototype.toColor = function (value) {
  * new jheatmap.decorators.Median({ maxValue: 4 });
  *
  * @class
- * @param {number}  [maxValue=3]    Absolute maximum and minimum of the median
- * @param {Array}   [nullColor=[255,255,255]]   NaN values color [r,g,b]
+ * @param {number}  [p.maxValue=3]    Absolute maximum and minimum of the median
+ * @param {Array}   [p.nullColor=[255,255,255]]   NaN values color [r,g,b]
  */
-jheatmap.decorators.Median = function (options) {
-    options = options || {};
-    this.maxValue = options.maxValue || 3;
-    this.nullColor = options.nullColor || [255,255,255]
+jheatmap.decorators.Median = function (p) {
+    p = p || {};
+    this.maxValue = p.maxValue || 3;
+    this.nullColor = p.nullColor || [255,255,255]
 
 };
 
@@ -898,13 +1301,13 @@ jheatmap.decorators.Median.prototype.toColor = function (value) {
  * new jheatmap.decorators.PValue({ cutoff: 0.01 });
  *
  * @class
- * @param {number}  [cutoff=0.05]   Significance cutoff.
- * @param {Array}   [nullColor=[255,255,255]]   NaN values color [r,g,b]
+ * @param {number}  [p.cutoff=0.05]   Significance cutoff.
+ * @param {Array}   [p.nullColor=[255,255,255]]   NaN values color [r,g,b]
  */
-jheatmap.decorators.PValue = function (options) {
-    options = options || {};
-    this.cutoff = options.cutoff || 0.05;
-    this.nullColor = options.nullColor || [255,255,255]
+jheatmap.decorators.PValue = function (p) {
+    p = p || {};
+    this.cutoff = p.cutoff || 0.05;
+    this.nullColor = p.nullColor || [255,255,255]
 };
 
 /**
@@ -948,10 +1351,10 @@ jheatmap.aggregators.Addition = function () {
 };
 
 /**
- * Acumulates all the values
- * @param {Array}   values  The values to acumulate
+ * accumulates all the values
+ * @param {Array}   values  The values to accumulate
  */
-jheatmap.aggregators.Addition.prototype.acumulate = function (values) {
+jheatmap.aggregators.Addition.prototype.accumulate = function (values) {
     var sum = 0;
     for (var i = 0; i < values.length; i++) {
         var value = values[i];
@@ -976,7 +1379,7 @@ jheatmap.aggregators.AbsoluteAddition = function () {
  * Accumulates all the values as absolute
  * @param {Array}   values  The values to accumulate
  */
-jheatmap.aggregators.AbsoluteAddition.prototype.acumulate = function (values) {
+jheatmap.aggregators.AbsoluteAddition.prototype.accumulate = function (values) {
     var sum = 0;
     for (var i = 0; i < values.length; i++) {
         var value = values[i];
@@ -992,18 +1395,17 @@ jheatmap.aggregators.AbsoluteAddition.prototype.acumulate = function (values) {
  * Average aggregator.
  *
  * @example
- * new jheatmap.aggregators.Median({ maxValue: 4 });
+ * new jheatmap.aggregators.Average();
  *
  */
 jheatmap.aggregators.Average = function (options) {
-    options = options || {};
-}
+};
 
 /**
- * Acumulates all the values
- * @param {Array}   values  The values to acumulate
+ * Accumulates all the values
+ * @param {Array}   values  The values to accumulate
  */
-jheatmap.aggregators.Average.prototype.acumulate = function (values) {
+jheatmap.aggregators.Average.prototype.accumulate = function (values) {
     var avg = 0;
     var count = 0;
     for (var i = 0; i < values.length; i++) {
@@ -1025,18 +1427,18 @@ jheatmap.aggregators.Average.prototype.acumulate = function (values) {
  * new jheatmap.aggregators.Median({ maxValue: 4 });
  *
  * @class
- * @param {number}  [maxValue=3]    Absolute maximum and minimum median value.
+ * @param {number}  [p.maxValue=3]    Absolute maximum and minimum median value.
  */
-jheatmap.aggregators.Median = function (options) {
-    options = options || {};
-    this.maxValue = options.maxValue || 3;
+jheatmap.aggregators.Median = function (p) {
+    p = p || {};
+    this.maxValue = p.maxValue || 3;
 };
 
 /**
- * Acumulates all the values
- * @param {Array}   values  The values to acumulate
+ * accumulates all the values
+ * @param {Array}   values  The values to accumulate
  */
-jheatmap.aggregators.Median.prototype.acumulate = function (values) {
+jheatmap.aggregators.Median.prototype.accumulate = function (values) {
     var sum = 0;
 
     for (var i = 0; i < values.length; i++) {
@@ -1055,18 +1457,18 @@ jheatmap.aggregators.Median.prototype.acumulate = function (values) {
  * new jheatmap.aggregators.PValue({ cutoff: 0.01 });
  *
  * @class
- * @param   {number}    [cutoff=0.05]   Significance cutoff
+ * @param   {number}    [p.cutoff=0.05]   Significance cutoff
  */
-jheatmap.aggregators.PValue = function (options) {
-    options = options || {};
-    this.cutoff = options.cutoff || 0.05;
+jheatmap.aggregators.PValue = function (p) {
+    p = p || {};
+    this.cutoff = p.cutoff || 0.05;
 };
 
 /**
- * Acumulates all the values
- * @param {Array}   values  The values to acumulate
+ * accumulates all the values
+ * @param {Array}   values  The values to accumulate
  */
-jheatmap.aggregators.PValue.prototype.acumulate = function (values) {
+jheatmap.aggregators.PValue.prototype.accumulate = function (values) {
     var sum = 0;
     for (var i = 0; i < values.length; i++) {
         if (values[i] && !isNaN(values[i])) {
@@ -1143,10 +1545,12 @@ jheatmap.filters.NonExpressed.prototype.filter = function (values) {
  * @author Jordi Deu-Pons
  * @class
  */
-jheatmap.Heatmap = function () {
+jheatmap.Heatmap = function (options) {
+
+    this.options = options || {};
 
     // Components
-    this.divHeatmap = null;
+    this.divHeatmap = options.container || null;
     this.canvasCols = null;
     this.canvasRows = null;
     this.canvasCells = null;
@@ -1185,14 +1589,6 @@ jheatmap.Heatmap = function () {
         top:0,
         left:0
     };
-
-    /**
-     * Internal property to track when the loaded files
-     * are ready
-     *
-     * @private
-     */
-    this.sync = false;
 
     /**
      * User defined filters
@@ -1440,15 +1836,10 @@ jheatmap.Heatmap = function () {
         return this.getColValue(col, this.cols.selectedValue);
     };
 
-
-
-
     /**
      * Initialize the Heatmap
      */
-    this.init = function (targetDiv) {
-
-        this.divHeatmap = targetDiv;
+    this.init = function () {
 
         // Loop iterators
         var r, c, f;
@@ -1578,7 +1969,7 @@ jheatmap.Heatmap = function () {
                         values.push(value[this.rows.sort.field]);
                     }
                 }
-                aggregation[this.rows.order[r]] = sum = this.cells.aggregators[this.rows.sort.field].acumulate(values);
+                aggregation[this.rows.order[r]] = sum = this.cells.aggregators[this.rows.sort.field].accumulate(values);
             }
 
             this.rows.order.stableSort(function (o_a, o_b) {
@@ -1660,7 +2051,7 @@ jheatmap.Heatmap = function () {
                         values.push(value[this.cols.sort.field]);
                     }
                 }
-                aggregation[cols[c]] = this.cells.aggregators[this.cells.selectedValue].acumulate(values);
+                aggregation[cols[c]] = this.cells.aggregators[this.cells.selectedValue].accumulate(values);
             }
 
             this.cols.order.stableSort(function (o_a, o_b) {
@@ -2985,295 +3376,51 @@ var console = console || {"log":function () {
 
 (function ($) {
 
-    String.prototype.splitCSV = function (sep) {
-        for (var thisCSV = this.split(sep = sep || ","), x = thisCSV.length - 1, tl; x >= 0; x--) {
-            if (thisCSV[x].replace(/"\s+$/, '"').charAt(thisCSV[x].length - 1) == '"') {
-                if ((tl = thisCSV[x].replace(/^\s+"/, '"')).length > 1 && tl.charAt(0) == '"') {
-                    thisCSV[x] = thisCSV[x].replace(/^\s*"|"\s*$/g, '').replace(/""/g, '"');
-                } else if (x) {
-                    thisCSV.splice(x - 1, 2, [ thisCSV[x - 1], thisCSV[x] ].join(sep));
-                } else
-                    thisCSV = thisCSV.shift().split(sep).concat(thisCSV);
-            } else
-                thisCSV[x].replace(/""/g, '"');
-        }
-        return thisCSV;
-    };
+    $.fn.heatmap = function (options) {
 
-    String.prototype.startsWith = function (str) {
-        return (this.match("^" + str) == str);
-    };
+        return this.each(function () {
 
-    var data;
+            options.container = $(this);
+            var heatmap = new jheatmap.Heatmap(options);
 
-    var methods = {
+            var initialize = function() {
 
-        // Load one file.
-        readfile:function (csvFile, sep, result, parse, options, obj) {
-            $.ajax({
-                url:csvFile,
-                success:function (file) {
-                    var lines = file.replace('\r', '').split('\n');
-                    $.each(lines, function (lineCount, line) {
-                        if (line.length > 0 && !line.startsWith("#")) {
-                            if (lineCount == 0) {
-                                result.header = line.splitCSV(sep);
-                            } else {
-                                var valuesRow = [];
-                                if (parse) {
-                                    var textValues = line.splitCSV(sep);
-                                    for (var i = 0; i < textValues.length; i++) {
-                                        valuesRow[valuesRow.length] = parseFloat(textValues[i]);
-                                    }
-                                } else {
-                                    valuesRow = line.splitCSV(sep);
-                                }
-                                result.values[result.values.length] = valuesRow;
-                            }
-                        }
-                    });
-                    if (options != undefined) {
+                if (options.data.rows != undefined && heatmap.rows.ready == undefined) {
+                    return;
+                }
 
-                        // Two columns matrix format
-                        if (options.data.type == "tdm") {
+                if (options.data.cols != undefined && heatmap.cols.ready == undefined) {
+                    return;
+                }
 
-                            var cellValues = [];
+                if (options.data.values != undefined && heatmap.cells.ready == undefined) {
+                    return;
+                }
 
-                            // Try to deduce with column is the row primary key.
-                            var rowKey;
-                            var valuesRowKey;
-                            if (options.data.rows != undefined) {
-                                for (var i = 0; i < data.rows.header.length; i++) {
-                                    if ((valuesRowKey = $.inArray(data.rows.header[i], data.cells.header)) > -1) {
-                                        rowKey = i;
-                                        break;
-                                    }
-                                }
-                            } else {
-                                rowKey = 0;
+                // Reset orders
+                heatmap.init();
 
-                                if (options.data.rows_annotations != undefined) {
-                                    var rowAnn = options.data.rows_annotations;
+                // Call init function
+                heatmap.options.init.call(this, heatmap);
 
-                                    valuesRowKey = rowAnn[0];
-                                    data.rows.header = [];
+                // Build & paint
+                heatmap.build();
+                heatmap.paint();
 
-                                    for (var i = 0; i < rowAnn.length; i++) {
-                                        data.rows.header.push(data.cells.header[rowAnn[i]]);
-                                        data.cells.header[rowAnn[i]] = undefined;
-                                    }
-                                } else {
-                                    valuesRowKey = 1;
-                                    data.rows.header = [ data.cells.header[ valuesRowKey ] ];
-                                }
-                            }
-
-                            // Try to deduce with column is the column primary
-                            // key.
-                            var colKey;
-                            var valuesColKey;
-
-                            if (options.data.cols != undefined) {
-                                for (var i = 0; i < data.cols.header.length; i++) {
-                                    if ((valuesColKey = $.inArray(data.cols.header[i], data.cells.header)) > -1) {
-                                        if (valuesColKey != valuesRowKey) {
-                                            colKey = i;
-                                            break;
-                                        }
-                                    }
-                                }
-                            } else {
-                                colKey = 0;
-
-                                if (options.data.cols_annotations != undefined) {
-                                    var colAnn = options.data.cols_annotations;
-
-                                    valuesColKey = colAnn[0];
-                                    data.cols.header = [];
-
-                                    for (var i = 0; i < colAnn.length; i++) {
-                                        data.cols.header.push(data.cells.header[colAnn[i]]);
-                                        data.cells.header[colAnn[i]] = undefined;
-                                    }
-
-                                } else {
-                                    valuesColKey = 0;
-                                    data.cols.header = [ data.cells.header[ valuesColKey ]];
-                                }
-                            }
-
-                            // Build hashes
-                            var rowHash = {};
-                            var colHash = {};
-
-                            if (options.data.rows != undefined && options.data.cols != undefined) {
-
-                                for (var i = 0; i < data.rows.values.length; i++) {
-                                    rowHash[(data.rows.values[i][rowKey]).toString()] = i;
-                                }
-
-                                for (var i = 0; i < data.cols.values.length; i++) {
-                                    colHash[(data.cols.values[i][colKey]).toString()] = i;
-                                }
-
-                            } else {
-                                console.log((new Date().getTime()) + " Building columns and rows hashes...");
-                                for (var i = 0; i < data.cells.values.length; i++) {
-                                    var values = data.cells.values[i];
-
-                                    if (values != null) {
-                                        var rowValues;
-                                        if (options.data.rows_annotations != undefined) {
-                                            rowValues = options.data.rows_annotations;
-                                        } else {
-                                            rowValues = [ valuesRowKey ];
-                                        }
-                                        if (rowHash[(values[valuesRowKey]).toString()] == undefined) {
-
-                                            var pos = data.rows.values.length;
-                                            rowHash[(values[valuesRowKey]).toString()] = pos;
-                                            data.rows.values[pos] = [];
-
-                                            for (var r = 0; r < rowValues.length; r++) {
-                                                data.rows.values[pos][r] = values[rowValues[r]];
-                                            }
-                                        }
-
-                                        var colValues;
-                                        if (options.data.cols_annotations != undefined) {
-                                            colValues = options.data.cols_annotations;
-                                        } else {
-                                            colValues = [ valuesColKey ];
-                                        }
-                                        if (colHash[(values[valuesColKey]).toString()] == undefined) {
-                                            var pos = data.cols.values.length;
-                                            colHash[(values[valuesColKey]).toString()] = pos;
-                                            data.cols.values[pos] = [];
-
-                                            for (var c = 0; c < colValues.length; c++) {
-                                                data.cols.values[pos][c] = values[colValues[c]];
-                                            }
-                                        }
-                                    }
-                                }
-                                console.log((new Date().getTime()) + " Hashes ready");
-                            }
-
-                            // Create a null matrix
-                            var totalPos = data.rows.values.length * data.cols.values.length;
-                            for (var pos = 0; pos < totalPos; pos++) {
-                                cellValues[pos] = null;
-                            }
-
-                            var cl = data.cols.values.length;
-
-                            console.log((new Date().getTime()) + " Loading cell values...");
-                            for (var i = 0; i < data.cells.values.length; i++) {
-
-                                var value = data.cells.values[i];
-
-                                if (value != null) {
-                                    var rowIndex = rowHash[value[valuesRowKey]];
-                                    var colIndex = colHash[value[valuesColKey]];
-
-                                    var pos = rowIndex * cl + colIndex;
-
-                                    cellValues[pos] = value;
-                                }
-                            }
-                            console.log((new Date().getTime()) + " Cells ready");
-
-                            delete data.cells.values;
-                            data.cells.values = cellValues;
-
-                            // Continuous data matrix format
-                        } else if (options.data.type == "cdm") {
-
-                            data.cols.header = [ "Column" ];
-                            for (var i = 0; i < data.cells.header.length; i++) {
-                                data.cols.values[data.cols.values.length] = [ data.cells.header[i] ];
-                            }
-
-                            var cellValues = [];
-                            data.rows.header = [ "Row" ];
-                            for (var row = 0; row < data.cells.values.length; row++) {
-                                data.rows.values[data.rows.values.length] = [ data.cells.values[row][0] ];
-                                for (var col = 0; col < data.cols.values.length; col++) {
-                                    cellValues[cellValues.length] = [ data.cells.values[row][col + 1] ];
-                                }
-                            }
-
-                            delete data.cells.header;
-                            delete data.cells.values;
-                            data.cells.header = [ "Value" ];
-                            data.cells.values = cellValues;
-                        }
-
-                        // Reset orders
-                        data.init(obj);
-
-                        // Call init function
-                        options.init.call(this, data);
-
-                        // Paint the heatmap
-                        data.build();
-                        data.paint();
-                        data.sync = true;
-
-
-                    }
-                    ;
-
-                },
-                dataType:"text"
-            });
-        },
-
-        // Load all the data files.
-        load:function (data, options, obj) {
+            }
 
             if (options.data.rows != undefined) {
-                methods['readfile'].call(this, options.data.rows, options.separator, data.rows, false, options, obj);
+                options.data.rows.read(heatmap.rows, initialize);
             }
 
             if (options.data.cols != undefined) {
-                methods['readfile'].call(this, options.data.cols, options.separator, data.cols, false, options, obj);
+                options.data.cols.read(heatmap.cols, initialize);
             }
 
             if (options.data.values != undefined) {
-                methods['readfile'].call(this, options.data.values, options.separator, data.cells, false, options, obj);
+                options.data.values.read(heatmap, initialize);
             }
-
-        },
-
-        init:function (options) {
-            var obj = $(this);
-
-            // Load all the data files on init
-            methods['load'].call(this, data, options, obj);
-
-        }
-
-    };
-
-
-    $.fn.heatmap = function (options) {
-        var defaults = {
-            separator:"\t",
-            data:{
-                type:"raw",
-                rows:"heatmap-rows.tsv",
-                cols:"heatmap-cols.tsv",
-                values:"heatmap-values.tsv"
-            },
-            init:function (heatmap) {
-            }
-        };
-        var options = $.extend(defaults, options);
-        data = new jheatmap.Heatmap();
-        data.sync = true;
-
-        return this.each(methods['init'].call(this, options));
+        });
     };
 
 })(jQuery);
