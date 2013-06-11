@@ -1,3 +1,39 @@
+/* Loader */
+#heatmap-loader div.background {
+    background-color: #FFF;
+    opacity: 0.75;
+    position: fixed;
+    z-index: 9002;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+#heatmap-loader div.loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 66px;
+    height: 66px;
+    margin-top: -30px;
+    margin-left: -30px;
+    z-index: 9003;
+}
+
+#tooltip {
+    position: absolute;
+    z-index: 3000;
+    border: 1px solid #111;
+    background-color: #eee;
+    padding: 5px;
+    opacity: 0.85;
+    font-size: 8px;
+}
+
+#tooltip h3, #tooltip div {
+    margin: 0;
+}
 
 table.heatmap div.modal-window
 {
@@ -6,16 +42,15 @@ table.heatmap div.modal-window
 
 }
 
-/* CSV Table Classes */
-canvas {
+table.heatmap canvas {
     background-color: #EEE;
+    display: inline-block;
 }
 
-canvas.header {
+table.heatmap canvas.header {
     background-color: #FFF;
 }
 
-/* Header */
 table.heatmap .border {
 	background-color: #FFF;
 	border: 0px solid white;
@@ -70,6 +105,7 @@ table.heatmap th.topleft {
     text-align: left;
     width: 220px;
     max-width: 220px;
+    padding: 8px 8px;
 }
 
 table.heatmap th.topleft select {
@@ -80,12 +116,11 @@ table.heatmap th.topleft select {
 }
 
 table.heatmap th.topleft span {
-	vertical-align: top;
-	margin-left: 5px;
+    vertical-align: top;
+    margin-left: 0px;
     display: inline-block;
-    width: 55px;
+    margin-top: 2px;
 }
-
 
 table.heatmap th div.col {
 	text-align: center;
@@ -98,14 +133,14 @@ table.heatmap th div.col {
 }
 
 table.heatmap th.topleft div.filter {
-	margin-left: 0px;
-	margin-bottom: 15px;
-	width: 100%;
-	text-align: center;
-	font-weight: normal;
-	font-size: 10px;
-	-webkit-transform: rotate(0deg);
-	-moz-transform: rotate(0deg);
+    margin-top: 5px;
+    margin-left: 8px;
+    margin-bottom: 15px;
+    width: 100%;
+    font-weight: normal;
+    font-size: 10px;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
 }
 
 table.heatmap td.row {
@@ -118,7 +153,6 @@ table.heatmap td.row {
 	white-space:nowrap;
 }
 
-/* Table Cells */
 table.heatmap td {
 	padding: 0px;
 	text-align: left;
@@ -131,7 +165,6 @@ table.heatmap div.col, table.heatmap td.row, table.heatmap th.title {
      cursor: pointer;   
 }
 
-/* Details box */
 table.heatmap div.detailsbox {
     position: absolute;
     border: 1px solid black;
@@ -143,29 +176,6 @@ table.heatmap div.detailsbox {
     color: #000;
 }
 
-/* Loader */
-#heatmap-loader div.background {
-	background-color: #FFF;
-        opacity: 0.75;
-        position: fixed;
-        z-index: 9002;
-        top: 0px;
-        left: 0px;
-        width: 100%;
-        height: 100%;
-}
-
-#heatmap-loader div.loader {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-    width: 66px;
-    height: 66px;
-	margin-top: -30px;
-	margin-left: -30px;
-	z-index: 9003;
-}
-
 table.heatmap td.borderRL, table.heatmap th.borderRL {
     border-right: 1px solid #BBB;
     border-left: 1px solid #BBB;
@@ -175,15 +185,12 @@ table.heatmap td.borderRL, table.heatmap th.borderRL {
 }
 
 table.heatmap td.border-rows-ann, table.heatmap th.border-rows-ann {
-    border: 1px solid #BBB;
     background-color: #FFF;
 }
 
 table.heatmap td.border-cols-ann, table.heatmap th.border-cols-ann {
-    border: 1px solid #BBB;
     background-color: #FFF;
 }
-
 
 table.heatmap td.borderL, table.heatmap th.borderL {
     border-right: 0px;
@@ -207,15 +214,7 @@ table.heatmap td.ra {
 
 table.heatmap {
     line-height: 0px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
-
-#tooltip {
-    position: absolute;
-    z-index: 3000;
-    border: 1px solid #111;
-    background-color: #eee;
-    padding: 5px;
-    opacity: 0.85;
-    font-size: 8px;
-}
-#tooltip h3, #tooltip div { margin: 0; }
