@@ -1,10 +1,13 @@
 /**
- * Numeric sort comparator
+ * Numeric sorter by row or column annotation
  *
  * @example
- * new jheatmap.sorters.AnnotationSorter(heatmapDimension);
+ * new jheatmap.sorters.AnnotationSorter(heatmapDimension, 2, true);
+ *
  * @class
- * @param {HeatmapDimension} heatmapDimension   The heatmap dimension to sort
+ * @param {HeatmapDimension}    heatmapDimension    The heatmap dimension to sort
+ * @param {int}                 field               Value field to aggregate
+ * @param {boolean}             asc                 True to sort ascending, false to sort descending
  */
 jheatmap.sorters.AnnotationSorter = function (heatmapDimension, field, asc) {
     this.heatmapDimension = heatmapDimension || [];
@@ -12,6 +15,9 @@ jheatmap.sorters.AnnotationSorter = function (heatmapDimension, field, asc) {
     this.asc = asc;
 };
 
+/**
+ * Sort the heatmap
+ */
 jheatmap.sorters.AnnotationSorter.prototype.sort = function() {
 
     var values = this.heatmapDimension.values;

@@ -1,12 +1,16 @@
 /**
- * Numeric aggregation sorter
+ * Numeric sorter by value of multiple aggregated rows or columns.
  *
  * @example
- * new jheatmap.sorters.AggregationValueSorter(heatmapDimension);
+ * new jheatmap.sorters.AggregationValueSorter(heatmap, "rows", 3, true, [23, 24, 32, 45, 50] );
  * @class
- * @param {HeatmapDimension} heatmapDimension   The heatmap dimension to sort
+ * @param {Heatmap} heatmap     The heatmap to sort
+ * @param {string}  sortType    "rows" or "columns"
+ * @param {int}     field       Value field to aggregate
+ * @param {boolean} asc         True to sort ascending, false to sort descending
+ * @param {Array}   indices     Integer positions of the selected rows/columns to aggregate.
  */
-jheatmap.sorters.AggregationValueSorter = function (heatmap, sortType, field, asc, item) {
+jheatmap.sorters.AggregationValueSorter = function (heatmap, sortType, field, asc, indices) {
 
     this.field = field;
     this.asc = asc;
@@ -14,10 +18,13 @@ jheatmap.sorters.AggregationValueSorter = function (heatmap, sortType, field, as
     this.rowsSort = (sortType=="rows");
     this.sortDimension = (this.rowsSort ? heatmap.rows : heatmap.cols);
     this.aggregationDimension = (this.rowsSort ? heatmap.cols : heatmap.rows);
-    this.item = item || this.aggregationDimension.order;
+    this.indices = indices || this.aggregationDimension.order;
 
 };
 
+/**
+ * Sort the heatmap
+ */
 jheatmap.sorters.AggregationValueSorter.prototype.sort = function() {
 
     var aggregation = [];
@@ -25,8 +32,8 @@ jheatmap.sorters.AggregationValueSorter.prototype.sort = function() {
     var cl = (this.rowsSort ? this.aggregationDimension.values.length : this.sortDimension.values.length);
     for (var r = 0; r < this.sortDimension.order.length; r++) {
         var values = [];
-        for (var i = 0; i < this.item.length; i++) {
-            var pos = (this.rowsSort ? this.sortDimension.order[r] * cl + this.item[i] : this.item[i] * cl + this.sortDimension.order[r]);
+        for (var i = 0; i < this.indices.length; i++) {
+            var pos = (this.rowsSort ? this.sortDimension.order[r] * cl + this.indices[i] : this.indices[i] * cl + this.sortDimension.order[r]);
             var value = this.cells.values[pos];
             if (value != null) {
                 values.push(value[this.field]);
@@ -43,4 +50,4 @@ jheatmap.sorters.AggregationValueSorter.prototype.sort = function() {
         return (v_a == v_b) ? 0 : (v_a > v_b ? val : -val);
     });
 
-}
+};
