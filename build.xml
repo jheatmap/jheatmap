@@ -46,17 +46,26 @@
     <target name="concat">
         <!-- concatenation of javascript -->
         <echo message="Building global javascript"/>
-        <concat destfile="site/js/jheatmap-${jheatmap.version}.js" force="no">
+        <concat destfile="site/js/jheatmap-${jheatmap.version}.js" force="no" fixlastline="yes">
+
             <!-- explicitly order js concat because ordering matters here -->
-            <fileset dir="." includes="src/js/bootstrap.js"/>
+
+            <!-- package definitions -->
+            <fileset dir="." includes="**/_package.js"/>
+
+            <!-- jHeatmap source code -->
+            <fileset dir="." excludes="**/_*.js" includes="src/js/jheatmap/utils/*.js"/>
+            <fileset dir="." excludes="**/_*.js" includes="src/js/jheatmap/readers/*.js"/>
+            <fileset dir="." excludes="**/_*.js" includes="src/js/jheatmap/decorators/*.js"/>
+            <fileset dir="." excludes="**/_*.js" includes="src/js/jheatmap/aggregators/*.js"/>
+            <fileset dir="." excludes="**/_*.js" includes="src/js/jheatmap/filters/*.js"/>
+            <fileset dir="." excludes="**/_*.js" includes="src/js/jheatmap/*.js"/>
+
+            <!-- jQuery plugins -->
+            <fileset dir="." includes="src/js/jquery.bootstrap.js"/>
             <fileset dir="." includes="src/js/jquery.mousewheel.js"/>
-            <fileset dir="." includes="src/js/jheatmap.utils.js"/>
-            <fileset dir="." includes="src/js/jheatmap.readers.js"/>
-            <fileset dir="." includes="src/js/jheatmap.decorators.js"/>
-            <fileset dir="." includes="src/js/jheatmap.aggregators.js"/>
-            <fileset dir="." includes="src/js/jheatmap.filters.js"/>
-            <fileset dir="." includes="src/js/jheatmap.Heatmap.js"/>
             <fileset dir="." includes="src/js/jquery.jheatmap.js"/>
+
         </concat>
 
         <!-- concatenation of cascading stylesheets -->
