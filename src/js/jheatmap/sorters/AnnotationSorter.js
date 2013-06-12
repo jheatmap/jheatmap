@@ -5,7 +5,7 @@
  * new jheatmap.sorters.AnnotationSorter(heatmapDimension, 2, true);
  *
  * @class
- * @param {HeatmapDimension}    heatmapDimension    The heatmap dimension to sort
+ * @param {jheatmap.HeatmapDimension}    heatmapDimension    The heatmap dimension to sort
  * @param {int}                 field               Value field to aggregate
  * @param {boolean}             asc                 True to sort ascending, false to sort descending
  */

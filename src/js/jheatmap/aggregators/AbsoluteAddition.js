@@ -3,6 +3,7 @@
  *
  * @example
  * new jheatmap.aggregators.AbsoluteAddition();
+ *
  * @class
  */
 jheatmap.aggregators.AbsoluteAddition = function () {

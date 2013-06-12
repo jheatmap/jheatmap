@@ -1,7 +1,9 @@
 /**
  * Constant decorator. This decorator returns always the same color
+ *
  * @example
  * new jheatmap.decorators.Constant({ color: "red" });
+ *
  * @class
  * @param {string}  [p.color="white"] Color for all the values
  */

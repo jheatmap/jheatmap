@@ -6,6 +6,7 @@
  *                            values: ["F", "M"],
  *                            colors: ["pink", "blue"]
  *                         });
+ *
  * @class
  * @param {Array} p.values                All posible values
  * @param {Array} p.colors                Corresponding colors

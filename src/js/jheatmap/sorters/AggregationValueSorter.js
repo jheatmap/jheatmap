@@ -4,7 +4,7 @@
  * @example
  * new jheatmap.sorters.AggregationValueSorter(heatmap, "rows", 3, true, [23, 24, 32, 45, 50] );
  * @class
- * @param {Heatmap} heatmap     The heatmap to sort
+ * @param {jheatmap.Heatmap} heatmap     The heatmap to sort
  * @param {string}  sortType    "rows" or "columns"
  * @param {int}     field       Value field to aggregate
  * @param {boolean} asc         True to sort ascending, false to sort descending

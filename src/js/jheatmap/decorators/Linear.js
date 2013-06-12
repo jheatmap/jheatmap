@@ -6,9 +6,7 @@
  *
  * @class
  * @param {Array}   [p.ranges=[[-2,0],[0,2]]]              All the ranges wanted starting with the most negative range upwards
- * @param {Array}   [p.colors=[ [[0,0,255],[255,255,255]],
- *                            [[255,255,255],[255,0,0]]
- *                  ]                                    Min and max colors for each defined range that produce gradient
+ * @param {Array}   [p.colors=[[[0,0,255],[255,255,255]],[[255,255,255],[255,0,0]]]  Min and max colors for each defined range that produce gradient
  * @param {Array}   [p.outColor=[0,0,0]]                   A specific color if the value is out of the range bounds. If not defined by user, the min and max colors will be used.
  * @param {Array}   [p.betweenColor=[187,187,187]]         A specific color if a value is between defined ranges. If not defined user it is set to black or outColor.
  *

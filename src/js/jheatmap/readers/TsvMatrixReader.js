@@ -19,7 +19,7 @@ jheatmap.readers.TsvMatrixReader = function (p) {
 /**
  * Asynchronously reads a text separated value file, the result is loaded in the 'heatmap' parameter.
  *
- * @param {Heatmap}     heatmap     The destination heatmap.
+ * @param {jheatmap.Heatmap}     heatmap     The destination heatmap.
  * @param {function}    initialize  A callback function that is called when the file is loaded.
  *
  */
