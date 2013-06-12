@@ -1,367 +1,3 @@
-/* =========================================================
- * bootstrap-modal.js v2.3.2
- * http://twitter.github.com/bootstrap/javascript.html#modals
- * =========================================================
- * Copyright 2012 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================= */
-
-
-!function ($) {
-
-  "use strict"; // jshint ;_;
-
-
- /* MODAL CLASS DEFINITION
-  * ====================== */
-
-  var Modal = function (element, options) {
-    this.options = options
-    this.$element = $(element)
-      .delegate('[data-dismiss="modal"]', 'click.dismiss.modal', $.proxy(this.hide, this))
-    this.options.remote && this.$element.find('.modal-body').load(this.options.remote)
-  }
-
-  Modal.prototype = {
-
-      constructor: Modal
-
-    , toggle: function () {
-        return this[!this.isShown ? 'show' : 'hide']()
-      }
-
-    , show: function () {
-        var that = this
-          , e = $.Event('show')
-
-        this.$element.trigger(e)
-
-        if (this.isShown || e.isDefaultPrevented()) return
-
-        this.isShown = true
-
-        this.escape()
-
-        this.backdrop(function () {
-          var transition = $.support.transition && that.$element.hasClass('fade')
-
-          if (!that.$element.parent().length) {
-            that.$element.appendTo(document.body) //don't move modals dom position
-          }
-
-          that.$element.show()
-
-          if (transition) {
-            that.$element[0].offsetWidth // force reflow
-          }
-
-          that.$element
-            .addClass('in')
-            .attr('aria-hidden', false)
-
-          that.enforceFocus()
-
-          transition ?
-            that.$element.one($.support.transition.end, function () { that.$element.focus().trigger('shown') }) :
-            that.$element.focus().trigger('shown')
-
-        })
-      }
-
-    , hide: function (e) {
-        e && e.preventDefault()
-
-        var that = this
-
-        e = $.Event('hide')
-
-        this.$element.trigger(e)
-
-        if (!this.isShown || e.isDefaultPrevented()) return
-
-        this.isShown = false
-
-        this.escape()
-
-        $(document).off('focusin.modal')
-
-        this.$element
-          .removeClass('in')
-          .attr('aria-hidden', true)
-
-        $.support.transition && this.$element.hasClass('fade') ?
-          this.hideWithTransition() :
-          this.hideModal()
-      }
-
-    , enforceFocus: function () {
-        var that = this
-        $(document).on('focusin.modal', function (e) {
-          if (that.$element[0] !== e.target && !that.$element.has(e.target).length) {
-            that.$element.focus()
-          }
-        })
-      }
-
-    , escape: function () {
-        var that = this
-        if (this.isShown && this.options.keyboard) {
-          this.$element.on('keyup.dismiss.modal', function ( e ) {
-            e.which == 27 && that.hide()
-          })
-        } else if (!this.isShown) {
-          this.$element.off('keyup.dismiss.modal')
-        }
-      }
-
-    , hideWithTransition: function () {
-        var that = this
-          , timeout = setTimeout(function () {
-              that.$element.off($.support.transition.end)
-              that.hideModal()
-            }, 500)
-
-        this.$element.one($.support.transition.end, function () {
-          clearTimeout(timeout)
-          that.hideModal()
-        })
-      }
-
-    , hideModal: function () {
-        var that = this
-        this.$element.hide()
-        this.backdrop(function () {
-          that.removeBackdrop()
-          that.$element.trigger('hidden')
-        })
-      }
-
-    , removeBackdrop: function () {
-        this.$backdrop && this.$backdrop.remove()
-        this.$backdrop = null
-      }
-
-    , backdrop: function (callback) {
-        var that = this
-          , animate = this.$element.hasClass('fade') ? 'fade' : ''
-
-        if (this.isShown && this.options.backdrop) {
-          var doAnimate = $.support.transition && animate
-
-          this.$backdrop = $('<div class="modal-backdrop ' + animate + '" />')
-            .appendTo(document.body)
-
-          this.$backdrop.click(
-            this.options.backdrop == 'static' ?
-              $.proxy(this.$element[0].focus, this.$element[0])
-            : $.proxy(this.hide, this)
-          )
-
-          if (doAnimate) this.$backdrop[0].offsetWidth // force reflow
-
-          this.$backdrop.addClass('in')
-
-          if (!callback) return
-
-          doAnimate ?
-            this.$backdrop.one($.support.transition.end, callback) :
-            callback()
-
-        } else if (!this.isShown && this.$backdrop) {
-          this.$backdrop.removeClass('in')
-
-          $.support.transition && this.$element.hasClass('fade')?
-            this.$backdrop.one($.support.transition.end, callback) :
-            callback()
-
-        } else if (callback) {
-          callback()
-        }
-      }
-  }
-
-
- /* MODAL PLUGIN DEFINITION
-  * ======================= */
-
-  var old = $.fn.modal
-
-  $.fn.modal = function (option) {
-    return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('modal')
-        , options = $.extend({}, $.fn.modal.defaults, $this.data(), typeof option == 'object' && option)
-      if (!data) $this.data('modal', (data = new Modal(this, options)))
-      if (typeof option == 'string') data[option]()
-      else if (options.show) data.show()
-    })
-  }
-
-  $.fn.modal.defaults = {
-      backdrop: true
-    , keyboard: true
-    , show: true
-  }
-
-  $.fn.modal.Constructor = Modal
-
-
- /* MODAL NO CONFLICT
-  * ================= */
-
-  $.fn.modal.noConflict = function () {
-    $.fn.modal = old
-    return this
-  }
-
-
- /* MODAL DATA-API
-  * ============== */
-
-  $(document).on('click.modal.data-api', '[data-toggle="modal"]', function (e) {
-    var $this = $(this)
-      , href = $this.attr('href')
-      , $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) //strip for ie7
-      , option = $target.data('modal') ? 'toggle' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
-
-    e.preventDefault()
-
-    $target
-      .modal(option)
-      .one('hide', function () {
-        $this.focus()
-      })
-  })
-
-}(window.jQuery);
-/*! Copyright (c) 2013 Brandon Aaron (http://brandonaaron.net)
- * Licensed under the MIT License (LICENSE.txt).
- *
- * Thanks to: http://adomas.org/javascript-mouse-wheel/ for some pointers.
- * Thanks to: Mathias Bank(http://www.mathias-bank.de) for a scope bug fix.
- * Thanks to: Seamus Leahy for adding deltaX and deltaY
- *
- * Version: 3.1.3
- *
- * Requires: 1.2.2+
- */
-
-(function (factory) {
-    if ( typeof define === 'function' && define.amd ) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof exports === 'object') {
-        // Node/CommonJS style for Browserify
-        module.exports = factory;
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
-
-    var toFix = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'];
-    var toBind = 'onwheel' in document || document.documentMode >= 9 ? ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'];
-    var lowestDelta, lowestDeltaXY;
-
-    if ( $.event.fixHooks ) {
-        for ( var i = toFix.length; i; ) {
-            $.event.fixHooks[ toFix[--i] ] = $.event.mouseHooks;
-        }
-    }
-
-    $.event.special.mousewheel = {
-        setup: function() {
-            if ( this.addEventListener ) {
-                for ( var i = toBind.length; i; ) {
-                    this.addEventListener( toBind[--i], handler, false );
-                }
-            } else {
-                this.onmousewheel = handler;
-            }
-        },
-
-        teardown: function() {
-            if ( this.removeEventListener ) {
-                for ( var i = toBind.length; i; ) {
-                    this.removeEventListener( toBind[--i], handler, false );
-                }
-            } else {
-                this.onmousewheel = null;
-            }
-        }
-    };
-
-    $.fn.extend({
-        mousewheel: function(fn) {
-            return fn ? this.bind("mousewheel", fn) : this.trigger("mousewheel");
-        },
-
-        unmousewheel: function(fn) {
-            return this.unbind("mousewheel", fn);
-        }
-    });
-
-
-    function handler(event) {
-        var orgEvent = event || window.event,
-            args = [].slice.call(arguments, 1),
-            delta = 0,
-            deltaX = 0,
-            deltaY = 0,
-            absDelta = 0,
-            absDeltaXY = 0,
-            fn;
-        event = $.event.fix(orgEvent);
-        event.type = "mousewheel";
-
-        // Old school scrollwheel delta
-        if ( orgEvent.wheelDelta ) { delta = orgEvent.wheelDelta; }
-        if ( orgEvent.detail )     { delta = orgEvent.detail * -1; }
-
-        // New school wheel delta (wheel event)
-        if ( orgEvent.deltaY ) {
-            deltaY = orgEvent.deltaY * -1;
-            delta  = deltaY;
-        }
-        if ( orgEvent.deltaX ) {
-            deltaX = orgEvent.deltaX;
-            delta  = deltaX * -1;
-        }
-
-        // Webkit
-        if ( orgEvent.wheelDeltaY !== undefined ) { deltaY = orgEvent.wheelDeltaY; }
-        if ( orgEvent.wheelDeltaX !== undefined ) { deltaX = orgEvent.wheelDeltaX * -1; }
-
-        // Look for lowest delta to normalize the delta values
-        absDelta = Math.abs(delta);
-        if ( !lowestDelta || absDelta < lowestDelta ) { lowestDelta = absDelta; }
-        absDeltaXY = Math.max(Math.abs(deltaY), Math.abs(deltaX));
-        if ( !lowestDeltaXY || absDeltaXY < lowestDeltaXY ) { lowestDeltaXY = absDeltaXY; }
-
-        // Get a whole value for the deltas
-        fn = delta > 0 ? 'floor' : 'ceil';
-        delta  = Math[fn](delta / lowestDelta);
-        deltaX = Math[fn](deltaX / lowestDeltaXY);
-        deltaY = Math[fn](deltaY / lowestDeltaXY);
-
-        // Add event and delta to the front of the arguments
-        args.unshift(event, delta, deltaX, deltaY);
-
-        return ($.event.dispatch || $.event.handle).apply(this, args);
-    }
-
-}));
 /**
  *
  * jHeatmap interactive viewer package
@@ -369,13 +5,31 @@
  * @namespace jheatmap
  */
 var jheatmap = {};
-
+/**
+ * Values aggregators
+ * @namespace jheatmap.aggregators
+ */
+jheatmap.aggregators = {};
+/**
+ * Cell decorators
+ * @namespace jheatmap.decorators
+ */
+jheatmap.decorators = {};
+/**
+ * Filters
+ * @namespace jheatmap.filters
+ */
+jheatmap.filters = {};
+/**
+ * Data readers
+ * @namespace jheatmap.readers
+ */
+jheatmap.readers = {};
 /**
  * Utils package
  * @namespace jheatmap.utils
  */
 jheatmap.utils = {};
-
 /**
  * RGBColor class - Convert a RGB value into Hexadecimal and rgb() HTML color String.
  *
@@ -420,7 +74,6 @@ jheatmap.utils.RGBColor.prototype.toHex = function () {
 jheatmap.utils.RGBColor.prototype.toRGB = function () {
     return 'rgb(' + this.r + ', ' + this.g + ', ' + this.b + ')';
 };
-
 jheatmap.utils.drawOrderSymbol = function (ctx, asc) {
     ctx.fillStyle = "rgba(130,2,2,1)";
     ctx.beginPath();
@@ -438,12 +91,6 @@ jheatmap.utils.drawOrderSymbol = function (ctx, asc) {
     ctx.fill();
     ctx.closePath();
 };
-
-
-/*
- Browser detection
- */
-
 var BrowserDetect = {
     init: function () {
         this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
@@ -639,36 +286,35 @@ BrowserDetect.init();
 
 
 /**
- * Data readers
- * @namespace jheatmap.readers
- */
-jheatmap.readers = {};
-
-/**
- * A text separated value file table reader
+ * A text separated value file matrix reader. The file has to follow this format:
+ *
+ * <pre><code>
+ *          col1    col2
+ *   row1   0.11    0.12
+ *   row2   0.21    0.22
+ * </code></pre>
  *
  * @example
- * new jheatmap.readers.TsvTableReader({ url: "filename.tsv" });
+ * new jheatmap.readers.CdmMatrixReader({ url: "filename.cdm" });
  *
  * @class
  * @param {string}  p.url                 File url
  * @param {string} [p.separator="tab"]    Value separator character
  */
-jheatmap.readers.TsvTableReader = function (p) {
+jheatmap.readers.CdmMatrixReader = function (p) {
     p = p || {};
     this.url = p.url || "";
     this.separator = p.separator || "\t";
 };
 
 /**
- * Asynchronously reads a text separated value file, the result is returned in the 'result' parameter.
+ * Asynchronously reads a text separated value file, the result is loaded in the 'heatmap' parameter.
  *
- * @param {Array} result.header Returns the file header as a string array.
- * @param {Array} result.values Returns the file values as an array of arrays.
+ * @param {Heatmap}     heatmap     The destination heatmap.
  * @param {function}    initialize  A callback function that is called when the file is loaded.
  *
  */
-jheatmap.readers.TsvTableReader.prototype.read = function (result, initialize) {
+jheatmap.readers.CdmMatrixReader.prototype.read = function (heatmap, initialize) {
 
     var sep = this.separator;
     var url = this.url;
@@ -685,23 +331,41 @@ jheatmap.readers.TsvTableReader.prototype.read = function (result, initialize) {
             jQuery.each(lines, function (lineCount, line) {
                 if (line.length > 0 && !line.startsWith("#")) {
                     if (lineCount == 0) {
-                        result.header = line.splitCSV(sep);
+                        heatmap.cells.header = line.splitCSV(sep);
                     } else {
-                        result.values[result.values.length] = line.splitCSV(sep);
+                        heatmap.cells.values[heatmap.cells.values.length] = line.splitCSV(sep);
                     }
                 }
             });
 
-            result.ready = true;
+            heatmap.cols.header = [ "Column" ];
+            for (var i = 0; i < heatmap.cells.header.length; i++) {
+                heatmap.cols.values[heatmap.cols.values.length] = [ heatmap.cells.header[i] ];
+            }
+
+            var cellValues = [];
+            heatmap.rows.header = [ "Row" ];
+            for (var row = 0; row < heatmap.cells.values.length; row++) {
+                heatmap.rows.values[heatmap.rows.values.length] = [ heatmap.cells.values[row][0] ];
+                for (var col = 0; col < heatmap.cols.values.length; col++) {
+                    cellValues[cellValues.length] = [ heatmap.cells.values[row][col + 1] ];
+                }
+            }
+
+            delete heatmap.cells.header;
+            delete heatmap.cells.values;
+            heatmap.cells.header = [ "Value" ];
+            heatmap.cells.values = cellValues;
+
+            heatmap.cells.ready = true;
 
             initialize.call(this);
 
         }
 
+
     });
 };
-
-
 /**
  * A text separated value file matrix reader.
  *
@@ -914,38 +578,31 @@ jheatmap.readers.TsvMatrixReader.prototype.read = function (heatmap, initialize)
 
     });
 };
-
-
 /**
- * A text separated value file matrix reader. The file has to follow this format:
- *
- * <pre><code>
- *          col1    col2
- *   row1   0.11    0.12
- *   row2   0.21    0.22
- * </code></pre>
+ * A text separated value file table reader
  *
  * @example
- * new jheatmap.readers.CdmMatrixReader({ url: "filename.cdm" });
+ * new jheatmap.readers.TsvTableReader({ url: "filename.tsv" });
  *
  * @class
  * @param {string}  p.url                 File url
  * @param {string} [p.separator="tab"]    Value separator character
  */
-jheatmap.readers.CdmMatrixReader = function (p) {
+jheatmap.readers.TsvTableReader = function (p) {
     p = p || {};
     this.url = p.url || "";
     this.separator = p.separator || "\t";
 };
 
 /**
- * Asynchronously reads a text separated value file, the result is loaded in the 'heatmap' parameter.
+ * Asynchronously reads a text separated value file, the result is returned in the 'result' parameter.
  *
- * @param {Heatmap}     heatmap     The destination heatmap.
+ * @param {Array} result.header Returns the file header as a string array.
+ * @param {Array} result.values Returns the file values as an array of arrays.
  * @param {function}    initialize  A callback function that is called when the file is loaded.
  *
  */
-jheatmap.readers.CdmMatrixReader.prototype.read = function (heatmap, initialize) {
+jheatmap.readers.TsvTableReader.prototype.read = function (result, initialize) {
 
     var sep = this.separator;
     var url = this.url;
@@ -962,95 +619,21 @@ jheatmap.readers.CdmMatrixReader.prototype.read = function (heatmap, initialize)
             jQuery.each(lines, function (lineCount, line) {
                 if (line.length > 0 && !line.startsWith("#")) {
                     if (lineCount == 0) {
-                        heatmap.cells.header = line.splitCSV(sep);
+                        result.header = line.splitCSV(sep);
                     } else {
-                        heatmap.cells.values[heatmap.cells.values.length] = line.splitCSV(sep);
+                        result.values[result.values.length] = line.splitCSV(sep);
                     }
                 }
             });
 
-            heatmap.cols.header = [ "Column" ];
-            for (var i = 0; i < heatmap.cells.header.length; i++) {
-                heatmap.cols.values[heatmap.cols.values.length] = [ heatmap.cells.header[i] ];
-            }
-
-            var cellValues = [];
-            heatmap.rows.header = [ "Row" ];
-            for (var row = 0; row < heatmap.cells.values.length; row++) {
-                heatmap.rows.values[heatmap.rows.values.length] = [ heatmap.cells.values[row][0] ];
-                for (var col = 0; col < heatmap.cols.values.length; col++) {
-                    cellValues[cellValues.length] = [ heatmap.cells.values[row][col + 1] ];
-                }
-            }
-
-            delete heatmap.cells.header;
-            delete heatmap.cells.values;
-            heatmap.cells.header = [ "Value" ];
-            heatmap.cells.values = cellValues;
-
-            heatmap.cells.ready = true;
+            result.ready = true;
 
             initialize.call(this);
 
         }
 
-
     });
 };
-/**
- * Cell decorators
- * @namespace jheatmap.decorators
- */
-jheatmap.decorators = {};
-
-/**
- * Constant decorator. This decorator returns always the same color
- * @example
- * new jheatmap.decorators.Constant({ color: "red" });
- * @class
- * @param {string}  [p.color="white"] Color for all the values
- */
-jheatmap.decorators.Constant = function (p) {
-    p = p || {};
-    this.color = p.color || "white";
-
-};
-
-/**
- * Convert a value to a color
- */
-jheatmap.decorators.Constant.prototype.toColor = function () {
-    return this.color;
-};
-
-/**
- * String to color decorator. The color is calculated from the ASCII code of the String
- */
-jheatmap.decorators.StringColor = function () {
-};
-
-jheatmap.decorators.StringColor.prototype.toColor = function (value) {
-    var color = [0,0,0];
-
-    value = value.toUpperCase();
-
-    var iterations = 0;
-    for (var i=0; i < value.length; i=i+3 ) {
-        color[0] += ((value.charCodeAt(i) || 65) - 48) * 7;
-        color[1] += ((value.charCodeAt(i+1) || 65) - 48) * 7;
-        color[2] += ((value.charCodeAt(i+2) || 65) - 48) * 7;
-        iterations++;
-    }
-
-    color[0] = Math.round( color[0] / iterations );
-    color[1] = Math.round( color[1] / iterations );
-    color[2] = Math.round( color[2] / iterations );
-
-    return (new jheatmap.utils.RGBColor(color)).toRGB();
-
-};
-
-
 /**
  * Categorical decorator.
  *
@@ -1084,7 +667,94 @@ jheatmap.decorators.Categorical.prototype.toColor = function (value) {
     }
     return this.unknown;
 };
+/**
+ * Constant decorator. This decorator returns always the same color
+ * @example
+ * new jheatmap.decorators.Constant({ color: "red" });
+ * @class
+ * @param {string}  [p.color="white"] Color for all the values
+ */
+jheatmap.decorators.Constant = function (p) {
+    p = p || {};
+    this.color = p.color || "white";
 
+};
+
+/**
+ * Convert a value to a color
+ */
+jheatmap.decorators.Constant.prototype.toColor = function () {
+    return this.color;
+};
+/**
+ * Heat decorator
+ *
+ * @example
+ * new jheatmap.decorators.Heat({ minValue: -5, midValue: 0, maxValue: 5 });
+ *
+ * @class
+ * @param {Array}   [p.minColor=[0,0,255]]    Minimum color [r,g,b]
+ * @param {number}  [p.minValue=-1]                Minimum value
+ * @param {Array}   [p.midColor=[255,255,0]]        Maximum color [r,g,b]
+ * @param {number}  [p.midValue=0]                Maximum value
+ * @param {Array}   [p.maxColor=[255,0,0]]        Maximum color [r,g,b]
+ * @param {number}  [p.maxValue=1]                Maximum value
+ * @param {Array}   [p.nullColor=[187,187,187]]   NaN values color [r,g,b]
+ *
+ */
+jheatmap.decorators.Heat = function (p) {
+    p = p || {};
+    this.minColor = (p.minColor == undefined ? [0, 0, 255] : p.minColor);
+    this.minValue = (p.minValue == undefined ? -1 : p.minValue);
+    this.midColor = (p.midColor == undefined ? [255, 255, 0]: p.midColor);
+    this.midValue = (p.midValue == undefined ? 0 : p.midValue);
+    this.maxColor = (p.maxColor == undefined ? [255, 0, 0] : p.maxColor);
+    this.maxValue = (p.maxValue == undefined ? 1 : p.maxValue);
+    this.nullColor = (p.nullColor == undefined ? [187, 187, 187] : p.nullColor);
+};
+
+/**
+ * Convert a value to a color
+ * @param value The cell value
+ * @return The corresponding color string definition.
+ */
+jheatmap.decorators.Heat.prototype.toColor = function (value) {
+
+    if (isNaN(value)) {
+        return (new jheatmap.utils.RGBColor(this.nullColor)).toRGB();
+    }
+
+    if (value > this.maxValue) {
+        return (new jheatmap.utils.RGBColor(this.maxColor)).toRGB();
+    }
+
+    if (value < this.minValue) {
+        return (new jheatmap.utils.RGBColor(this.minColor)).toRGB();
+    }
+
+    var maxV, minV, maxC, minC;
+    if (value < this.midValue) {
+        minV = this.minValue;
+        minC = this.minColor;
+        maxV = this.midValue;
+        maxC = this.midColor;
+    } else {
+        minV = this.midValue;
+        minC = this.midColor;
+        maxV = this.maxValue;
+        maxC = this.maxColor;
+    }
+
+    var fact = (value - minV) / (maxV - minV);
+
+    var r, g, b;
+
+    r = minC[0] + Math.round(fact * (maxC[0] - minC[0]));
+    g = minC[1] + Math.round(fact * (maxC[1] - minC[1]));
+    b = minC[2] + Math.round(fact * (maxC[2] - minC[2]));
+
+    return (new jheatmap.utils.RGBColor([r, g, b])).toRGB();
+};
 /**
  * Linear decorator
  *
@@ -1179,78 +849,6 @@ jheatmap.decorators.Linear.prototype.toColor = function (value) {
 
     return (new jheatmap.utils.RGBColor([r, g, b])).toRGB();
 };
-
-/**
- * Heat decorator
- *
- * @example
- * new jheatmap.decorators.Heat({ minValue: -5, midValue: 0, maxValue: 5 });
- *
- * @class
- * @param {Array}   [p.minColor=[0,0,255]]    Minimum color [r,g,b]
- * @param {number}  [p.minValue=-1]                Minimum value
- * @param {Array}   [p.midColor=[255,255,0]]        Maximum color [r,g,b]
- * @param {number}  [p.midValue=0]                Maximum value
- * @param {Array}   [p.maxColor=[255,0,0]]        Maximum color [r,g,b]
- * @param {number}  [p.maxValue=1]                Maximum value
- * @param {Array}   [p.nullColor=[187,187,187]]   NaN values color [r,g,b]
- *
- */
-jheatmap.decorators.Heat = function (p) {
-    p = p || {};
-    this.minColor = (p.minColor == undefined ? [0, 0, 255] : p.minColor);
-    this.minValue = (p.minValue == undefined ? -1 : p.minValue);
-    this.midColor = (p.midColor == undefined ? [255, 255, 0]: p.midColor);
-    this.midValue = (p.midValue == undefined ? 0 : p.midValue);
-    this.maxColor = (p.maxColor == undefined ? [255, 0, 0] : p.maxColor);
-    this.maxValue = (p.maxValue == undefined ? 1 : p.maxValue);
-    this.nullColor = (p.nullColor == undefined ? [187, 187, 187] : p.nullColor);
-};
-
-/**
- * Convert a value to a color
- * @param value The cell value
- * @return The corresponding color string definition.
- */
-jheatmap.decorators.Heat.prototype.toColor = function (value) {
-
-    if (isNaN(value)) {
-        return (new jheatmap.utils.RGBColor(this.nullColor)).toRGB();
-    }
-
-    if (value > this.maxValue) {
-        return (new jheatmap.utils.RGBColor(this.maxColor)).toRGB();
-    }
-
-    if (value < this.minValue) {
-        return (new jheatmap.utils.RGBColor(this.minColor)).toRGB();
-    }
-
-    var maxV, minV, maxC, minC;
-    if (value < this.midValue) {
-        minV = this.minValue;
-        minC = this.minColor;
-        maxV = this.midValue;
-        maxC = this.midColor;
-    } else {
-        minV = this.midValue;
-        minC = this.midColor;
-        maxV = this.maxValue;
-        maxC = this.maxColor;
-    }
-
-    var fact = (value - minV) / (maxV - minV);
-
-    var r, g, b;
-
-    r = minC[0] + Math.round(fact * (maxC[0] - minC[0]));
-    g = minC[1] + Math.round(fact * (maxC[1] - minC[1]));
-    b = minC[2] + Math.round(fact * (maxC[2] - minC[2]));
-
-    return (new jheatmap.utils.RGBColor([r, g, b])).toRGB();
-};
-
-
 /**
  * Median decorator
  *
@@ -1294,7 +892,6 @@ jheatmap.decorators.Median.prototype.toColor = function (value) {
 
     return (new jheatmap.utils.RGBColor([r, g, b])).toRGB();
 };
-
 /**
  * pValue decorator
  * @example
@@ -1335,11 +932,60 @@ jheatmap.decorators.PValue.prototype.toColor = function (value) {
     return (new jheatmap.utils.RGBColor([r, g, b])).toRGB();
 };
 /**
- * Values aggregators
- * @namespace jheatmap.aggregators
+ * String to color decorator. The color is calculated from the ASCII code of the String
+ *
+ * @example
+ * new jheatmap.aggregators.StringColor();
+ *
+ * @class
  */
-jheatmap.aggregators = {};
+jheatmap.decorators.StringColor = function () {
+};
 
+jheatmap.decorators.StringColor.prototype.toColor = function (value) {
+    var color = [0,0,0];
+
+    value = value.toUpperCase();
+
+    var iterations = 0;
+    for (var i=0; i < value.length; i=i+3 ) {
+        color[0] += ((value.charCodeAt(i) || 65) - 48) * 7;
+        color[1] += ((value.charCodeAt(i+1) || 65) - 48) * 7;
+        color[2] += ((value.charCodeAt(i+2) || 65) - 48) * 7;
+        iterations++;
+    }
+
+    color[0] = Math.round( color[0] / iterations );
+    color[1] = Math.round( color[1] / iterations );
+    color[2] = Math.round( color[2] / iterations );
+
+    return (new jheatmap.utils.RGBColor(color)).toRGB();
+
+};
+/**
+ * Absolute addition aggregator. This aggregator adds the absolute current value to the accumulated sum.
+ *
+ * @example
+ * new jheatmap.aggregators.AbsoluteAddition();
+ * @class
+ */
+jheatmap.aggregators.AbsoluteAddition = function () {
+};
+
+/**
+ * Accumulates all the values as absolute
+ * @param {Array}   values  The values to accumulate
+ */
+jheatmap.aggregators.AbsoluteAddition.prototype.accumulate = function (values) {
+    var sum = 0;
+    for (var i = 0; i < values.length; i++) {
+        var value = values[i];
+        if (value && !isNaN(value)) {
+            sum += Math.abs(value);
+        }
+    }
+    return sum;
+};
 /**
  * Addition aggregator. This aggregator add the current value to the accumulated sum.
  *
@@ -1366,37 +1012,12 @@ jheatmap.aggregators.Addition.prototype.accumulate = function (values) {
 };
 
 /**
- * Absolute addition aggregator. This aggregator adds the absolute current value to the accumulated sum.
- *
- * @example
- * new jheatmap.aggregators.AbsoluteAddition();
- * @class
- */
-jheatmap.aggregators.AbsoluteAddition = function () {
-};
-
-    /**
- * Accumulates all the values as absolute
- * @param {Array}   values  The values to accumulate
- */
-jheatmap.aggregators.AbsoluteAddition.prototype.accumulate = function (values) {
-    var sum = 0;
-    for (var i = 0; i < values.length; i++) {
-        var value = values[i];
-        if (value && !isNaN(value)) {
-            sum += Math.abs(value);
-        }
-    }
-    return sum;
-};
-
-
-/**
  * Average aggregator.
  *
  * @example
  * new jheatmap.aggregators.Average();
  *
+ * @class
  */
 jheatmap.aggregators.Average = function (options) {
 };
@@ -1418,8 +1039,6 @@ jheatmap.aggregators.Average.prototype.accumulate = function (values) {
     }
     return (count==0 ? -10 : (avg/count));
 };
-
-
 /**
  * Median aggregator.
  *
@@ -1449,7 +1068,6 @@ jheatmap.aggregators.Median.prototype.accumulate = function (values) {
     }
     return sum;
 };
-
 /**
  * PValue aggregator
  *
@@ -1478,40 +1096,7 @@ jheatmap.aggregators.PValue.prototype.accumulate = function (values) {
         }
     }
     return sum;
-};/**
- * Filters
- * @namespace jheatmap.filters
- */
-jheatmap.filters = {};
-
-
-/**
- * Filter rows or columns with all the values non-significant
- *
- * @example
- * new jheatmap.filters.NonSignificance({ cutoff: 0.01 });
- *
- * @class
- * @param {number}  [cutoff=0.05]   Significance cutoff
- */
-jheatmap.filters.NonSignificance = function (options) {
-    options = options || {};
-    this.cutoff = options.cutoff || 0.05;
 };
-
-/**
- * @param {Array}   values  All the row or column values
- * @returns Returns 'false' if at least one value is significant otherwise returns 'true'
- */
-jheatmap.filters.NonSignificance.prototype.filter = function (values) {
-    for (var i = 0; i < values.length; i++) {
-        if (parseFloat(values[i]) < this.cutoff) {
-            return false;
-        }
-    }
-    return true;
-};
-
 /**
  * Filter out rows or columns that all the values are outside [-maxValue, maxValue] range.
  *
@@ -1538,7 +1123,34 @@ jheatmap.filters.NonExpressed.prototype.filter = function (values) {
         }
     }
     return true;
-};/**
+};
+/**
+ * Filter rows or columns with all the values non-significant
+ *
+ * @example
+ * new jheatmap.filters.NonSignificance({ cutoff: 0.01 });
+ *
+ * @class
+ * @param {number}  [cutoff=0.05]   Significance cutoff
+ */
+jheatmap.filters.NonSignificance = function (options) {
+    options = options || {};
+    this.cutoff = options.cutoff || 0.05;
+};
+
+/**
+ * @param {Array}   values  All the row or column values
+ * @returns Returns 'false' if at least one value is significant otherwise returns 'true'
+ */
+jheatmap.filters.NonSignificance.prototype.filter = function (values) {
+    for (var i = 0; i < values.length; i++) {
+        if (parseFloat(values[i]) < this.cutoff) {
+            return false;
+        }
+    }
+    return true;
+};
+/**
  *
  * Heatmap interactive viewer
  *
@@ -3434,6 +3046,370 @@ jheatmap.Heatmap = function (options) {
     }
 
 };
+/* =========================================================
+ * bootstrap-modal.js v2.3.2
+ * http://twitter.github.com/bootstrap/javascript.html#modals
+ * =========================================================
+ * Copyright 2012 Twitter, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ========================================================= */
+
+
+!function ($) {
+
+  "use strict"; // jshint ;_;
+
+
+ /* MODAL CLASS DEFINITION
+  * ====================== */
+
+  var Modal = function (element, options) {
+    this.options = options
+    this.$element = $(element)
+      .delegate('[data-dismiss="modal"]', 'click.dismiss.modal', $.proxy(this.hide, this))
+    this.options.remote && this.$element.find('.modal-body').load(this.options.remote)
+  }
+
+  Modal.prototype = {
+
+      constructor: Modal
+
+    , toggle: function () {
+        return this[!this.isShown ? 'show' : 'hide']()
+      }
+
+    , show: function () {
+        var that = this
+          , e = $.Event('show')
+
+        this.$element.trigger(e)
+
+        if (this.isShown || e.isDefaultPrevented()) return
+
+        this.isShown = true
+
+        this.escape()
+
+        this.backdrop(function () {
+          var transition = $.support.transition && that.$element.hasClass('fade')
+
+          if (!that.$element.parent().length) {
+            that.$element.appendTo(document.body) //don't move modals dom position
+          }
+
+          that.$element.show()
+
+          if (transition) {
+            that.$element[0].offsetWidth // force reflow
+          }
+
+          that.$element
+            .addClass('in')
+            .attr('aria-hidden', false)
+
+          that.enforceFocus()
+
+          transition ?
+            that.$element.one($.support.transition.end, function () { that.$element.focus().trigger('shown') }) :
+            that.$element.focus().trigger('shown')
+
+        })
+      }
+
+    , hide: function (e) {
+        e && e.preventDefault()
+
+        var that = this
+
+        e = $.Event('hide')
+
+        this.$element.trigger(e)
+
+        if (!this.isShown || e.isDefaultPrevented()) return
+
+        this.isShown = false
+
+        this.escape()
+
+        $(document).off('focusin.modal')
+
+        this.$element
+          .removeClass('in')
+          .attr('aria-hidden', true)
+
+        $.support.transition && this.$element.hasClass('fade') ?
+          this.hideWithTransition() :
+          this.hideModal()
+      }
+
+    , enforceFocus: function () {
+        var that = this
+        $(document).on('focusin.modal', function (e) {
+          if (that.$element[0] !== e.target && !that.$element.has(e.target).length) {
+            that.$element.focus()
+          }
+        })
+      }
+
+    , escape: function () {
+        var that = this
+        if (this.isShown && this.options.keyboard) {
+          this.$element.on('keyup.dismiss.modal', function ( e ) {
+            e.which == 27 && that.hide()
+          })
+        } else if (!this.isShown) {
+          this.$element.off('keyup.dismiss.modal')
+        }
+      }
+
+    , hideWithTransition: function () {
+        var that = this
+          , timeout = setTimeout(function () {
+              that.$element.off($.support.transition.end)
+              that.hideModal()
+            }, 500)
+
+        this.$element.one($.support.transition.end, function () {
+          clearTimeout(timeout)
+          that.hideModal()
+        })
+      }
+
+    , hideModal: function () {
+        var that = this
+        this.$element.hide()
+        this.backdrop(function () {
+          that.removeBackdrop()
+          that.$element.trigger('hidden')
+        })
+      }
+
+    , removeBackdrop: function () {
+        this.$backdrop && this.$backdrop.remove()
+        this.$backdrop = null
+      }
+
+    , backdrop: function (callback) {
+        var that = this
+          , animate = this.$element.hasClass('fade') ? 'fade' : ''
+
+        if (this.isShown && this.options.backdrop) {
+          var doAnimate = $.support.transition && animate
+
+          this.$backdrop = $('<div class="modal-backdrop ' + animate + '" />')
+            .appendTo(document.body)
+
+          this.$backdrop.click(
+            this.options.backdrop == 'static' ?
+              $.proxy(this.$element[0].focus, this.$element[0])
+            : $.proxy(this.hide, this)
+          )
+
+          if (doAnimate) this.$backdrop[0].offsetWidth // force reflow
+
+          this.$backdrop.addClass('in')
+
+          if (!callback) return
+
+          doAnimate ?
+            this.$backdrop.one($.support.transition.end, callback) :
+            callback()
+
+        } else if (!this.isShown && this.$backdrop) {
+          this.$backdrop.removeClass('in')
+
+          $.support.transition && this.$element.hasClass('fade')?
+            this.$backdrop.one($.support.transition.end, callback) :
+            callback()
+
+        } else if (callback) {
+          callback()
+        }
+      }
+  }
+
+
+ /* MODAL PLUGIN DEFINITION
+  * ======================= */
+
+  var old = $.fn.modal
+
+  $.fn.modal = function (option) {
+    return this.each(function () {
+      var $this = $(this)
+        , data = $this.data('modal')
+        , options = $.extend({}, $.fn.modal.defaults, $this.data(), typeof option == 'object' && option)
+      if (!data) $this.data('modal', (data = new Modal(this, options)))
+      if (typeof option == 'string') data[option]()
+      else if (options.show) data.show()
+    })
+  }
+
+  $.fn.modal.defaults = {
+      backdrop: true
+    , keyboard: true
+    , show: true
+  }
+
+  $.fn.modal.Constructor = Modal
+
+
+ /* MODAL NO CONFLICT
+  * ================= */
+
+  $.fn.modal.noConflict = function () {
+    $.fn.modal = old
+    return this
+  }
+
+
+ /* MODAL DATA-API
+  * ============== */
+
+  $(document).on('click.modal.data-api', '[data-toggle="modal"]', function (e) {
+    var $this = $(this)
+      , href = $this.attr('href')
+      , $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) //strip for ie7
+      , option = $target.data('modal') ? 'toggle' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
+
+    e.preventDefault()
+
+    $target
+      .modal(option)
+      .one('hide', function () {
+        $this.focus()
+      })
+  })
+
+}(window.jQuery);
+/*! Copyright (c) 2013 Brandon Aaron (http://brandonaaron.net)
+ * Licensed under the MIT License (LICENSE.txt).
+ *
+ * Thanks to: http://adomas.org/javascript-mouse-wheel/ for some pointers.
+ * Thanks to: Mathias Bank(http://www.mathias-bank.de) for a scope bug fix.
+ * Thanks to: Seamus Leahy for adding deltaX and deltaY
+ *
+ * Version: 3.1.3
+ *
+ * Requires: 1.2.2+
+ */
+
+(function (factory) {
+    if ( typeof define === 'function' && define.amd ) {
+        // AMD. Register as an anonymous module.
+        define(['jquery'], factory);
+    } else if (typeof exports === 'object') {
+        // Node/CommonJS style for Browserify
+        module.exports = factory;
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function ($) {
+
+    var toFix = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'];
+    var toBind = 'onwheel' in document || document.documentMode >= 9 ? ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'];
+    var lowestDelta, lowestDeltaXY;
+
+    if ( $.event.fixHooks ) {
+        for ( var i = toFix.length; i; ) {
+            $.event.fixHooks[ toFix[--i] ] = $.event.mouseHooks;
+        }
+    }
+
+    $.event.special.mousewheel = {
+        setup: function() {
+            if ( this.addEventListener ) {
+                for ( var i = toBind.length; i; ) {
+                    this.addEventListener( toBind[--i], handler, false );
+                }
+            } else {
+                this.onmousewheel = handler;
+            }
+        },
+
+        teardown: function() {
+            if ( this.removeEventListener ) {
+                for ( var i = toBind.length; i; ) {
+                    this.removeEventListener( toBind[--i], handler, false );
+                }
+            } else {
+                this.onmousewheel = null;
+            }
+        }
+    };
+
+    $.fn.extend({
+        mousewheel: function(fn) {
+            return fn ? this.bind("mousewheel", fn) : this.trigger("mousewheel");
+        },
+
+        unmousewheel: function(fn) {
+            return this.unbind("mousewheel", fn);
+        }
+    });
+
+
+    function handler(event) {
+        var orgEvent = event || window.event,
+            args = [].slice.call(arguments, 1),
+            delta = 0,
+            deltaX = 0,
+            deltaY = 0,
+            absDelta = 0,
+            absDeltaXY = 0,
+            fn;
+        event = $.event.fix(orgEvent);
+        event.type = "mousewheel";
+
+        // Old school scrollwheel delta
+        if ( orgEvent.wheelDelta ) { delta = orgEvent.wheelDelta; }
+        if ( orgEvent.detail )     { delta = orgEvent.detail * -1; }
+
+        // New school wheel delta (wheel event)
+        if ( orgEvent.deltaY ) {
+            deltaY = orgEvent.deltaY * -1;
+            delta  = deltaY;
+        }
+        if ( orgEvent.deltaX ) {
+            deltaX = orgEvent.deltaX;
+            delta  = deltaX * -1;
+        }
+
+        // Webkit
+        if ( orgEvent.wheelDeltaY !== undefined ) { deltaY = orgEvent.wheelDeltaY; }
+        if ( orgEvent.wheelDeltaX !== undefined ) { deltaX = orgEvent.wheelDeltaX * -1; }
+
+        // Look for lowest delta to normalize the delta values
+        absDelta = Math.abs(delta);
+        if ( !lowestDelta || absDelta < lowestDelta ) { lowestDelta = absDelta; }
+        absDeltaXY = Math.max(Math.abs(deltaY), Math.abs(deltaX));
+        if ( !lowestDeltaXY || absDeltaXY < lowestDeltaXY ) { lowestDeltaXY = absDeltaXY; }
+
+        // Get a whole value for the deltas
+        fn = delta > 0 ? 'floor' : 'ceil';
+        delta  = Math[fn](delta / lowestDelta);
+        deltaX = Math[fn](deltaX / lowestDeltaXY);
+        deltaY = Math[fn](deltaY / lowestDeltaXY);
+
+        // Add event and delta to the front of the arguments
+        args.unshift(event, delta, deltaX, deltaY);
+
+        return ($.event.dispatch || $.event.handle).apply(this, args);
+    }
+
+}));
 var scripts = document.getElementsByTagName("script");
 if (!basePath) {
     var basePath = scripts[scripts.length - 1].src.replace(/js\/jheatmap-(.*)\.js/g, "");
