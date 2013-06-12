@@ -59,6 +59,7 @@
             <fileset dir="." excludes="**/_*.js" includes="src/js/jheatmap/decorators/*.js"/>
             <fileset dir="." excludes="**/_*.js" includes="src/js/jheatmap/aggregators/*.js"/>
             <fileset dir="." excludes="**/_*.js" includes="src/js/jheatmap/filters/*.js"/>
+            <fileset dir="." excludes="**/_*.js" includes="src/js/jheatmap/sorters/*.js"/>
             <fileset dir="." excludes="**/_*.js" includes="src/js/jheatmap/*.js"/>
 
             <!-- jQuery plugins -->

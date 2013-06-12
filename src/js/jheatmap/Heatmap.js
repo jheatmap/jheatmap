@@ -396,79 +396,15 @@ jheatmap.Heatmap = function (options) {
      */
     this.applyRowsSort = function () {
         var heatmap = this;
-
         if (this.rows.sort.type == "label") {
-
-            this.rows.order.stableSort(function (o_a, o_b) {
-                var v_a = heatmap.rows.values[o_a][heatmap.rows.sort.field].toLowerCase();
-                var v_b = heatmap.rows.values[o_b][heatmap.rows.sort.field].toLowerCase();
-                var val = (heatmap.rows.sort.asc ? 1 : -1);
-
-                if (!isNaN(v_a)) {
-                    v_a = parseFloat(v_a);
-                    v_b = parseFloat(v_b);
-                    o_a = parseFloat(o_a);
-                    o_b = parseFloat(o_b);
-                }
-
-                return (v_a == v_b) ? 0 : (v_a > v_b ? val : -val);
-            });
+            var sorter = new jheatmap.sorters.AnnotationSorter(heatmap.rows, heatmap.rows.sort.field, heatmap.rows.sort.asc);
+            sorter.sort();
         } else if (this.rows.sort.type == "value") {
-            var aggregation = [];
-
-            var cl = this.cols.values.length;
-            if (this.rows.sort.item == undefined) {
-                this.rows.sort.item = this.cols.order;
-            }
-            for (var r = 0; r < this.rows.order.length; r++) {
-                var values = [];
-                for (var i = 0; i < this.rows.sort.item.length; i++) {
-                    var pos = this.rows.order[r] * cl + this.rows.sort.item[i];
-                    var value = this.cells.values[pos];
-                    if (value != null) {
-                        values.push(value[this.rows.sort.field]);
-                    }
-                }
-                aggregation[this.rows.order[r]] = sum = this.cells.aggregators[this.rows.sort.field].accumulate(values);
-            }
-
-            this.rows.order.stableSort(function (o_a, o_b) {
-                var v_a = aggregation[o_a];
-                var v_b = aggregation[o_b];
-                var val = (heatmap.rows.sort.asc ? 1 : -1);
-                return (v_a == v_b) ? 0 : (v_a > v_b ? val : -val);
-            });
+            var sorter = new jheatmap.sorters.AggregationValueSorter(heatmap, "rows", heatmap.rows.sort.field, heatmap.rows.sort.asc, heatmap.rows.sort.item );
+            sorter.sort();
         } else if (this.rows.sort.type == "single") {
-
-            this.rows.order.stableSort(function (o_a, o_b) {
-                var pos_a = (o_a * heatmap.cols.values.length) + heatmap.rows.sort.item;
-                var pos_b = (o_b * heatmap.cols.values.length) + heatmap.rows.sort.item;
-
-                var value_a = heatmap.cells.values[pos_a];
-                var value_b = heatmap.cells.values[pos_b];
-
-                var v_a = (value_a == null ? null : parseFloat(value_a[heatmap.rows.sort.field]));
-                var v_b = (value_b == null ? null : parseFloat(value_b[heatmap.rows.sort.field]));
-
-                if (isNaN(v_a) && v_b == null) {
-                    return -1;
-                }
-
-                if (isNaN(v_b) && v_a == null) {
-                    return 1;
-                }
-
-                if (v_a == null || isNaN(v_a)) {
-                    return 1;
-                }
-
-                if (v_b == null || isNaN(v_b)) {
-                    return -1;
-                }
-
-                var val = (heatmap.rows.sort.asc ? 1 : -1);
-                return (v_a == v_b) ? 0 : ((v_a > v_b) ? val : -val);
-            });
+            var sorter = new jheatmap.sorters.ValueSorter(heatmap, "rows", heatmap.rows.sort.field, heatmap.rows.sort.asc, heatmap.rows.sort.item );
+            sorter.sort();
         }
     };
 
@@ -479,78 +415,14 @@ jheatmap.Heatmap = function (options) {
         var heatmap = this;
 
         if (this.cols.sort.type == "label") {
-            this.cols.order.stableSort(function (o_a, o_b) {
-                var v_a = heatmap.cols.values[o_a][heatmap.cols.sort.field].toLowerCase();
-                var v_b = heatmap.cols.values[o_b][heatmap.cols.sort.field].toLowerCase();
-
-                if (!isNaN(v_a)) {
-                    v_a = parseFloat(v_a);
-                    v_b = parseFloat(v_b);
-                    o_a = parseFloat(o_a);
-                    o_b = parseFloat(o_b);
-                }
-                var val = (heatmap.cols.sort.asc ? 1 : -1);
-                return (v_a == v_b) ? 0 : ((v_a > v_b) ? val : -val);
-            });
-
+            var sorter = new jheatmap.sorters.AnnotationSorter(heatmap.cols, heatmap.cols.sort.field, heatmap.cols.sort.asc);
+            sorter.sort();
         } else if (this.cols.sort.type == "value") {
-            var aggregation = [];
-            var cl = this.cols.values.length;
-
-            var cols = this.cols.order;
-
-            if (this.cols.sort.item == undefined) {
-                this.cols.sort.item = this.rows.order;
-            }
-            for (var c = 0; c < cols.length; c++) {
-                var values = [];
-                for (var i = 0; i < this.cols.sort.item.length; i++) {
-                    var pos = this.cols.sort.item[i] * cl + cols[c];
-                    var value = this.cells.values[pos];
-                    if (value != null) {
-                        values.push(value[this.cols.sort.field]);
-                    }
-                }
-                aggregation[cols[c]] = this.cells.aggregators[this.cells.selectedValue].accumulate(values);
-            }
-
-            this.cols.order.stableSort(function (o_a, o_b) {
-                var v_a = aggregation[o_a];
-                var v_b = aggregation[o_b];
-                var val = (heatmap.cols.sort.asc ? 1 : -1);
-                return (v_a == v_b) ? 0 : (v_a > v_b ? val : -val);
-            });
-
+            var sorter = new jheatmap.sorters.AggregationValueSorter(heatmap, "cols", heatmap.cols.sort.field, heatmap.cols.sort.asc, heatmap.cols.sort.item );
+            sorter.sort();
         } else if (this.cols.sort.type == "single") {
-
-            pos = this.cols.sort.item * this.cols.values.length;
-            this.cols.order.stableSort(function (o_a, o_b) {
-                var value_a = heatmap.cells.values[pos + o_a];
-                var value_b = heatmap.cells.values[pos + o_b];
-                var v_a = (value_a == null ? null : parseFloat(value_a[heatmap.cols.sort.field]));
-                var v_b = (value_b == null ? null : parseFloat(value_b[heatmap.cols.sort.field]));
-
-
-                if (isNaN(v_a) && v_b == null) {
-                    return -1;
-                }
-
-                if (isNaN(v_b) && v_a == null) {
-                    return 1;
-                }
-
-                if (v_a == null || isNaN(v_a)) {
-                    return 1;
-                }
-
-                if (v_b == null || isNaN(v_b)) {
-                    return -1;
-                }
-
-                var val = (heatmap.cols.sort.asc ? 1 : -1);
-
-                return (v_a == v_b) ? 0 : ((v_a > v_b) ? val : -val);
-            });
+            var sorter = new jheatmap.sorters.ValueSorter(heatmap, "cols", heatmap.cols.sort.field, heatmap.cols.sort.asc, heatmap.cols.sort.item );
+            sorter.sort();
         }
     };
 
