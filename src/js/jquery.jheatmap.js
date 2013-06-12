@@ -28,24 +28,8 @@ var console = console || {"log":function () {
                     return;
                 }
 
-                // Reset orders
+                // Initialize heatmap
                 heatmap.init();
-
-                // Call init function
-                heatmap.options.init.call(this, heatmap);
-
-                // Reindex if needed
-                heatmap.reindex();
-
-                // Filter
-                heatmap.applyFilters();
-
-                // Sort
-                heatmap.applySort();
-
-                // Build & paint
-                heatmap.build();
-                heatmap.paint();
 
             }
 

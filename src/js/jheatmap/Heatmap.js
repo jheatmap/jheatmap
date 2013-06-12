@@ -343,6 +343,22 @@ jheatmap.Heatmap = function (options) {
             this.rows.decorators[r] = defaultDecorator;
         }
 
+        // Call init function
+        this.options.init(this);
+
+        // Reindex if needed
+        this.reindex();
+
+        // Filter
+        this.applyFilters();
+
+        // Sort
+        this.applySort();
+
+        // Build & paint
+        this.build();
+        this.paint();
+
     };
 
     /**
