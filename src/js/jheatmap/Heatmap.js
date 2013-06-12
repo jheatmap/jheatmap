@@ -51,97 +51,19 @@ jheatmap.Heatmap = function (options) {
      */
     this.search = null;
 
-    /**
-     * Rows configuration
-     *
-     * @property {number}           zoom            - Height in pixels of one cell (default 20)
-     * @property {Array}            header          - Header of the rows values
-     * @property {Array}            values          - Array with all the rows values and annotations (one array per line)
-     * @property {Array}            order           - Array of index of the visible values sorted as current order
-     * @property {number}           selectedValue   - Index of the current visible row label (zero it's the first)
-     * @property {string}           sort.type       - Type of sort ('none', 'label', 'single' or 'value')
-     * @property {number}           sort.field      - Index of the field that we are sorting
-     * @property {boolean}          sort.asc        - true if ascending order, false if descending
-     * @property {Array}            filters         - Active user filters on rows
-     * @property {Array}            decorators      - Decorators for the rows fields
-     * @property {Array}            annotations     - Array with the index of the rows fields to show
-     * @property {Array}            selected        - Index of the selected rows
-     */
-    this.rows = {
-        zoom:20,
-        header:[],
-        values:[],
-        order:[],
-        selectedValue:0,
-        sort:{
-            type:"none",
-            field:0,
-            asc:false
-        },
-        filters:[],
-        decorators:[],
-        annotations:[],
-        selected:[]
-    };
-
-    /**
-     * Columns configuration
-     *
-     * @property {number}           zoom            - Width in pixels of one cell (default 20)
-     * @property {Array}            header          - Header of the columns values
-     * @property {Array}            values          - Array of arrays with all the columns values and annotations (one array per line)
-     * @property {Array}            order           - Array of index of the visible values sorted as current order
-     * @property {number}           selectedValue   - Index of the current visible column label (zero it's the first)
-     * @property {string}           sort.type       - Type of sort ('none', 'label', 'single' or 'value')
-     * @property {number}           sort.field      - Index of the field that we are sorting
-     * @property {boolean}          sort.asc        - true if ascending order, false if descending
-     * @property {Array}            filters         - Active user filters on columns
-     * @property {Array}            decorators      - Decorators for the columns fields
-     * @property {Array}            annotations     - Array with the index of the columns fields to show
-     * @property {Array}            selected        - Index of the selected columns
-     */
-    this.cols = {
-        zoom:20,
-        header:[],
-        values:[],
-        order:[],
-        selectedValue:0,
-        sort:{
-            type:"none",
-            field:0,
-            asc:false
-        },
-        decorators:[],
-        annotations:[],
-        selected:[]
-    };
-
-    /**
-     * Cells configuration
-     *
-     * @property {Array}    header          - Header of the multiple cell values
-     * @property {Array}    values          - Array of arrays with all the cell values (one array per cell)
-     * @property {number}   selectedValue   - Index of the current visible cell field (zero it's the first)
-     * @property {Array}    decorators      - Decorators for the cell fields
-     * @property {Array}    aggregators     - Aggregators for the cell fields
-     */
-    this.cells = {
-        header:[],
-        values:[],
-        selectedValue:0,
-        decorators:[],
-        aggregators:[]
-    };
+    this.rows = new jheatmap.HeatmapDimension();
+    this.cols = new jheatmap.HeatmapDimension();
+    this.cells = new jheatmap.HeatmapCells();
 
     var drawer = new jheatmap.HeatmapDrawer(this);
 
     this.build = function() {
         drawer.build();
-    }
+    };
 
     this.paint = function() {
         drawer.paint();
-    }
+    };
 
     /**
      * Activate one filter for the rows
@@ -212,7 +134,8 @@ jheatmap.Heatmap = function (options) {
 
                 // Filters
                 var filters = this.rows.filters[field];
-                for (var filterId in filters) {
+                var filterId;
+                for (filterId in filters) {
                     if (filters[filterId].filter.filter(values)) {
                         // This filter is filtering this row, so skip it.
                         continue nextRow;
@@ -301,53 +224,22 @@ jheatmap.Heatmap = function (options) {
      */
     this.init = function () {
 
-        // Loop iterators
-        var r, c, f;
-
-        // Initialize rows order
-        this.rows.order = [];
-        for (r = 0; r < this.rows.values.length; r++) {
-            this.rows.order[this.rows.order.length] = r;
-        }
-
-        // Initialize cols order
-        this.cols.order = [];
-        for (c = 0; c < this.cols.values.length; c++) {
-            this.cols.order[this.cols.order.length] = c;
-        }
-
-        // Initialize sort columns
-        this.cols.sort.type = "none";
-        this.cols.sort.field = 0;
-        this.cols.sort.asc = false;
-
-        // Initialize sort rows
-        this.rows.sort.type = "none";
-        this.rows.sort.field = 0;
-        this.rows.sort.asc = false;
-
-        // Initialize decorators & aggregators
-        var defaultDecorator = new jheatmap.decorators.Constant({});
-        var defaultAggregator = new jheatmap.aggregators.Addition();
-        for (f = 0; f < this.cells.header.length; f++) {
-            this.cells.decorators[f] = defaultDecorator;
-            this.cells.aggregators[f] = defaultAggregator;
-
-        }
-
-        for (c = 0; c < this.cols.header.length; c++) {
-            this.cols.decorators[c] = defaultDecorator;
-        }
-
-        for (r = 0; r < this.rows.header.length; r++) {
-            this.rows.decorators[r] = defaultDecorator;
-        }
+        this.rows.init();
+        this.cols.init();
+        this.cells.init();
 
         // Call init function
         this.options.init(this);
 
-        // Reindex if needed
-        this.reindex();
+        // Reindex configuration. Needed to let the user use position or header id interchangeably
+        this.rows.reindex(this);
+        this.cols.reindex(this);
+        this.cells.reindex(this);
+
+        var key;
+        for(key in this.filters) {
+            jheatmap.utils.convertToIndexArray(this.filters[key].fields, this.cells.header);
+        }
 
         // Filter
         this.applyFilters();
@@ -375,34 +267,12 @@ jheatmap.Heatmap = function (options) {
 
     /**
      *
-     * @param asc
-     */
-    this.sortColsByValue = function (asc) {
-        this.cols.sort.type = "value";
-        this.cols.sort.field = this.cells.selectedValue;
-        this.cols.sort.asc = asc;
-        this.applyColsSort();
-    };
-
-    /**
-     *
      * @param f
      * @param asc
      */
     this.sortRowsByLabel = function (f, asc) {
         this.rows.sort.type = "label";
         this.rows.sort.field = f;
-        this.rows.sort.asc = asc;
-        this.applyRowsSort();
-    };
-
-    /**
-     *
-     * @param asc
-     */
-    this.sortRowsByValue = function (asc) {
-        this.rows.sort.type = "value";
-        this.rows.sort.field = this.cells.selectedValue;
         this.rows.sort.asc = asc;
         this.applyRowsSort();
     };
@@ -448,20 +318,6 @@ jheatmap.Heatmap = function (options) {
     this.applySort = function () {
         this.applyRowsSort();
         this.applyColsSort();
-    };
-
-    /**
-     * Show loading image while running 'runme'
-     *
-     * @param runme Function to execute
-     */
-    this.loading = function (runme) {
-        $('#heatmap-loader').show();
-        var interval = window.setInterval(function () {
-            runme.call(this);
-            $('#heatmap-loader').hide();
-            window.clearInterval(interval);
-        }, 1);
     };
 
     this.onHScrollClick = function (e) {
@@ -1104,71 +960,5 @@ jheatmap.Heatmap = function (options) {
 
         return true;
     };
-
-    this.reindexArray = function(values, headers) {
-        for(var index in values) {
-            if (isNaN(index)) {
-                i = jQuery.inArray(index, headers);
-                values[i] = values[index];
-                values[index] = undefined;
-            }
-        }
-    }
-
-    this.convertToIndexArray = function(values, headers) {
-        for (var index in values) {
-            values[index] = this.reindexField(values[index], headers);
-        }
-    }
-
-    this.reindexField = function(value, headers) {
-        if (isNaN(value)) {
-            i = jQuery.inArray(value, headers);
-
-            if (i > -1) {
-                return i;
-            }
-        }
-
-        return value;
-    }
-
-    this.reindex = function() {
-
-        var heatmap = this;
-
-        // Reindex configuration. Needed to let the user use position or header id interchangeably
-        this.reindexArray(heatmap.cells.decorators, heatmap.cells.header);
-        this.reindexArray(heatmap.cells.aggregators, heatmap.cells.header);
-        this.reindexArray(heatmap.cols.decorators, heatmap.cols.header);
-        this.reindexArray(heatmap.cols.aggregators, heatmap.cols.header);
-        this.convertToIndexArray(heatmap.cols.annotations, heatmap.cols.header);
-        this.reindexArray(heatmap.rows.decorators, heatmap.rows.header);
-        this.reindexArray(heatmap.rows.aggregators, heatmap.rows.header);
-        this.convertToIndexArray(heatmap.rows.annotations, heatmap.rows.header);
-
-        if (heatmap.filters != undefined) {
-            for(var key in heatmap.filters) {
-                this.convertToIndexArray(heatmap.filters[key].fields, heatmap.cells.header);
-            }
-        }
-
-        if (heatmap.rows.filters != undefined) {
-            for(var key in heatmap.rows.filters) {
-                this.convertToIndexArray(heatmap.rows.filters[key].fields, heatmap.cells.header);
-            }
-        }
-
-        if (heatmap.cols.filters != undefined) {
-            for(var key in heatmap.cols.filters) {
-                this.convertToIndexArray(heatmap.cols.filters[key].fields, heatmap.cells.header);
-            }
-        }
-
-        heatmap.rows.sort.field = this.reindexField(heatmap.rows.sort.field, heatmap.cells.header);
-        heatmap.cols.sort.field = this.reindexField(heatmap.cols.sort.field, heatmap.cells.header);
-        heatmap.cells.selectedValue = this.reindexField(heatmap.cells.selectedValue, heatmap.cells.header)
-
-    }
 
 };

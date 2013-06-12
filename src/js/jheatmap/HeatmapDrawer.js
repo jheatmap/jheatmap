@@ -21,6 +21,20 @@ jheatmap.HeatmapDrawer = function (heatmap) {
     var lastPaint = null;
 
     /**
+     * Show loading image while running 'runme'
+     *
+     * @param runme Function to execute
+     */
+    var loading = function (runme) {
+        $('#heatmap-loader').show();
+        var interval = window.setInterval(function () {
+            runme.call(this);
+            $('#heatmap-loader').hide();
+            window.clearInterval(interval);
+        }, 1);
+    };
+
+    /**
      * Paint the heatmap.
      */
     this.paint = function () {
@@ -361,7 +375,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
                 checkInput.prop('checked', heatmap.getRowsFilter(filterId));
                 checkInput.click(function () {
                     var checkbox = $(this);
-                    heatmap.loading(function () {
+                    loading(function () {
                         if (checkbox.is(':checked')) {
                             heatmap.addRowsFilter(filterId);
                         } else {
@@ -382,7 +396,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         // Add column selector
         var selectCol = $("<select>").change(function () {
             heatmap.cols.selectedValue = $(this)[0].value;
-            heatmap.loading(function () {
+            loading(function () {
                 heatmap.paint();
             });
         });
@@ -397,7 +411,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         // Add row selector
         var selectRow = $("<select>").change(function () {
             heatmap.rows.selectedValue = $(this)[0].value;
-            heatmap.loading(function () {
+            loading(function () {
                 heatmap.paint();
             });
         });
@@ -413,7 +427,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         // Add cell selector
         var selectCell = $("<select>").change(function () {
             heatmap.cells.selectedValue = $(this)[0].value;
-            heatmap.loading(function () {
+            loading(function () {
                 heatmap.paint();
             });
         });
