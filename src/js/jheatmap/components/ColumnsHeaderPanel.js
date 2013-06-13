@@ -168,7 +168,6 @@ jheatmap.components.ColumnsHeaderPanel = function(drawer, heatmap) {
     }
 
     // Bind events
-    var panel = this;
     this.canvas.bind('mousedown', function (e) {
         onMouseDown(e);
     });
