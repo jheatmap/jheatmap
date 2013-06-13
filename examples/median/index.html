@@ -43,13 +43,9 @@
 				heatmap.addRowsFilter('non-expressed-rows');
 				heatmap.applyFilters();
 
-				// Default sort
-				heatmap.rows.sort.type = "value";
-				heatmap.rows.sort.field = 0;
-				heatmap.rows.sort.asc = false;
-				heatmap.cols.sort.type = "value";
-				heatmap.cols.sort.field = 0;
-				heatmap.cols.sort.asc = false;
+                // Sorting
+                heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter("left-p-value");
+                heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter("left-p-value");
 
 			}
 		});
@@ -57,6 +53,13 @@
 </script>
 </head>
 <body>
+
+    <div id="heatmap-loader">
+        <div class="background"></div>
+        <div class="loader">
+            <img src="../images/loading.gif">
+        </div>
+    </div>
 	<div id="heatmap"></div>
 </body>
 </html>

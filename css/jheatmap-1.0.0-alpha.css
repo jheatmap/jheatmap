@@ -36,7 +36,6 @@ table.heatmap .show{display:block;}
 table.heatmap select {width: 220px;height: 30px;border-radius: 0px;border: 1px solid #cccccc;background-color: #ffffff;font-size:13px;font-weight:normal;line-height:18px;}
 table.heatmap a{color:#0088cc;text-decoration:none;}
 table.heatmap a:hover{color:#005580;text-decoration:underline;}
-/* Loader */
 #heatmap-loader div.background {
     background-color: #FFF;
     opacity: 0.75;

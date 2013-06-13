@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>JSDoc: Class: Linear</title>
+	<title>JSDoc: Class: HeatmapDrawer</title>
 	
 	<script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -15,21 +15,21 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Linear</h1>
+    <h1 class="page-title">Class: HeatmapDrawer</h1>
     
     
     
     <section>
      
     <header>
-        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.decorators.html">.decorators</a>.</span>Linear</h2>
+        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a>.</span>HeatmapDrawer</h2>
         
     </header>  
     
     <article>
         <div class="container-overview">
         <dt>
-    <h4 class="name" id="Linear"><span class="type-signature"></span>new Linear</h4>
+    <h4 class="name" id="HeatmapDrawer"><span class="type-signature"></span>new HeatmapDrawer</h4>
     
     
 </dt>
@@ -37,143 +37,13 @@
     
     
     <p class="description">
-        Linear decorator
+        Heatmap drawer.
     </p>
     
     
     
     
-    <h5>Parameters:</h5>
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Argument</th>
-		
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.ranges</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [[-2,0],[0,2]]
-                </td>
-            
-            
-            <td class="description last">All the ranges wanted starting with the most negative range upwards</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.colors</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [[[0,0,255],[255,255,255]],[[255,255,255],[255,0,0]]
-                </td>
-            
-            
-            <td class="description last">Min and max colors for each defined range that produce gradient</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.outColor</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [0,0,0]
-                </td>
-            
-            
-            <td class="description last">A specific color if the value is out of the range bounds. If not defined by user, the min and max colors will be used.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.betweenColor</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [187,187,187]
-                </td>
-            
-            
-            <td class="description last">A specific color if a value is between defined ranges. If not defined user it is set to black or outColor.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
+    
     
     <dl class="details">
     
@@ -185,6 +55,11 @@
 	
 	
 	
+	<dt class="tag-author">Author:</dt>
+	<dd class="tag-author">
+        <ul><li>Jordi Deu-Pons</li></ul>
+	</dd>
+	
 	
 	
 	
@@ -194,7 +69,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 808</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1789</li></ul></dd>
 	
     
     
@@ -211,9 +86,7 @@
     
     
     
-    <h5>Example</h5>
-    <pre class="sh_javascript"><code>new jheatmap.decorators.Linear({});</code></pre>
-
+    
 
 </dd>
 
@@ -236,7 +109,7 @@
             <h3 class="subsection-title">Methods</h3>
             
             <dl><dt>
-    <h4 class="name" id="toColor"><span class="type-signature"></span>toColor</h4>
+    <h4 class="name" id="build"><span class="type-signature"></span>build</h4>
     
     
 </dt>
@@ -244,7 +117,119 @@
     
     
     <p class="description">
-        Convert a value to a color
+        Build the heatmap.
+    </p>
+    
+    
+    
+    
+    
+    
+    <dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 2122</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+
+</dd>
+<dt>
+    <h4 class="name" id="paint"><span class="type-signature"></span>paint</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <p class="description">
+        Paint the heatmap.
+    </p>
+    
+    
+    
+    
+    
+    
+    <dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1838</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+
+</dd>
+<dt>
+    <h4 class="name" id="loading"><span class="type-signature">&lt;inner> </span>loading</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <p class="description">
+        Show loading image while running 'runme'
     </p>
     
     
@@ -274,7 +259,7 @@
 	
         <tr>
             
-                <td class="name"><code>value</code></td>
+                <td class="name"><code>runme</code></td>
             
             
             <td class="type">
@@ -285,7 +270,7 @@
             
             
             
-            <td class="description last">The cell value</td>
+            <td class="description last">Function to execute</td>
         </tr>
 	
 	
@@ -311,7 +296,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 839</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1813</li></ul></dd>
 	
     
     
@@ -327,14 +312,6 @@
     
     
     
-    <h5>Returns:</h5>
-    
-<div class="param-desc">
-    The corresponding color string definition.
-</div>
-
-
-
     
     
 

@@ -70,14 +70,10 @@
                 						}
                 				}
 
-                				// Default sorting
-                				heatmap.rows.sort.type = "value";
-								heatmap.rows.sort.field = "left-p-value";
-								heatmap.rows.sort.asc = false;
-								heatmap.cols.sort.type = "value";
-								heatmap.cols.sort.field = "left-p-value";
-								heatmap.cols.sort.asc = false;
-                				                				
+                				// Sorting
+                				heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter("left-p-value");
+                                heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter("left-p-value");
+
                 			}
                 		}
                 );
@@ -86,6 +82,12 @@
 </head>
 <body>
 
+    <div id="heatmap-loader">
+        <div class="background"></div>
+        <div class="loader">
+            <img src="../images/loading.gif">
+        </div>
+    </div>
 	<div id="heatmap"></div>
 
 </body>

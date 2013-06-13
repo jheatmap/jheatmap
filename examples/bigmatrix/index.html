@@ -19,17 +19,17 @@
                                 heatmap.size.width = 600;
                                 heatmap.size.height = 600;
 
+                                // Default zoom
+                                heatmap.cols.zoom = 5;
+                                heatmap.rows.zoom = 5;
+
                                 // Default cell value
                 				heatmap.cells.selectedValue = 0;
                 				                				
                 				// Configure decorators and aggregators
                 				heatmap.cells.decorators[0] = new jheatmap.decorators.Median( { maxValue: 4 });
                 				heatmap.cells.aggregators[0] = new jheatmap.aggregators.Median( { maxValue: 4 });
-                				
-                				// Default zoom
-                				heatmap.cols.zoom = 5;
-                				heatmap.rows.zoom = 5;
-                				
+
                 				// Add filters
                 				heatmap.filters = {
                 						'non-expressed-rows' : {
@@ -39,8 +39,7 @@
                 						}
                 				}
                 				heatmap.addRowsFilter('non-expressed-rows');
-                				heatmap.applyFilters();
-               				
+
                 				// Default sort
                 				heatmap.rows.sort.type = "value";
 								heatmap.rows.sort.field = 0;
@@ -48,8 +47,7 @@
 								heatmap.cols.sort.type = "value";
 								heatmap.cols.sort.field = 0;
 								heatmap.cols.sort.asc = true; 
-								heatmap.applySort();
-								
+
                 			}
                 		}
                 );
@@ -58,8 +56,13 @@
 </head>
 <body>
 
-    <div id="heatmap"></div>
-
+<div id="heatmap-loader">
+    <div class="background"></div>
+    <div class="loader">
+        <img src="../images/loading.gif">
+    </div>
+</div>
+<div id="heatmap"></div>
 
 </body>
 </html>

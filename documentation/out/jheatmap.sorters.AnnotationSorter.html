@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>JSDoc: Class: Linear</title>
+	<title>JSDoc: Class: AnnotationSorter</title>
 	
 	<script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -15,21 +15,21 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Linear</h1>
+    <h1 class="page-title">Class: AnnotationSorter</h1>
     
     
     
     <section>
      
     <header>
-        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.decorators.html">.decorators</a>.</span>Linear</h2>
+        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.sorters.html">.sorters</a>.</span>AnnotationSorter</h2>
         
     </header>  
     
     <article>
         <div class="container-overview">
         <dt>
-    <h4 class="name" id="Linear"><span class="type-signature"></span>new Linear</h4>
+    <h4 class="name" id="AnnotationSorter"><span class="type-signature"></span>new AnnotationSorter</h4>
     
     
 </dt>
@@ -37,7 +37,7 @@
     
     
     <p class="description">
-        Linear decorator
+        Numeric sorter by row or column annotation
     </p>
     
     
@@ -55,11 +55,7 @@
 		<th>Type</th>
 		
 		
-		<th>Argument</th>
 		
-		
-		
-		<th>Default</th>
 		
 		
 		<th class="last">Description</th>
@@ -71,104 +67,36 @@
 	
         <tr>
             
-                <td class="name"><code>p.ranges</code></td>
+                <td class="name"><code>field</code></td>
             
             
             <td class="type">
-            Array
+            int
             </td>
             
             
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
             
             
             
-                <td class="default">
-                [[-2,0],[0,2]]
-                </td>
-            
-            
-            <td class="description last">All the ranges wanted starting with the most negative range upwards</td>
+            <td class="description last">Value field to aggregate</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>p.colors</code></td>
+                <td class="name"><code>asc</code></td>
             
             
             <td class="type">
-            Array
+            boolean
             </td>
             
             
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
             
             
             
-                <td class="default">
-                [[[0,0,255],[255,255,255]],[[255,255,255],[255,0,0]]
-                </td>
-            
-            
-            <td class="description last">Min and max colors for each defined range that produce gradient</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.outColor</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [0,0,0]
-                </td>
-            
-            
-            <td class="description last">A specific color if the value is out of the range bounds. If not defined by user, the min and max colors will be used.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.betweenColor</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [187,187,187]
-                </td>
-            
-            
-            <td class="description last">A specific color if a value is between defined ranges. If not defined user it is set to black or outColor.</td>
+            <td class="description last">True to sort ascending, false to sort descending</td>
         </tr>
 	
 	
@@ -194,7 +122,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 808</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1253</li></ul></dd>
 	
     
     
@@ -212,7 +140,7 @@
     
     
     <h5>Example</h5>
-    <pre class="sh_javascript"><code>new jheatmap.decorators.Linear({});</code></pre>
+    <pre class="sh_javascript"><code>new jheatmap.sorters.AnnotationSorter(heatmapDimension, 2, true);</code></pre>
 
 
 </dd>
@@ -236,7 +164,7 @@
             <h3 class="subsection-title">Methods</h3>
             
             <dl><dt>
-    <h4 class="name" id="toColor"><span class="type-signature"></span>toColor</h4>
+    <h4 class="name" id="sort"><span class="type-signature"></span>sort</h4>
     
     
 </dt>
@@ -244,7 +172,7 @@
     
     
     <p class="description">
-        Convert a value to a color
+        Sort the heatmap
     </p>
     
     
@@ -274,18 +202,36 @@
 	
         <tr>
             
-                <td class="name"><code>value</code></td>
+                <td class="name"><code>heatmap</code></td>
             
             
             <td class="type">
-            
+            <a href="jheatmap.Heatmap.html">jheatmap.Heatmap</a>
             </td>
             
             
             
             
             
-            <td class="description last">The cell value</td>
+            <td class="description last">The heatmap to sort</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>sortType</code></td>
+            
+            
+            <td class="type">
+            string
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">"rows" or "columns"</td>
         </tr>
 	
 	
@@ -311,7 +257,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 839</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1265</li></ul></dd>
 	
     
     
@@ -327,14 +273,6 @@
     
     
     
-    <h5>Returns:</h5>
-    
-<div class="param-desc">
-    The corresponding color string definition.
-</div>
-
-
-
     
     
 
