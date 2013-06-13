@@ -11,6 +11,11 @@ var jheatmap = {};
  */
 jheatmap.aggregators = {};
 /**
+ * Drawers package
+ * @namespace jheatmap.drawers
+ */
+jheatmap.components = {};
+/**
  * Cell decorators
  * @namespace jheatmap.decorators
  */
@@ -36,95 +41,6 @@ jheatmap.sorters = {};
  * @namespace jheatmap.utils
  */
 jheatmap.utils = {};
-/**
- * RGBColor class - Convert a RGB value into Hexadecimal and rgb() HTML color String.
- *
- * @example
- * new jheatmap.utils.RGBColor([255,123,42]);
- *
- * @class
- * @param {Array}   color   RGB color components [r,g,b]
- */
-jheatmap.utils.RGBColor = function (color) {
-
-    // Init values;
-    this.r = color[0];
-    this.g = color[1];
-    this.b = color[2];
-
-    // Validate values
-    this.r = (this.r < 0 || isNaN(this.r)) ? 0 : ((this.r > 255) ? 255 : this.r);
-    this.g = (this.g < 0 || isNaN(this.g)) ? 0 : ((this.g > 255) ? 255 : this.g);
-    this.b = (this.b < 0 || isNaN(this.b)) ? 0 : ((this.b > 255) ? 255 : this.b);
-}
-
-/**
- * @return Hexadecimal representation of the color. Example: #FF0323
- */
-jheatmap.utils.RGBColor.prototype.toHex = function () {
-    var r = this.r.toString(16);
-    var g = this.g.toString(16);
-    var b = this.b.toString(16);
-    if (r.length == 1)
-        r = '0' + r;
-    if (g.length == 1)
-        g = '0' + g;
-    if (b.length == 1)
-        b = '0' + b;
-    return '#' + r + g + b;
-};
-
-/**
- * @return RGB representation of the color. Example: rgb(255,123,42)
- */
-jheatmap.utils.RGBColor.prototype.toRGB = function () {
-    return 'rgb(' + this.r + ', ' + this.g + ', ' + this.b + ')';
-};
-
-jheatmap.utils.reindexArray = function(values, headers) {
-    for(var index in values) {
-        if (isNaN(index)) {
-            i = jQuery.inArray(index, headers);
-            values[i] = values[index];
-            values[index] = undefined;
-        }
-    }
-};
-
-jheatmap.utils.convertToIndexArray = function(values, headers) {
-    for (var index in values) {
-        values[index] = this.reindexField(values[index], headers);
-    }
-};
-
-jheatmap.utils.reindexField = function(value, headers) {
-    if (isNaN(value)) {
-        i = jQuery.inArray(value, headers);
-
-        if (i > -1) {
-            return i;
-        }
-    }
-
-    return value;
-};
-jheatmap.utils.drawOrderSymbol = function (ctx, asc) {
-    ctx.fillStyle = "rgba(130,2,2,1)";
-    ctx.beginPath();
-    if (asc) {
-        ctx.moveTo(-2, -2);
-        ctx.lineTo(-2, 2);
-        ctx.lineTo(2, -2);
-        ctx.lineTo(-2, -2);
-    } else {
-        ctx.moveTo(2, 2);
-        ctx.lineTo(-2, 2);
-        ctx.lineTo(2, -2);
-        ctx.lineTo(2, 2);
-    }
-    ctx.fill();
-    ctx.closePath();
-};
 var BrowserDetect = {
     init: function () {
         this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
@@ -247,7 +163,7 @@ BrowserDetect.init();
 /*
  ---
 
- script: Array.stableSort.js
+ script: Array.Array.js
 
  description: Add a stable sort algorithm for all browsers
 
@@ -266,6 +182,10 @@ BrowserDetect.init();
  */
 
 (function () {
+
+    Array.prototype.remove = function(v) {
+        this.splice(this.indexOf(v) == -1 ? this.length : this.indexOf(v), 1);
+    }
 
     Array.prototype.stableSort = function (compare) {
         // I would love some real feature recognition. Problem is that an unstable algorithm sometimes/often gives the same result as an unstable algorithm.
@@ -319,6 +239,78 @@ BrowserDetect.init();
 
 
 
+/**
+ * RGBColor class - Convert a RGB value into Hexadecimal and rgb() HTML color String.
+ *
+ * @example
+ * new jheatmap.utils.RGBColor([255,123,42]);
+ *
+ * @class
+ * @param {Array}   color   RGB color components [r,g,b]
+ */
+jheatmap.utils.RGBColor = function (color) {
+
+    // Init values;
+    this.r = color[0];
+    this.g = color[1];
+    this.b = color[2];
+
+    // Validate values
+    this.r = (this.r < 0 || isNaN(this.r)) ? 0 : ((this.r > 255) ? 255 : this.r);
+    this.g = (this.g < 0 || isNaN(this.g)) ? 0 : ((this.g > 255) ? 255 : this.g);
+    this.b = (this.b < 0 || isNaN(this.b)) ? 0 : ((this.b > 255) ? 255 : this.b);
+}
+
+/**
+ * @return Hexadecimal representation of the color. Example: #FF0323
+ */
+jheatmap.utils.RGBColor.prototype.toHex = function () {
+    var r = this.r.toString(16);
+    var g = this.g.toString(16);
+    var b = this.b.toString(16);
+    if (r.length == 1)
+        r = '0' + r;
+    if (g.length == 1)
+        g = '0' + g;
+    if (b.length == 1)
+        b = '0' + b;
+    return '#' + r + g + b;
+};
+
+/**
+ * @return RGB representation of the color. Example: rgb(255,123,42)
+ */
+jheatmap.utils.RGBColor.prototype.toRGB = function () {
+    return 'rgb(' + this.r + ', ' + this.g + ', ' + this.b + ')';
+};
+
+jheatmap.utils.reindexArray = function(values, headers) {
+    for(var index in values) {
+        if (isNaN(index)) {
+            i = jQuery.inArray(index, headers);
+            values[i] = values[index];
+            values[index] = undefined;
+        }
+    }
+};
+
+jheatmap.utils.convertToIndexArray = function(values, headers) {
+    for (var index in values) {
+        values[index] = this.reindexField(values[index], headers);
+    }
+};
+
+jheatmap.utils.reindexField = function(value, headers) {
+    if (isNaN(value)) {
+        i = jQuery.inArray(value, headers);
+
+        if (i > -1) {
+            return i;
+        }
+    }
+
+    return value;
+};
 /**
  * A text separated value file matrix reader. The file has to follow this format:
  *
@@ -1218,7 +1210,7 @@ jheatmap.sorters.AggregationValueSorter.prototype.sort = function(heatmap, sortT
 
     var aggregation = [];
 
-    var cl = (rowsSort ? aggregationDimension.values.length : sortDimension.values.length);
+    var cl = heatmap.cols.values.length;
     for (var r = 0; r < sortDimension.order.length; r++) {
         var values = [];
         for (var i = 0; i < this.indices.length; i++) {
@@ -1414,6 +1406,111 @@ jheatmap.sorters.ValueSorter.prototype.sort = function(heatmap, sortType) {
     });
 
 }
+
+jheatmap.components.ColumnSelector = function(drawer, heatmap, container) {
+
+    var selectCol = $("<select>").change(function () {
+        heatmap.cols.selectedValue = $(this)[0].value;
+        drawer.loading(function () {
+            drawer.paint();
+        });
+    });
+    container.append($("<span>Columns</span>"));
+    container.append(selectCol);
+    for (var o = 0; o < heatmap.cols.header.length; o++) {
+        selectCol.append(new Option(heatmap.cols.header[o], o, o == heatmap.cols.selectedValue));
+    }
+    selectCol.val(heatmap.cols.selectedValue);
+    container.append($("<br>"));
+
+};
+
+jheatmap.components.DetailsPanel = function(container) {
+    container.append('<td><div class="detailsbox">cell details here</div></td>');
+};
+
+jheatmap.components.FilterCheckBoxes = function(drawer, heatmap, container) {
+    jheatmap.components._FilterCheckBox(drawer, container, heatmap, "rows");
+    jheatmap.components._FilterCheckBox(drawer, container, heatmap, "columns");
+};
+
+jheatmap.components._FilterCheckBox = function(drawer, container, heatmap, dimensionType) {
+
+    var dimension = (dimensionType == "rows" ? heatmap.rows : heatmap.cols);
+
+    // Add row filters
+    for (var f=0; f < dimension.filters.values.length; f++) {
+        var filterDef = dimension.filters.values[f];
+
+        if ($.inArray(heatmap.cells.selectedValue, filterDef.visible) > -1) {
+
+            var checkInput = $('<input type="checkbox">');
+            if ($.inArray(heatmap.cells.selectedValue, filterDef.enabled)>-1) {
+                checkInput.prop('checked', 'true');
+            }
+            checkInput.click(function () {
+                var checkbox = $(this);
+                drawer.loading(function () {
+                    if (checkbox.is(':checked')) {
+                        filterDef.enabled.push(heatmap.cells.selectedValue);
+                    } else {
+                        filterDef.enabled.remove(heatmap.cells.selectedValue);
+                    }
+                    dimension.filters.filter(heatmap, dimensionType);
+                    dimension.sorter.sort(heatmap, dimensionType);
+
+                    drawer.paint();
+                });
+            });
+
+            container.append($('<div>', {
+                'class': 'filter'
+            }).append(checkInput).append($('<span>').html(filterDef.title)));
+
+        }
+    }
+};
+
+jheatmap.components.OrderSymbol = function (ctx, asc) {
+    ctx.fillStyle = "rgba(130,2,2,1)";
+    ctx.beginPath();
+    if (asc) {
+        ctx.moveTo(-2, -2);
+        ctx.lineTo(-2, 2);
+        ctx.lineTo(2, -2);
+        ctx.lineTo(-2, -2);
+    } else {
+        ctx.moveTo(2, 2);
+        ctx.lineTo(-2, 2);
+        ctx.lineTo(2, -2);
+        ctx.lineTo(2, 2);
+    }
+    ctx.fill();
+    ctx.closePath();
+};
+
+jheatmap.components.ShortcutsPanel = function(container) {
+
+    container.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 70px; padding-bottom: 4px;'>" +
+        "<div><a href='#helpModal' data-toggle='modal'>Keyboard shortcuts</a></div>" +
+        "<div class='modal hide' id='helpModal' tabindex='-1' role='dialog'>" +
+        "<div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button>" +
+        "<h3>Keyboard shortcuts</h3></div>" +
+        "<div class='modal-body'>" +
+        "<dl class='dl-horizontal'>" +
+        "<dd><strong>Place the mouse over rows or columns and press the key:</strong></dd>" +
+        "<dt>H</dt><dd>Hide selected rows/columns</dd>" +
+        "<dt>S</dt><dd>Show hidden rows/columns</dd>" +
+        "<dt>R</dt><dd>Remove selection from rows/columns</dd>" +
+        "</dl>" +
+        "</div>" +
+        "<div class='modal-footer'>" +
+        "<button class='btn' data-dismiss='modal'>Close</button>" +
+        "</div>" +
+        "</div>" +
+        "</td>");
+
+};
 /**
  *
  * Heatmap interactive viewer
@@ -1423,6 +1520,11 @@ jheatmap.sorters.ValueSorter.prototype.sort = function(heatmap, sortType) {
  */
 jheatmap.Heatmap = function (options) {
 
+    /**
+     * User configuration
+     *
+     * @type {*|{}}
+     */
     this.options = options || {};
 
     /**
@@ -1448,104 +1550,31 @@ jheatmap.Heatmap = function (options) {
     };
 
     /**
-     * User defined filters
-     */
-    this.filters = {};
-
-    /**
      * Current search string to highlight matching rows and columns.
      * Default 'null' means no search.
      */
     this.search = null;
 
-    this.rows = new jheatmap.HeatmapDimension();
-    this.cols = new jheatmap.HeatmapDimension();
+    /**
+     * Heatmap rows
+     *
+     * @type {jheatmap.HeatmapDimension}
+     */
+    this.rows = new jheatmap.HeatmapDimension(this);
+
+    /**
+     * Heatmap columns
+     *
+     * @type {jheatmap.HeatmapDimension}
+     */
+    this.cols = new jheatmap.HeatmapDimension(this);
+
+    /**
+     * Heatmap cells
+     *
+     * @type {jheatmap.HeatmapCells}
+     */
     this.cells = new jheatmap.HeatmapCells(this);
-
-    /**
-     * Activate one filter for the rows
-     *
-     * @param filterId
-     */
-    this.addRowsFilter = function (filterId) {
-
-        var currentField = this.cells.selectedValue;
-        if (!this.rows.filters[currentField]) {
-            this.rows.filters[currentField] = {};
-        }
-
-        this.rows.filters[currentField][filterId] = this.filters[filterId];
-    };
-
-    /**
-     *
-     * @param filterId
-     */
-    this.getRowsFilter = function (filterId) {
-        var filter = this.rows.filters[this.cells.selectedValue];
-
-        if (filter) {
-            return filter[filterId];
-        }
-
-        return filter;
-    };
-
-    /**
-     *
-     * @param filterId
-     */
-    this.removeRowsFilter = function (filterId) {
-        delete this.rows.filters[this.cells.selectedValue][filterId];
-    };
-
-    /**
-     * Apply all the active filters on the rows.
-     */
-    this.applyRowsFilters = function () {
-
-        // Initialize rows order
-        this.rows.order = [];
-
-        if (this.rows.filters.length == 0) {
-
-            this.rows.order = [];
-            for (var r = 0; r < this.rows.values.length; r++) {
-                this.rows.order[this.rows.order.length] = r;
-            }
-            return;
-        }
-
-        var cl = this.cols.values.length;
-
-        nextRow: for (r = 0; r < this.rows.values.length; r++) {
-
-            for (var field = 0; field < this.cells.header.length; field++) {
-
-                // Get all column values
-                var values = [];
-                for (var c = 0; c < this.cols.values.length; c++) {
-                    var pos = r * cl + c;
-                    values[values.length] = this.cells.values[pos][field];
-                }
-
-                // Filters
-                var filters = this.rows.filters[field];
-                var filterId;
-                for (filterId in filters) {
-                    if (filters[filterId].filter.filter(values)) {
-                        // This filter is filtering this row, so skip it.
-                        continue nextRow;
-                    }
-                }
-
-            }
-
-            this.rows.order[this.rows.order.length] = r;
-        }
-
-        this.applyRowsSort();
-    };
 
     /**
      * Initialize the Heatmap
@@ -1556,20 +1585,17 @@ jheatmap.Heatmap = function (options) {
         this.cols.init();
         this.cells.init();
 
-        // Call init function
+        // Call user init function
         this.options.init(this);
 
         // Reindex configuration. Needed to let the user use position or header id interchangeably
         this.rows.reindex(this);
         this.cols.reindex(this);
         this.cells.reindex(this);
-        var key;
-        for(key in this.filters) {
-            jheatmap.utils.convertToIndexArray(this.filters[key].fields, this.cells.header);
-        }
 
         // Filter
-        this.applyRowsFilters();
+        this.rows.filters.filter(this, "rows");
+        this.cols.filters.filter(this, "columns");
 
         // Sort
         this.rows.sorter.sort(this, "rows");
@@ -1642,7 +1668,7 @@ jheatmap.HeatmapCells.prototype.init = function () {
     }
 };
 
-jheatmap.HeatmapCells.prototype.reindex = function (heatmap) {
+jheatmap.HeatmapCells.prototype.reindex = function () {
     jheatmap.utils.reindexArray(this.decorators, this.header);
     jheatmap.utils.reindexArray(this.aggregators, this.header);
     this.selectedValue = jheatmap.utils.reindexField(this.selectedValue, this.header);
@@ -1675,7 +1701,7 @@ jheatmap.HeatmapCells.prototype.getValue = function (row, col, field) {
  *
  * @class
  */
-jheatmap.HeatmapDimension = function () {
+jheatmap.HeatmapDimension = function (heatmap) {
 
     /**
      * Height in pixels of one cell (default 20)
@@ -1712,15 +1738,15 @@ jheatmap.HeatmapDimension = function () {
      * field: Index of the field that we are sorting
      * asc: true if ascending order, false if descending
      *
-     * @type {{type: string, field: number, asc: boolean}}
+     * @type {jheatmap.sorters.DefaultSorter}
      */
     this.sorter = new jheatmap.sorters.DefaultSorter();
 
     /**
      * Active user filters on items
-     * @type {Array}
+     * @type {jheatmap.HeatmapFilters}
      */
-    this.filters = [];
+    this.filters = new jheatmap.HeatmapFilters(heatmap);
 
     /**
      * Decorators for the items fields
@@ -1779,6 +1805,7 @@ jheatmap.HeatmapDimension.prototype.reindex = function (heatmap) {
 jheatmap.HeatmapDimension.prototype.getValue = function (col, field) {
     return this.values[this.order[col]][field];
 };
+
 /**
  *
  * Heatmap drawer.
@@ -1810,7 +1837,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
      *
      * @param runme Function to execute
      */
-    var loading = function (runme) {
+    this.loading = function (runme) {
         $('#heatmap-loader').show();
         var interval = window.setInterval(function () {
             runme.call(this);
@@ -1910,7 +1937,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
             if (    (heatmap.rows.sorter.field == heatmap.cells.selectedValue) &&
                     ($.inArray(heatmap.cols.order[c], heatmap.rows.sorter.indices) > -1)
                 ) {
-                jheatmap.utils.drawOrderSymbol(colCtx, heatmap.rows.sorter.asc);
+                jheatmap.components.OrderSymbol(colCtx, heatmap.rows.sorter.asc);
             } else {
                 if (heatmap.cols.zoom < 6) {
                     colCtx.fillRect(-1, -1, 2, 2);
@@ -1953,7 +1980,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
             if (    (heatmap.cols.sorter.field == heatmap.cells.selectedValue) &&
                     ($.inArray(heatmap.rows.order[row], heatmap.cols.sorter.indices) > -1)
                 ) {
-                jheatmap.utils.drawOrderSymbol(rowCtx, heatmap.cols.sorter.asc);
+                jheatmap.components.OrderSymbol(rowCtx, heatmap.cols.sorter.asc);
             } else {
                 if (heatmap.rows.zoom < 6) {
                     rowCtx.fillRect(-1, -1, 2, 2);
@@ -2121,7 +2148,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
      */
     this.build = function () {
 
-        // Loader
+        // Reset
         container.html('');
 
         var table = $("<table>", {
@@ -2139,75 +2166,16 @@ jheatmap.HeatmapDrawer = function (heatmap) {
             "class": "topleft"
         });
         firstRow.append(topleftPanel);
-        topleftPanel.append('<td><div class="detailsbox">cell details here</div></td>');
 
-        topleftPanel.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 70px; padding-bottom: 4px;'>" +
-            "<div><a href='#helpModal' data-toggle='modal'>Keyboard shortcuts</a></div>" +
-            "<div class='modal hide' id='helpModal' tabindex='-1' role='dialog'>" +
-            "<div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button>" +
-            "<h3>Keyboard shortcuts</h3></div>" +
-            "<div class='modal-body'>" +
-            "<dl class='dl-horizontal'>" +
-            "<dd><strong>Place the mouse over rows or columns and press the key:</strong></dd>" +
-            "<dt>H</dt><dd>Hide selected rows/columns</dd>" +
-            "<dt>S</dt><dd>Show hidden rows/columns</dd>" +
-            "<dt>R</dt><dd>Remove selection from rows/columns</dd>" +
-            "</dl>" +
-            "</div>" +
-            "<div class='modal-footer'>" +
-            "<button class='btn' data-dismiss='modal'>Close</button>" +
-            "</div>" +
-            "</div>" +
-            "</td>");
-
-        // Add filters
-        for (var filterId in heatmap.filters) {
-
-            var filterDef = heatmap.filters[filterId];
-
-            if ($.inArray(heatmap.cells.selectedValue, filterDef.fields) > -1) {
-
-                var checkInput = $('<input type="checkbox">');
-                checkInput.prop('checked', heatmap.getRowsFilter(filterId));
-                checkInput.click(function () {
-                    var checkbox = $(this);
-                    loading(function () {
-                        if (checkbox.is(':checked')) {
-                            heatmap.addRowsFilter(filterId);
-                        } else {
-                            heatmap.removeRowsFilter(filterId);
-                        }
-                        heatmap.applyRowsFilters();
-                        drawer.paint();
-                    });
-                });
-
-                topleftPanel.append($('<div>', {
-                    'class': 'filter'
-                }).append(checkInput).append($('<span>').html(filterDef.title)));
-
-            }
-        }
-
-        // Add column selector
-        var selectCol = $("<select>").change(function () {
-            heatmap.cols.selectedValue = $(this)[0].value;
-            loading(function () {
-                drawer.paint();
-            });
-        });
-        topleftPanel.append($("<span>Columns</span>"));
-        topleftPanel.append(selectCol);
-        for (var o = 0; o < heatmap.cols.header.length; o++) {
-            selectCol.append(new Option(heatmap.cols.header[o], o, o == heatmap.cols.selectedValue));
-        }
-        selectCol.val(heatmap.cols.selectedValue);
-        topleftPanel.append($("<br>"));
+        jheatmap.components.DetailsPanel(topleftPanel);
+        jheatmap.components.ShortcutsPanel(topleftPanel);
+        jheatmap.components.FilterCheckBoxes(this, heatmap, topleftPanel);
+        jheatmap.components.ColumnSelector(this, heatmap, topleftPanel);
 
         // Add row selector
         var selectRow = $("<select>").change(function () {
             heatmap.rows.selectedValue = $(this)[0].value;
-            loading(function () {
+            drawer.loading(function () {
                 drawer.paint();
             });
         });
@@ -2223,7 +2191,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         // Add cell selector
         var selectCell = $("<select>").change(function () {
             heatmap.cells.selectedValue = $(this)[0].value;
-            loading(function () {
+            drawer.loading(function () {
                 drawer.paint();
             });
         });
@@ -3031,8 +2999,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
                     if (diff > 0) {
                         if ($.inArray(heatmap.cols.order[heatmap.cols.order.length - 1], heatmap.cols.selected) == -1) {
                             for (var i = heatmap.cols.order.length - 2; i >= 0; i--) {
-                                var index = $.inArray(heatmap.cols.order[i], heatmap.cols.selected);
-                                if (index != -1) {
+                                if ($.inArray(heatmap.cols.order[i], heatmap.cols.selected) != -1) {
                                     var nextCol = heatmap.cols.order[i + 1];
                                     heatmap.cols.order[i + 1] = heatmap.cols.order[i];
                                     heatmap.cols.order[i] = nextCol;
@@ -3042,8 +3009,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
                     } else {
                         if ($.inArray(heatmap.cols.order[0], heatmap.cols.selected) == -1) {
                             for (var i = 1; i < heatmap.cols.order.length; i++) {
-                                var index = $.inArray(heatmap.cols.order[i], heatmap.cols.selected);
-                                if (index != -1) {
+                                if ($.inArray(heatmap.cols.order[i], heatmap.cols.selected) != -1) {
                                     var prevCol = heatmap.cols.order[i - 1];
                                     heatmap.cols.order[i - 1] = heatmap.cols.order[i];
                                     heatmap.cols.order[i] = prevCol;
@@ -3089,6 +3055,75 @@ jheatmap.HeatmapDrawer = function (heatmap) {
             drawer.paint();
         }
 
+    }
+
+};
+/**
+ *
+ * Class to manage all the dimension filters.
+ *
+ * @class
+ */
+jheatmap.HeatmapFilters = function (heatmap) {
+    this.values = [];
+    this.heatmap = heatmap;
+}
+
+jheatmap.HeatmapFilters.prototype.add = function(title, filter, enabledFields, visibleFields) {
+
+    jheatmap.utils.convertToIndexArray(enabledFields, this.heatmap.cells.header);
+    jheatmap.utils.convertToIndexArray(visibleFields, this.heatmap.cells.header);
+
+    this.values[this.values.length] = {
+        title : title,
+        filter : filter,
+        enabled : enabledFields,
+        visible : visibleFields
+    }
+};
+
+/**
+ * Apply all the active filters on the rows.
+ */
+jheatmap.HeatmapFilters.prototype.filter = function (heatmap, filterType) {
+
+    var rowsSort = (filterType=="rows");
+    var filterDimension = (rowsSort ? heatmap.rows : heatmap.cols);
+    var otherDimension = (rowsSort ? heatmap.cols : heatmap.rows);
+    var cl = heatmap.cols.values.length;
+    var filtered = false;
+    var r;
+
+    filterDimension.order = [];
+    nextRow: for (r = 0; r < filterDimension.values.length; r++) {
+        for (var field = 0; field < heatmap.cells.header.length; field++) {
+
+            // Get all other dimension values
+            var values = [];
+            for (var c = 0; c < otherDimension.values.length; c++) {
+                var pos = (rowsSort ? r * cl + c : c * cl + r);
+                var value = heatmap.cells.values[pos];
+
+                if (value != undefined) {
+                    values[values.length] = value[field];
+                }
+            }
+
+            // Filters
+            for (var f=0; f < filterDimension.filters.values.length; f++) {
+                var filterDef = filterDimension.filters.values[f];
+
+                if ($.inArray(field, filterDef.enabled) > -1) {
+                    filtered = true;
+                    if (filterDef.filter.filter(values)) {
+                        // This filter is filtering this row, so skip it.
+                        continue nextRow;
+                    }
+                }
+            }
+        }
+
+        filterDimension.order[filterDimension.order.length] = r;
     }
 
 };

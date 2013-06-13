@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>JSDoc: Class: CdmMatrixReader</title>
+	<title>JSDoc: Class: HeatmapFilters</title>
 	
 	<script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -15,21 +15,21 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: CdmMatrixReader</h1>
+    <h1 class="page-title">Class: HeatmapFilters</h1>
     
     
     
     <section>
      
     <header>
-        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.readers.html">.readers</a>.</span>CdmMatrixReader</h2>
+        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a>.</span>HeatmapFilters</h2>
         
     </header>  
     
     <article>
         <div class="container-overview">
         <dt>
-    <h4 class="name" id="CdmMatrixReader"><span class="type-signature"></span>new CdmMatrixReader</h4>
+    <h4 class="name" id="HeatmapFilters"><span class="type-signature"></span>new HeatmapFilters</h4>
     
     
 </dt>
@@ -37,97 +37,13 @@
     
     
     <p class="description">
-        A text separated value file matrix reader. The file has to follow this format:
-
-<pre><code>
-         col1    col2
-  row1   0.11    0.12
-  row2   0.21    0.22
-</code></pre>
+        Class to manage all the dimension filters.
     </p>
     
     
     
     
-    <h5>Parameters:</h5>
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Argument</th>
-		
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.url</code></td>
-            
-            
-            <td class="type">
-            string
-            </td>
-            
-            
-                <td class="attributes">
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">File url</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.separator</code></td>
-            
-            
-            <td class="type">
-            string
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                "tab"
-                </td>
-            
-            
-            <td class="description last">Value separator character</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
+    
     
     <dl class="details">
     
@@ -148,7 +64,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 330</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 3067</li></ul></dd>
 	
     
     
@@ -165,9 +81,7 @@
     
     
     
-    <h5>Example</h5>
-    <pre class="sh_javascript"><code>new jheatmap.readers.CdmMatrixReader({ url: "filename.cdm" });</code></pre>
-
+    
 
 </dd>
 
@@ -190,7 +104,7 @@
             <h3 class="subsection-title">Methods</h3>
             
             <dl><dt>
-    <h4 class="name" id="read"><span class="type-signature"></span>read</h4>
+    <h4 class="name" id="filter"><span class="type-signature"></span>filter</h4>
     
     
 </dt>
@@ -198,71 +112,13 @@
     
     
     <p class="description">
-        Asynchronously reads a text separated value file, the result is loaded in the 'heatmap' parameter.
+        Apply all the active filters on the rows.
     </p>
     
     
     
     
-    <h5>Parameters:</h5>
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>heatmap</code></td>
-            
-            
-            <td class="type">
-            <a href="jheatmap.Heatmap.html">jheatmap.Heatmap</a>
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The destination heatmap.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>initialize</code></td>
-            
-            
-            <td class="type">
-            function
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">A callback function that is called when the file is loaded.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
+    
     
     <dl class="details">
     
@@ -283,7 +139,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 343</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 3088</li></ul></dd>
 	
     
     

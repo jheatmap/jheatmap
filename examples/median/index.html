@@ -33,19 +33,16 @@
 				heatmap.rows.zoom = 10;
 
 				// Add filters
-				heatmap.filters = {
-					'non-expressed-rows' : {
-						title : "Hide non-differentially expressed",
-						filter : new jheatmap.filters.NonExpressed( { maxValue: 4 }),
-						fields : [ 0 ]
-					}
-				}
-				heatmap.addRowsFilter('non-expressed-rows');
-				heatmap.applyFilters();
+				heatmap.rows.filters.add(
+                        "Hide non-differentially expressed",
+						new jheatmap.filters.NonExpressed( { maxValue: 4 }),
+                        [ 0 ],
+						[ 0 ]
+                );
 
                 // Sorting
-                heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter("left-p-value");
-                heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter("left-p-value");
+                heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter("median-centered");
+                heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter("median-centered");
 
 			}
 		});
