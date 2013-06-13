@@ -11,7 +11,6 @@ jheatmap.HeatmapDrawer = function (heatmap) {
     var container = heatmap.options.container;
 
     // Components
-    var canvasRows = null;
     var canvasCells = null;
     var canvasAnnRowHeader = null;
     var canvasAnnColHeader = null;
@@ -27,6 +26,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
     var controlsPanel = new jheatmap.components.ControlsPanel(drawer, heatmap);
     var columnsHeaderPanel = new jheatmap.components.ColumnsHeaderPanel(drawer, heatmap);
     var rowsHeaderPanel = new jheatmap.components.RowsHeaderPanel(drawer, heatmap);
+    var cellsBodyPanel = new jheatmap.components.CellsBodyPanel(drawer, heatmap);
 
     /**
      * Build the heatmap.
@@ -120,37 +120,8 @@ jheatmap.HeatmapDrawer = function (heatmap) {
 
         // Add left border
         var tableRow = $('<tr>');
-
-        /*******************************************************************
-         * ROWS HEADERS *
-         ******************************************************************/
         tableRow.append(rowsHeaderPanel.markup);
-
-        /*******************************************************************
-         * HEATMAP CELLS *
-         ******************************************************************/
-        var heatmapCell = $('<td>');
-        tableRow.append(heatmapCell);
-        canvasCells = $("<canvas width='" + heatmap.size.width + "' height='" + heatmap.size.height + "' tabindex='2'></canvas>");
-        canvasCells.bind('mousewheel', function (e, delta, deltaX, deltaY) {
-            drawer.onCellsMouseWheel(e, delta, deltaX, deltaY);
-        });
-        canvasCells.bind('gesturechange', function (e) {
-            drawer.onCellsGestureChange(e);
-        });
-        canvasCells.bind('gestureend', function (e) {
-            drawer.onCellsGestureEnd(e);
-        });
-        canvasCells.bind('mousedown', function (e) {
-            drawer.onCellsMouseDown(e);
-        });
-        canvasCells.bind('mousemove', function (e) {
-            drawer.onCellsMouseMove(e);
-        });
-        canvasCells.bind('mouseup', function (e) {
-            drawer.onCellsMouseUp(e);
-        });
-        heatmapCell.append(canvasCells);
+        tableRow.append(cellsBodyPanel.markup);
 
         /*******************************************************************
          * Vertical annotations
@@ -388,37 +359,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         }
 
         // Cells
-        var cellCtx = canvasCells.get()[0].getContext('2d');
-        cellCtx.clearRect(0, 0, cellCtx.canvas.width, cellCtx.canvas.height)
-        for (var row = this.startRow; row < this.endRow; row++) {
-
-            for (var col = this.startCol; col < this.endCol; col++) {
-
-                // Iterate all values
-                var value = heatmap.cells.getValue(row, col, heatmap.cells.selectedValue);
-
-                if (value != null) {
-                    var color = heatmap.cells.decorators[heatmap.cells.selectedValue].toColor(value);
-                    cellCtx.fillStyle = color;
-                    cellCtx.fillRect((col - this.startCol) * cz, (row - this.startRow) * rz, cz, rz);
-                }
-            }
-
-            if ($.inArray(heatmap.rows.order[row], heatmap.rows.selected) > -1) {
-                cellCtx.fillStyle = "rgba(0,0,0,0.1)";
-                cellCtx.fillRect(0, (row - this.startRow) * rz, (this.endCol - this.startCol) * cz, rz);
-                cellCtx.fillStyle = "white";
-            }
-        }
-
-        // Selected columns
-        for (var col = this.startCol; col < this.endCol; col++) {
-            if ($.inArray(heatmap.cols.order[col], heatmap.cols.selected) > -1) {
-                cellCtx.fillStyle = "rgba(0,0,0,0.1)";
-                cellCtx.fillRect((col - this.startCol) * cz, 0, cz, (this.endRow - this.startRow) * rz);
-                cellCtx.fillStyle = "white";
-            }
-        }
+        cellsBodyPanel.paint();
 
         // Vertical scroll
         var maxHeight = (this.endRow - this.startRow) * heatmap.rows.zoom;
@@ -533,194 +474,6 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         }
 
     }
-
-    var downX = null;
-    var downY = null;
-
-    this.onCellsMouseUp = function (e) {
-        e.preventDefault();
-
-        if (e.originalEvent.touches && e.originalEvent.touches.length > 1) {
-            return;
-        }
-
-        var position = $(e.target).offset();
-        var pX = e.pageX - position.left - downX;
-        var pY = e.pageY - position.top - downY;
-
-        var c = Math.round(pX / heatmap.cols.zoom);
-        var r = Math.round(pY / heatmap.rows.zoom);
-
-        downX = null;
-        downY = null;
-
-        if (r == 0 && c == 0) {
-
-            var col = Math.floor((e.originalEvent.pageX - position.left) / heatmap.cols.zoom) + heatmap.offset.left;
-            var row = Math.floor((e.originalEvent.pageY - position.top) / heatmap.rows.zoom) + heatmap.offset.top;
-
-            var cl = heatmap.cols.values.length;
-            var pos = heatmap.rows.order[row] * cl + heatmap.cols.order[col];
-            var value = heatmap.cells.values[pos];
-
-            var details = $('table.heatmap div.detailsbox');
-            if (value != null) {
-
-                var boxTop = e.pageY - $(container).offset().top;
-                var boxLeft = e.pageX - $(container).offset().left;
-                var boxWidth;
-                var boxHeight;
-
-                var boxHtml = "<dl class='dl-horizontal'>";
-                boxHtml += "<dt>Column</dt><dd>" + heatmap.cols.getValue(col, heatmap.cols.selectedValue) + "</dd>";
-                boxHtml += "<dt>Row</dt><dd>" + heatmap.rows.getValue(row, heatmap.rows.selectedValue) + "</dd>";
-                boxHtml += "<hr />";
-                for (var i = 0; i < heatmap.cells.header.length; i++) {
-                    if (heatmap.cells.header[i] == undefined) {
-                        continue;
-                    }
-                    boxHtml += "<dt>" + heatmap.cells.header[i] + ":</dt><dd>";
-                    var val = value[i];
-                    if (!isNaN(val) && (val % 1 != 0)) {
-                        val = Number(val).toFixed(3);
-                    }
-                    boxHtml += val;
-                    boxHtml += "</dd>";
-                }
-                boxHtml += "</dl>";
-
-                details.html(boxHtml);
-                boxWidth = 300;
-                boxHeight = 60 + (heatmap.cells.header.length * 20);
-
-
-                var wHeight = $(document).height();
-                var wWidth = $(document).width();
-
-                if (boxTop + boxHeight > wHeight) {
-                    boxTop -= boxHeight;
-                }
-
-                if (boxLeft + boxWidth > wWidth) {
-                    boxLeft -= boxWidth;
-                }
-
-                details.css('left', boxLeft);
-                details.css('top', boxTop);
-                details.css('width', boxWidth);
-                details.css('height', boxHeight);
-
-                details.css('display', 'block');
-                details.bind('click', function () {
-                    $(this).css('display', 'none');
-                });
-            } else {
-                details.css('display', 'none');
-            }
-
-        }
-        drawer.paint();
-    };
-
-    this.onCellsMouseMove = function (e) {
-        e.preventDefault();
-
-        if (downX != null) {
-            var position = $(e.target).offset();
-            var pX = e.pageX - position.left - downX;
-            var pY = e.pageY - position.top - downY;
-
-            var c = Math.round(pX / heatmap.cols.zoom);
-            var r = Math.round(pY / heatmap.rows.zoom);
-
-            if (!(r == 0 && c == 0)) {
-
-                heatmap.offset.top -= r;
-                heatmap.offset.left -= c;
-                drawer.paint();
-                downX = e.pageX - position.left;
-                downY = e.pageY - position.top;
-            }
-        }
-
-    };
-
-    this.onCellsMouseDown = function (e) {
-        e.preventDefault();
-
-        var position = $(e.target).offset();
-        downX = e.pageX - position.left;
-        downY = e.pageY - position.top;
-
-    };
-
-    this.zoomHeatmap = function (zoomin, col, row) {
-
-        var ncz = null;
-        var nrz = null;
-        if (zoomin) {
-
-            ncz = heatmap.rows.zoom + 3;
-            ncz = ncz < 3 ? 3 : ncz;
-            ncz = ncz > 32 ? 32 : ncz;
-
-            // Zoom rows
-            nrz = heatmap.rows.zoom + 3;
-            nrz = nrz < 3 ? 3 : nrz;
-            nrz = nrz > 32 ? 32 : nrz;
-
-            var ml = Math.round(col - heatmap.offset.left - ((heatmap.cols.zoom * (col - heatmap.offset.left)) / ncz));
-            var mt = Math.round(row - heatmap.offset.top - ((heatmap.rows.zoom * (row - heatmap.offset.top)) / nrz));
-
-            heatmap.offset.left += ml;
-            heatmap.offset.top += mt;
-        } else {
-
-            ncz = heatmap.cols.zoom - 3;
-            ncz = ncz < 3 ? 3 : ncz;
-            ncz = ncz > 32 ? 32 : ncz;
-
-            // Zoom rows
-            nrz = heatmap.rows.zoom - 3;
-            nrz = nrz < 3 ? 3 : nrz;
-            nrz = nrz > 32 ? 32 : nrz;
-
-            var ml = Math.round(col - heatmap.offset.left - ((heatmap.cols.zoom * (col - heatmap.offset.left)) / ncz));
-            var mt = Math.round(row - heatmap.offset.top - ((heatmap.rows.zoom * (row - heatmap.offset.top)) / nrz));
-
-            heatmap.offset.left += ml;
-            heatmap.offset.top += mt;
-        }
-
-        if (!(nrz == heatmap.rows.zoom && ncz == heatmap.cols.zoom)) {
-            heatmap.cols.zoom = ncz;
-            heatmap.rows.zoom = nrz;
-            drawer.paint();
-        }
-    };
-
-    this.onCellsGestureEnd = function (e) {
-        e.preventDefault();
-
-        var col = Math.round(this.startCol + ((this.endCol - this.startCol) / 2));
-        var row = Math.round(this.startRow + ((this.endRow - this.startRow) / 2));
-        var zoomin = e.originalEvent.scale > 1;
-
-        this.zoomHeatmap(zoomin, col, row);
-    };
-
-    this.onCellsGestureChange = function (e) {
-        e.preventDefault();
-    };
-
-    this.onCellsMouseWheel = function (e, delta, deltaX, deltaY) {
-
-        var pos = $(e.target).offset();
-        var col = Math.floor((e.pageX - pos.left) / heatmap.cols.zoom) + heatmap.offset.left;
-        var row = Math.floor((e.pageY - pos.top) / heatmap.rows.zoom) + heatmap.offset.top;
-        var zoomin = delta / 120 > 0;
-        this.zoomHeatmap(zoomin, col, row);
-    };
 
     /**
      * Show loading image while running 'runme'
