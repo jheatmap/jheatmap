@@ -4,7 +4,7 @@
  *
  * @class
  */
-jheatmap.HeatmapDimension = function () {
+jheatmap.HeatmapDimension = function (heatmap) {
 
     /**
      * Height in pixels of one cell (default 20)
@@ -41,15 +41,15 @@ jheatmap.HeatmapDimension = function () {
      * field: Index of the field that we are sorting
      * asc: true if ascending order, false if descending
      *
-     * @type {{type: string, field: number, asc: boolean}}
+     * @type {jheatmap.sorters.DefaultSorter}
      */
     this.sorter = new jheatmap.sorters.DefaultSorter();
 
     /**
      * Active user filters on items
-     * @type {Array}
+     * @type {jheatmap.HeatmapFilters}
      */
-    this.filters = [];
+    this.filters = new jheatmap.HeatmapFilters(heatmap);
 
     /**
      * Decorators for the items fields
@@ -108,3 +108,4 @@ jheatmap.HeatmapDimension.prototype.reindex = function (heatmap) {
 jheatmap.HeatmapDimension.prototype.getValue = function (col, field) {
     return this.values[this.order[col]][field];
 };
+

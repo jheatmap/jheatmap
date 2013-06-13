@@ -1,4 +1,5 @@
-jheatmap.utils.drawOrderSymbol = function (ctx, asc) {
+
+jheatmap.components.OrderSymbol = function (ctx, asc) {
     ctx.fillStyle = "rgba(130,2,2,1)";
     ctx.beginPath();
     if (asc) {

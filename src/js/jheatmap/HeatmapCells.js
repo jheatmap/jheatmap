@@ -57,7 +57,7 @@ jheatmap.HeatmapCells.prototype.init = function () {
     }
 };
 
-jheatmap.HeatmapCells.prototype.reindex = function (heatmap) {
+jheatmap.HeatmapCells.prototype.reindex = function () {
     jheatmap.utils.reindexArray(this.decorators, this.header);
     jheatmap.utils.reindexArray(this.aggregators, this.header);
     this.selectedValue = jheatmap.utils.reindexField(this.selectedValue, this.header);

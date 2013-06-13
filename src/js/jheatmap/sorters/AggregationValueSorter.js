@@ -30,7 +30,7 @@ jheatmap.sorters.AggregationValueSorter.prototype.sort = function(heatmap, sortT
 
     var aggregation = [];
 
-    var cl = (rowsSort ? aggregationDimension.values.length : sortDimension.values.length);
+    var cl = heatmap.cols.values.length;
     for (var r = 0; r < sortDimension.order.length; r++) {
         var values = [];
         for (var i = 0; i < this.indices.length; i++) {

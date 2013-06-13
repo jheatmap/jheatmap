@@ -29,7 +29,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
      *
      * @param runme Function to execute
      */
-    var loading = function (runme) {
+    this.loading = function (runme) {
         $('#heatmap-loader').show();
         var interval = window.setInterval(function () {
             runme.call(this);
@@ -129,7 +129,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
             if (    (heatmap.rows.sorter.field == heatmap.cells.selectedValue) &&
                     ($.inArray(heatmap.cols.order[c], heatmap.rows.sorter.indices) > -1)
                 ) {
-                jheatmap.utils.drawOrderSymbol(colCtx, heatmap.rows.sorter.asc);
+                jheatmap.components.OrderSymbol(colCtx, heatmap.rows.sorter.asc);
             } else {
                 if (heatmap.cols.zoom < 6) {
                     colCtx.fillRect(-1, -1, 2, 2);
@@ -172,7 +172,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
             if (    (heatmap.cols.sorter.field == heatmap.cells.selectedValue) &&
                     ($.inArray(heatmap.rows.order[row], heatmap.cols.sorter.indices) > -1)
                 ) {
-                jheatmap.utils.drawOrderSymbol(rowCtx, heatmap.cols.sorter.asc);
+                jheatmap.components.OrderSymbol(rowCtx, heatmap.cols.sorter.asc);
             } else {
                 if (heatmap.rows.zoom < 6) {
                     rowCtx.fillRect(-1, -1, 2, 2);
@@ -340,7 +340,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
      */
     this.build = function () {
 
-        // Loader
+        // Reset
         container.html('');
 
         var table = $("<table>", {
@@ -358,75 +358,16 @@ jheatmap.HeatmapDrawer = function (heatmap) {
             "class": "topleft"
         });
         firstRow.append(topleftPanel);
-        topleftPanel.append('<td><div class="detailsbox">cell details here</div></td>');
 
-        topleftPanel.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 70px; padding-bottom: 4px;'>" +
-            "<div><a href='#helpModal' data-toggle='modal'>Keyboard shortcuts</a></div>" +
-            "<div class='modal hide' id='helpModal' tabindex='-1' role='dialog'>" +
-            "<div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button>" +
-            "<h3>Keyboard shortcuts</h3></div>" +
-            "<div class='modal-body'>" +
-            "<dl class='dl-horizontal'>" +
-            "<dd><strong>Place the mouse over rows or columns and press the key:</strong></dd>" +
-            "<dt>H</dt><dd>Hide selected rows/columns</dd>" +
-            "<dt>S</dt><dd>Show hidden rows/columns</dd>" +
-            "<dt>R</dt><dd>Remove selection from rows/columns</dd>" +
-            "</dl>" +
-            "</div>" +
-            "<div class='modal-footer'>" +
-            "<button class='btn' data-dismiss='modal'>Close</button>" +
-            "</div>" +
-            "</div>" +
-            "</td>");
-
-        // Add filters
-        for (var filterId in heatmap.filters) {
-
-            var filterDef = heatmap.filters[filterId];
-
-            if ($.inArray(heatmap.cells.selectedValue, filterDef.fields) > -1) {
-
-                var checkInput = $('<input type="checkbox">');
-                checkInput.prop('checked', heatmap.getRowsFilter(filterId));
-                checkInput.click(function () {
-                    var checkbox = $(this);
-                    loading(function () {
-                        if (checkbox.is(':checked')) {
-                            heatmap.addRowsFilter(filterId);
-                        } else {
-                            heatmap.removeRowsFilter(filterId);
-                        }
-                        heatmap.applyRowsFilters();
-                        drawer.paint();
-                    });
-                });
-
-                topleftPanel.append($('<div>', {
-                    'class': 'filter'
-                }).append(checkInput).append($('<span>').html(filterDef.title)));
-
-            }
-        }
-
-        // Add column selector
-        var selectCol = $("<select>").change(function () {
-            heatmap.cols.selectedValue = $(this)[0].value;
-            loading(function () {
-                drawer.paint();
-            });
-        });
-        topleftPanel.append($("<span>Columns</span>"));
-        topleftPanel.append(selectCol);
-        for (var o = 0; o < heatmap.cols.header.length; o++) {
-            selectCol.append(new Option(heatmap.cols.header[o], o, o == heatmap.cols.selectedValue));
-        }
-        selectCol.val(heatmap.cols.selectedValue);
-        topleftPanel.append($("<br>"));
+        jheatmap.components.DetailsPanel(topleftPanel);
+        jheatmap.components.ShortcutsPanel(topleftPanel);
+        jheatmap.components.FilterCheckBoxes(this, heatmap, topleftPanel);
+        jheatmap.components.ColumnSelector(this, heatmap, topleftPanel);
 
         // Add row selector
         var selectRow = $("<select>").change(function () {
             heatmap.rows.selectedValue = $(this)[0].value;
-            loading(function () {
+            drawer.loading(function () {
                 drawer.paint();
             });
         });
@@ -442,7 +383,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         // Add cell selector
         var selectCell = $("<select>").change(function () {
             heatmap.cells.selectedValue = $(this)[0].value;
-            loading(function () {
+            drawer.loading(function () {
                 drawer.paint();
             });
         });
@@ -1250,8 +1191,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
                     if (diff > 0) {
                         if ($.inArray(heatmap.cols.order[heatmap.cols.order.length - 1], heatmap.cols.selected) == -1) {
                             for (var i = heatmap.cols.order.length - 2; i >= 0; i--) {
-                                var index = $.inArray(heatmap.cols.order[i], heatmap.cols.selected);
-                                if (index != -1) {
+                                if ($.inArray(heatmap.cols.order[i], heatmap.cols.selected) != -1) {
                                     var nextCol = heatmap.cols.order[i + 1];
                                     heatmap.cols.order[i + 1] = heatmap.cols.order[i];
                                     heatmap.cols.order[i] = nextCol;
@@ -1261,8 +1201,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
                     } else {
                         if ($.inArray(heatmap.cols.order[0], heatmap.cols.selected) == -1) {
                             for (var i = 1; i < heatmap.cols.order.length; i++) {
-                                var index = $.inArray(heatmap.cols.order[i], heatmap.cols.selected);
-                                if (index != -1) {
+                                if ($.inArray(heatmap.cols.order[i], heatmap.cols.selected) != -1) {
                                     var prevCol = heatmap.cols.order[i - 1];
                                     heatmap.cols.order[i - 1] = heatmap.cols.order[i];
                                     heatmap.cols.order[i] = prevCol;

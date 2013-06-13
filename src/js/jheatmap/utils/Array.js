@@ -120,7 +120,7 @@ BrowserDetect.init();
 /*
  ---
 
- script: Array.stableSort.js
+ script: Array.Array.js
 
  description: Add a stable sort algorithm for all browsers
 
@@ -139,6 +139,10 @@ BrowserDetect.init();
  */
 
 (function () {
+
+    Array.prototype.remove = function(v) {
+        this.splice(this.indexOf(v) == -1 ? this.length : this.indexOf(v), 1);
+    }
 
     Array.prototype.stableSort = function (compare) {
         // I would love some real feature recognition. Problem is that an unstable algorithm sometimes/often gives the same result as an unstable algorithm.

@@ -31,22 +31,16 @@
                 				heatmap.cells.aggregators[0] = new jheatmap.aggregators.Median( { maxValue: 4 });
 
                 				// Add filters
-                				heatmap.filters = {
-                						'non-expressed-rows' : {
-                							title : "Hide non-differentially expressed",
-                							filter : new jheatmap.filters.NonExpressed({ maxValue: 4 }),
-                							fields : [ 0 ]
-                						}
-                				}
-                				heatmap.addRowsFilter('non-expressed-rows');
+                				heatmap.rows.filters.add(
+                                        "Hide non-differentially expressed",
+                					    new jheatmap.filters.NonExpressed({ maxValue: 4 }),
+                                        [ 0 ],
+                						[ 0 ]
+                                );
 
                 				// Default sort
-                				heatmap.rows.sort.type = "value";
-								heatmap.rows.sort.field = 0;
-								heatmap.rows.sort.asc = true;
-								heatmap.cols.sort.type = "value";
-								heatmap.cols.sort.field = 0;
-								heatmap.cols.sort.asc = true; 
+                                heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter(0);
+                                heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter(0);
 
                 			}
                 		}

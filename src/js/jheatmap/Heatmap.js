@@ -7,6 +7,11 @@
  */
 jheatmap.Heatmap = function (options) {
 
+    /**
+     * User configuration
+     *
+     * @type {*|{}}
+     */
     this.options = options || {};
 
     /**
@@ -32,104 +37,31 @@ jheatmap.Heatmap = function (options) {
     };
 
     /**
-     * User defined filters
-     */
-    this.filters = {};
-
-    /**
      * Current search string to highlight matching rows and columns.
      * Default 'null' means no search.
      */
     this.search = null;
 
-    this.rows = new jheatmap.HeatmapDimension();
-    this.cols = new jheatmap.HeatmapDimension();
+    /**
+     * Heatmap rows
+     *
+     * @type {jheatmap.HeatmapDimension}
+     */
+    this.rows = new jheatmap.HeatmapDimension(this);
+
+    /**
+     * Heatmap columns
+     *
+     * @type {jheatmap.HeatmapDimension}
+     */
+    this.cols = new jheatmap.HeatmapDimension(this);
+
+    /**
+     * Heatmap cells
+     *
+     * @type {jheatmap.HeatmapCells}
+     */
     this.cells = new jheatmap.HeatmapCells(this);
-
-    /**
-     * Activate one filter for the rows
-     *
-     * @param filterId
-     */
-    this.addRowsFilter = function (filterId) {
-
-        var currentField = this.cells.selectedValue;
-        if (!this.rows.filters[currentField]) {
-            this.rows.filters[currentField] = {};
-        }
-
-        this.rows.filters[currentField][filterId] = this.filters[filterId];
-    };
-
-    /**
-     *
-     * @param filterId
-     */
-    this.getRowsFilter = function (filterId) {
-        var filter = this.rows.filters[this.cells.selectedValue];
-
-        if (filter) {
-            return filter[filterId];
-        }
-
-        return filter;
-    };
-
-    /**
-     *
-     * @param filterId
-     */
-    this.removeRowsFilter = function (filterId) {
-        delete this.rows.filters[this.cells.selectedValue][filterId];
-    };
-
-    /**
-     * Apply all the active filters on the rows.
-     */
-    this.applyRowsFilters = function () {
-
-        // Initialize rows order
-        this.rows.order = [];
-
-        if (this.rows.filters.length == 0) {
-
-            this.rows.order = [];
-            for (var r = 0; r < this.rows.values.length; r++) {
-                this.rows.order[this.rows.order.length] = r;
-            }
-            return;
-        }
-
-        var cl = this.cols.values.length;
-
-        nextRow: for (r = 0; r < this.rows.values.length; r++) {
-
-            for (var field = 0; field < this.cells.header.length; field++) {
-
-                // Get all column values
-                var values = [];
-                for (var c = 0; c < this.cols.values.length; c++) {
-                    var pos = r * cl + c;
-                    values[values.length] = this.cells.values[pos][field];
-                }
-
-                // Filters
-                var filters = this.rows.filters[field];
-                var filterId;
-                for (filterId in filters) {
-                    if (filters[filterId].filter.filter(values)) {
-                        // This filter is filtering this row, so skip it.
-                        continue nextRow;
-                    }
-                }
-
-            }
-
-            this.rows.order[this.rows.order.length] = r;
-        }
-
-        this.applyRowsSort();
-    };
 
     /**
      * Initialize the Heatmap
@@ -140,20 +72,17 @@ jheatmap.Heatmap = function (options) {
         this.cols.init();
         this.cells.init();
 
-        // Call init function
+        // Call user init function
         this.options.init(this);
 
         // Reindex configuration. Needed to let the user use position or header id interchangeably
         this.rows.reindex(this);
         this.cols.reindex(this);
         this.cells.reindex(this);
-        var key;
-        for(key in this.filters) {
-            jheatmap.utils.convertToIndexArray(this.filters[key].fields, this.cells.header);
-        }
 
         // Filter
-        this.applyRowsFilters();
+        this.rows.filters.filter(this, "rows");
+        this.cols.filters.filter(this, "columns");
 
         // Sort
         this.rows.sorter.sort(this, "rows");
