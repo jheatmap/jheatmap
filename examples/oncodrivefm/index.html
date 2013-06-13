@@ -42,7 +42,9 @@
 				heatmap.rows.zoom = 6;
 
                 // Mutually exclusive sorting
-                heatmap.applySort = function() {
+                heatmap.rows.sorter = new jheatmap.sorters.MutualExclusiveSorter(2, false);
+
+                /*heatmap.applySort = function() {
                     heatmap.rows.sort.type = "value";
                     heatmap.rows.sort.field = 2;
                     heatmap.rows.sort.asc = false;
@@ -55,7 +57,7 @@
                         heatmap.cols.sort.item = [heatmap.rows.order[i]];
                         heatmap.applyColsSort();
                     }
-                }
+                }*/
 
 			}
 		});

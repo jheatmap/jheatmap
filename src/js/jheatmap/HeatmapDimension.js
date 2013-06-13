@@ -43,11 +43,7 @@ jheatmap.HeatmapDimension = function () {
      *
      * @type {{type: string, field: number, asc: boolean}}
      */
-    this.sort = {
-        type: "none",
-        field: 0,
-        asc: false
-    };
+    this.sorter = new jheatmap.sorters.DefaultSorter();
 
     /**
      * Active user filters on items
@@ -105,6 +101,10 @@ jheatmap.HeatmapDimension.prototype.reindex = function (heatmap) {
         jheatmap.utils.convertToIndexArray(this.filters[key].fields, heatmap.cells.header);
     }
 
-    this.sort.field = jheatmap.utils.reindexField(this.sort.field, heatmap.cells.header);
+    this.sorter.field = jheatmap.utils.reindexField(this.sorter.field, heatmap.cells.header);
 
+};
+
+jheatmap.HeatmapDimension.prototype.getValue = function (col, field) {
+    return this.values[this.order[col]][field];
 };

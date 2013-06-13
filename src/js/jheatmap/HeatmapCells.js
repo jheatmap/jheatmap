@@ -4,7 +4,14 @@
  *
  * @class
  */
-jheatmap.HeatmapCells = function () {
+jheatmap.HeatmapCells = function (heatmap) {
+
+    /**
+     * The heatmap
+     *
+     * @type {jheatmap.Heatmap}
+     */
+    this.heatmap = heatmap;
 
     /**
      * Header of the multiple cell values
@@ -54,4 +61,26 @@ jheatmap.HeatmapCells.prototype.reindex = function (heatmap) {
     jheatmap.utils.reindexArray(this.decorators, this.header);
     jheatmap.utils.reindexArray(this.aggregators, this.header);
     this.selectedValue = jheatmap.utils.reindexField(this.selectedValue, this.header);
+};
+
+/**
+ * Get cell value
+ *
+ * @param row   Row position
+ * @param col   Column position
+ * @param field Field position
+ * @return The cell value
+ */
+jheatmap.HeatmapCells.prototype.getValue = function (row, col, field) {
+
+    var cl = this.heatmap.cols.values.length;
+    var pos = this.heatmap.rows.order[row] * cl + this.heatmap.cols.order[col];
+
+    var value = this.values[pos];
+
+    if (value == null) {
+        return null;
+    }
+
+    return value[field];
 };

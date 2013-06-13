@@ -5,26 +5,29 @@
  * new jheatmap.sorters.AnnotationSorter(heatmapDimension, 2, true);
  *
  * @class
- * @param {jheatmap.HeatmapDimension}    heatmapDimension    The heatmap dimension to sort
  * @param {int}                 field               Value field to aggregate
  * @param {boolean}             asc                 True to sort ascending, false to sort descending
  */
-jheatmap.sorters.AnnotationSorter = function (heatmapDimension, field, asc) {
-    this.heatmapDimension = heatmapDimension || [];
+jheatmap.sorters.AnnotationSorter = function (field, asc) {
     this.field = field;
     this.asc = asc;
+    this.indices = [];
 };
 
 /**
  * Sort the heatmap
+ *
+ * @param {jheatmap.Heatmap} heatmap     The heatmap to sort
+ * @param {string}  sortType            "rows" or "columns"
  */
-jheatmap.sorters.AnnotationSorter.prototype.sort = function() {
+jheatmap.sorters.AnnotationSorter.prototype.sort = function(heatmap, sortType) {
 
-    var values = this.heatmapDimension.values;
+    var heatmapDimension = (sortType == "rows" ? heatmap.rows : heatmap.cols);
+    var values = heatmapDimension.values;
     var field = this.field;
     var asc = this.asc;
 
-    this.heatmapDimension.order.stableSort(function (a, b) {
+    heatmapDimension.order.stableSort(function (a, b) {
 
         var v_a = values[a][field].toLowerCase();
         var v_b = values[b][field].toLowerCase();

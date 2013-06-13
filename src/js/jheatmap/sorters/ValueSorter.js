@@ -5,21 +5,29 @@
  * new jheatmap.sorters.ValueSorter(heatmap, "columns", 3, false, 1);
  *
  * @class
- * @param {jheatmap.Heatmap} heatmap     The heatmap to sort
- * @param {string}  sortType    "rows" or "columns"
  * @param {int}     field       Value field to aggregate
  * @param {boolean} asc         True to sort ascending, false to sort descending
  * @param {Array}   index       Integer position of the row/column to sort.
  */
-jheatmap.sorters.ValueSorter = function (heatmap, sortType, field, asc, index) {
-
-    this.cells = heatmap.cells;
-    this.rowsSort = (sortType=="rows");
-    this.sortDimension = (this.rowsSort ? heatmap.rows : heatmap.cols);
-    this.index = index;
+jheatmap.sorters.ValueSorter = function (field, asc, index) {
+    this.indices = [ index ];
     this.field = field;
-    this.asc = asc;
-    this.getPosition = (this.rowsSort ?
+    this.asc = asc;    
+};
+
+/**
+ * Sort the heatmap
+ *
+ * @param {jheatmap.Heatmap} heatmap     The heatmap to sort
+ * @param {string}  sortType    "rows" or "columns"
+ */
+jheatmap.sorters.ValueSorter.prototype.sort = function(heatmap, sortType) {
+
+    var cells = heatmap.cells;
+    var rowsSort = (sortType=="rows");
+    var sortDimension = (rowsSort ? heatmap.rows : heatmap.cols);
+    var index = this.indices[0];
+    var getPosition = (rowsSort ?
         function(pos) {
             return (pos * heatmap.cols.values.length) + index;
         }
@@ -27,19 +35,12 @@ jheatmap.sorters.ValueSorter = function (heatmap, sortType, field, asc, index) {
         function(pos) {
             return index * heatmap.cols.values.length + pos;
         });
-};
-
-/**
- * Sort the heatmap
- */
-jheatmap.sorters.ValueSorter.prototype.sort = function() {
 
     var field = this.field;
     var asc = this.asc;
-    var values = this.cells.values;
-    var getPosition = this.getPosition;
+    var values = cells.values;
 
-    this.sortDimension.order.stableSort(function (o_a, o_b) {
+    sortDimension.order.stableSort(function (o_a, o_b) {
 
         var value_a = values[getPosition(o_a)];
         var value_b = values[getPosition(o_b)];
