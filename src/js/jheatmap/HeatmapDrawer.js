@@ -11,25 +11,14 @@ jheatmap.HeatmapDrawer = function (heatmap) {
     var container = heatmap.options.container;
 
     // Components
-    var canvasAnnColHeader = null;
-    var canvasAnnCols = null;
-    var canvasHScroll = null;
-    var canvasVScroll = null;
-    var lastPaint = null;
-
-    var textSpacing = 5;
-
-    // Components
     var controlPanel = new jheatmap.components.ControlsPanel(drawer, heatmap);
-
     var columnHeaderPanel = new jheatmap.components.ColumnHeaderPanel(drawer, heatmap);
     var columnAnnotationPanel = new jheatmap.components.ColumnAnnotationPanel(drawer, heatmap);
-
     var rowHeaderPanel = new jheatmap.components.RowHeaderPanel(drawer, heatmap);
     var rowAnnotationPanel = new jheatmap.components.RowAnnotationPanel(drawer, heatmap);
-
     var cellsBodyPanel = new jheatmap.components.CellBodyPanel(drawer, heatmap);
-
+    var verticalScrollBar = new jheatmap.components.VerticalScrollBar(drawer, heatmap);
+    var horizontalScrollBar = new jheatmap.components.HorizontalScrollBar(drawer, heatmap);
 
     /**
      * Build the heatmap.
@@ -66,40 +55,16 @@ jheatmap.HeatmapDrawer = function (heatmap) {
             tableRow.append(rowAnnotationPanel.body);
         }
 
-        /*******************************************************************
-         * Vertical scroll
-         ******************************************************************/
-        var scrollVert = $("<td class='borderL'>");
-        tableRow.append(scrollVert);
-        canvasVScroll = $("<canvas class='header' width='10' height='" + heatmap.size.height + "'></canvas>");
-        scrollVert.append(canvasVScroll);
-        canvasVScroll.bind('click', function (e) {
-            drawer.onVScrollClick(e);
-        });
-        canvasVScroll.bind('mousedown', function (e) {
-            drawer.onVScrollMouseDown(e);
-        });
-        canvasVScroll.bind('mouseup', function (e) {
-            drawer.onVScrollMouseUp(e);
-        });
-        canvasVScroll.bind('mousemove', function (e) {
-            drawer.onVScrollMouseMove(e);
-        });
-
-        // Right table border
+        tableRow.append(verticalScrollBar.markup);
         tableRow.append("<td class='borderL'>&nbsp;</td>");
         table.append(tableRow);
 
-        /*******************************************************************
-         * Horizontal scroll
-         ******************************************************************/
         var scrollRow = $("<tr class='horizontalScroll'>");
         scrollRow.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 10px; padding-top: 7px;'>" +
             "<span>visualized with <a href='http://bg.upf.edu/jheatmap/' target='_blank'>jHeatmap</a></span>" +
             "</td>");
 
-        var scrollHor = $("<td class='borderT'>");
-        scrollRow.append(scrollHor);
+        scrollRow.append(horizontalScrollBar.markup);
         scrollRow.append("<td class='border'></td>");
 
         if (heatmap.rows.annotations.length > 0) {
@@ -107,28 +72,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         }
 
         scrollRow.append("<td class='border'></td>");
-
-        canvasHScroll = $("<canvas class='header' width='" + heatmap.size.width + "' height='10'></canvas>");
-        scrollHor.append(canvasHScroll);
-
-        canvasHScroll.bind('click', function (e) {
-            drawer.onHScrollClick(e);
-        });
-        canvasHScroll.bind('mousedown', function (e) {
-            drawer.onHScrollMouseDown(e);
-        });
-        canvasHScroll.bind('mouseup', function (e) {
-            drawer.onHScrollMouseUp(e);
-        });
-        canvasHScroll.bind('mousemove', function (e) {
-            drawer.onHScrollMouseMove(e);
-        });
-
         table.append(scrollRow);
-
-        /*******************************************************************
-         * Close table
-         ******************************************************************/
 
         // Last border row
         var lastRow = $('<tr>');
@@ -142,7 +86,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         table.append(lastRow);
         container.append(table);
         $('#heatmap-loader').hide();
-        $('#helpModal').modal({ show: false });
+        $('#heatmap-modal').modal({ show: false });
 
     };
 
@@ -150,12 +94,6 @@ jheatmap.HeatmapDrawer = function (heatmap) {
      * Paint the heatmap.
      */
     this.paint = function () {
-
-        var currentPaint = new Date().getTime();
-        if (lastPaint != null && (currentPaint - lastPaint) < 100) {
-            return;
-        }
-        lastPaint = currentPaint;
 
         // Minimum zooms
         var mcz = Math.max(3, Math.round(heatmap.size.width / heatmap.cols.order.length));
@@ -194,13 +132,8 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         }
         heatmap.offset.left = left;
 
-        this.startRow = heatmap.offset.top;
-        this.endRow = Math.min(heatmap.offset.top + maxRows, heatmap.rows.order.length);
-        heatmap.offset.bottom = this.endRow;
-
-        this.startCol = heatmap.offset.left;
-        this.endCol = Math.min(heatmap.offset.left + maxCols, heatmap.cols.order.length);
-        heatmap.offset.right = this.endCol;
+        heatmap.offset.bottom = Math.min(heatmap.offset.top + maxRows, heatmap.rows.order.length);
+        heatmap.offset.right = Math.min(heatmap.offset.left + maxCols, heatmap.cols.order.length);
 
         // Column headers panel
         columnHeaderPanel.paint();
@@ -218,118 +151,12 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         cellsBodyPanel.paint();
 
         // Vertical scroll
-        var maxHeight = (this.endRow - this.startRow) * heatmap.rows.zoom;
-        var iniY = Math.round(maxHeight * (this.startRow / heatmap.rows.order.length));
-        var endY = Math.round(maxHeight * (this.endRow / heatmap.rows.order.length));
-        var scrollVertCtx = canvasVScroll.get()[0].getContext('2d');
-        scrollVertCtx.clearRect(0, 0, scrollVertCtx.canvas.width, scrollVertCtx.canvas.height)
-        scrollVertCtx.fillStyle = "rgba(0,136,204,1)";
-        scrollVertCtx.fillRect(0, iniY, 10, endY - iniY);
+        verticalScrollBar.paint();
 
         // Horizontal scroll
-        var scrollHorCtx = canvasHScroll.get()[0].getContext('2d');
-        scrollHorCtx.clearRect(0, 0, scrollHorCtx.canvas.width, scrollHorCtx.canvas.height)
-        scrollHorCtx.fillStyle = "rgba(0,136,204,1)";
-        var maxWidth = (this.endCol - this.startCol) * heatmap.cols.zoom;
-        var iniX = Math.round(maxWidth * (this.startCol / heatmap.cols.order.length));
-        var endX = Math.round(maxWidth * (this.endCol / heatmap.cols.order.length));
-        scrollHorCtx.fillRect(iniX, 0, endX - iniX, 10);
-
-        lastPaint = new Date().getTime();
+        horizontalScrollBar.paint();
 
     };
-
-    this.startRow = null;
-    this.endRow = null;
-    this.startCol = null;
-    this.endCol = null;
-
-    var hScrollMouseDown = false;
-
-    this.onHScrollClick = function (e) {
-        var maxWidth = (this.endCol - this.startCol) * heatmap.cols.zoom;
-        var iniX = Math.round(maxWidth * (this.startCol / heatmap.cols.order.length));
-        var endX = Math.round(maxWidth * (this.endCol / heatmap.cols.order.length));
-        var pX = e.pageX - $(e.target).offset().left - ((endX - iniX) / 2);
-        pX = (pX < 0 ? 0 : pX);
-        heatmap.offset.left = Math.round((pX / maxWidth) * heatmap.cols.order.length);
-        drawer.paint();
-    };
-
-    this.onHScrollMouseDown = function (e) {
-        e.preventDefault();
-
-        hScrollMouseDown = true;
-    }
-
-    this.onHScrollMouseUp = function (e) {
-        e.preventDefault();
-
-        if (e.originalEvent.touches && e.originalEvent.touches.length > 1) {
-            return;
-        }
-
-        hScrollMouseDown = false;
-        drawer.paint();
-    }
-
-    this.onHScrollMouseMove = function (e) {
-
-        if (hScrollMouseDown) {
-            var maxWidth = (this.endCol - this.startCol) * heatmap.cols.zoom;
-            var iniX = Math.round(maxWidth * (this.startCol / heatmap.cols.order.length));
-            var endX = Math.round(maxWidth * (this.endCol / heatmap.cols.order.length));
-            var pX = e.pageX - $(e.target).offset().left - ((endX - iniX) / 2);
-            pX = (pX < 0 ? 0 : pX);
-            heatmap.offset.left = Math.round((pX / maxWidth) * heatmap.cols.order.length);
-            drawer.paint();
-        }
-    }
-
-    var vScrollMouseDown = false;
-
-    this.onVScrollClick = function (e) {
-        var maxHeight = (this.endRow - this.startRow) * heatmap.rows.zoom;
-        var iniY = Math.round(maxHeight * (this.startRow / heatmap.rows.order.length));
-        var endY = Math.round(maxHeight * (this.endRow / heatmap.rows.order.length));
-
-        var pY = e.pageY - $(e.target).offset().top - ((endY - iniY) / 2);
-        pY = (pY < 0 ? 0 : pY);
-        heatmap.offset.top = Math.round((pY / maxHeight) * heatmap.rows.order.length);
-        drawer.paint();
-    };
-
-    this.onVScrollMouseDown = function (e) {
-        e.preventDefault();
-
-        vScrollMouseDown = true;
-    }
-
-    this.onVScrollMouseUp = function (e) {
-        e.preventDefault();
-
-        if (e.originalEvent.touches && e.originalEvent.touches.length > 1) {
-            return;
-        }
-
-        drawer.paint();
-        vScrollMouseDown = false;
-    }
-
-    this.onVScrollMouseMove = function (e) {
-
-        if (vScrollMouseDown) {
-            var maxHeight = (this.endRow - this.startRow) * heatmap.rows.zoom;
-            var iniY = Math.round(maxHeight * (this.startRow / heatmap.rows.order.length));
-            var endY = Math.round(maxHeight * (this.endRow / heatmap.rows.order.length));
-
-            var pY = e.pageY - $(e.target).offset().top - ((endY - iniY) / 2);
-            pY = (pY < 0 ? 0 : pY);
-            heatmap.offset.top = Math.round((pY / maxHeight) * heatmap.rows.order.length);
-            drawer.paint();
-        }
-
-    }
 
     /**
      * Show loading image while running 'runme'
@@ -345,6 +172,11 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         }, 1);
     };
 
+    /**
+     *
+     * @param e
+     * @returns {boolean}
+     */
     this.handleFocus = function (e) {
 
         if (e.type == 'mouseover') {
