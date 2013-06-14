@@ -128,45 +128,34 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
 
     };
 
+    var col, row;
+    var x, y;
+    var startWheel = new Date().getTime();
+
     var zoomHeatmap = function (zoomin, col, row) {
 
         var ncz = null;
         var nrz = null;
+
         if (zoomin) {
-
-            ncz = heatmap.rows.zoom + 3;
-            ncz = ncz < 3 ? 3 : ncz;
-            ncz = ncz > 32 ? 32 : ncz;
-
-            // Zoom rows
+            ncz = heatmap.cols.zoom + 3;
             nrz = heatmap.rows.zoom + 3;
-            nrz = nrz < 3 ? 3 : nrz;
-            nrz = nrz > 32 ? 32 : nrz;
-
-            var ml = Math.round(col - heatmap.offset.left - ((heatmap.cols.zoom * (col - heatmap.offset.left)) / ncz));
-            var mt = Math.round(row - heatmap.offset.top - ((heatmap.rows.zoom * (row - heatmap.offset.top)) / nrz));
-
-            heatmap.offset.left += ml;
-            heatmap.offset.top += mt;
         } else {
-
             ncz = heatmap.cols.zoom - 3;
-            ncz = ncz < 3 ? 3 : ncz;
-            ncz = ncz > 32 ? 32 : ncz;
-
-            // Zoom rows
             nrz = heatmap.rows.zoom - 3;
-            nrz = nrz < 3 ? 3 : nrz;
-            nrz = nrz > 32 ? 32 : nrz;
-
-            var ml = Math.round(col - heatmap.offset.left - ((heatmap.cols.zoom * (col - heatmap.offset.left)) / ncz));
-            var mt = Math.round(row - heatmap.offset.top - ((heatmap.rows.zoom * (row - heatmap.offset.top)) / nrz));
-
-            heatmap.offset.left += ml;
-            heatmap.offset.top += mt;
         }
 
+        ncz = ncz < 3 ? 3 : ncz;
+        ncz = ncz > 32 ? 32 : ncz;
+
+        nrz = nrz < 3 ? 3 : nrz;
+        nrz = nrz > 32 ? 32 : nrz;
+
         if (!(nrz == heatmap.rows.zoom && ncz == heatmap.cols.zoom)) {
+
+            heatmap.offset.left = col - Math.floor(x / ncz);
+            heatmap.offset.top  = row - Math.floor(y / nrz);
+
             heatmap.cols.zoom = ncz;
             heatmap.rows.zoom = nrz;
             drawer.paint();
@@ -176,8 +165,8 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
     var onGestureEnd = function (e) {
         e.preventDefault();
 
-        var col = Math.round(startCol + ((endCol - startCol) / 2));
-        var row = Math.round(startRow + ((endRow - startRow) / 2));
+        col = Math.round(heatmap.offset.left + ((heatmap.offset.right - heatmap.offset.left) / 2));
+        row = Math.round(heatmap.offset.top + ((heatmap.offset.bottom - heatmap.offset.top) / 2));
         var zoomin = e.originalEvent.scale > 1;
 
         zoomHeatmap(zoomin, col, row);
@@ -188,10 +177,18 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
     };
 
     var onMouseWheel = function (e, delta, deltaX, deltaY) {
+        e.preventDefault();
 
-        var pos = $(e.target).offset();
-        var col = Math.floor((e.pageX - pos.left) / heatmap.cols.zoom) + heatmap.offset.left;
-        var row = Math.floor((e.pageY - pos.top) / heatmap.rows.zoom) + heatmap.offset.top;
+        var currentTime = new Date().getTime();
+        if ((currentTime - startWheel) > 500) {
+            var pos = $(e.target).offset();
+            x = (e.pageX - pos.left);
+            y = (e.pageY - pos.top);
+            col = Math.floor(x / heatmap.cols.zoom) + heatmap.offset.left;
+            row = Math.floor(y / heatmap.rows.zoom) + heatmap.offset.top;
+        }
+        startWheel = currentTime;
+
         var zoomin = delta / 120 > 0;
         zoomHeatmap(zoomin, col, row);
     };
