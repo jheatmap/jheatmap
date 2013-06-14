@@ -46,7 +46,7 @@ jheatmap.HeatmapDimension = function (heatmap) {
     this.sorter = new jheatmap.sorters.DefaultSorter();
 
     /**
-     *
+     * This is the default sorter to be used when sorting multiple selected items.
      */
     this.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
 
