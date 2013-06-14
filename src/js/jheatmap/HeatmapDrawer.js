@@ -11,10 +11,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
     var container = heatmap.options.container;
 
     // Components
-    var canvasCells = null;
-    var canvasAnnRowHeader = null;
     var canvasAnnColHeader = null;
-    var canvasAnnRows = null;
     var canvasAnnCols = null;
     var canvasHScroll = null;
     var canvasVScroll = null;
@@ -23,10 +20,16 @@ jheatmap.HeatmapDrawer = function (heatmap) {
     var textSpacing = 5;
 
     // Components
-    var controlsPanel = new jheatmap.components.ControlsPanel(drawer, heatmap);
-    var columnsHeaderPanel = new jheatmap.components.ColumnsHeaderPanel(drawer, heatmap);
-    var rowsHeaderPanel = new jheatmap.components.RowsHeaderPanel(drawer, heatmap);
-    var cellsBodyPanel = new jheatmap.components.CellsBodyPanel(drawer, heatmap);
+    var controlPanel = new jheatmap.components.ControlsPanel(drawer, heatmap);
+
+    var columnHeaderPanel = new jheatmap.components.ColumnHeaderPanel(drawer, heatmap);
+    var columnAnnotationPanel = new jheatmap.components.ColumnAnnotationPanel(drawer, heatmap);
+
+    var rowHeaderPanel = new jheatmap.components.RowHeaderPanel(drawer, heatmap);
+    var rowAnnotationPanel = new jheatmap.components.RowAnnotationPanel(drawer, heatmap);
+
+    var cellsBodyPanel = new jheatmap.components.CellBodyPanel(drawer, heatmap);
+
 
     /**
      * Build the heatmap.
@@ -36,101 +39,31 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         // Reset
         container.html('');
 
-        var table = $("<table>", {
-            "class": "heatmap"
-        });
-
+        var table = $("<table>", { "class": "heatmap"});
         var firstRow = $("<tr>");
         table.append(firstRow);
-        firstRow.append(controlsPanel.markup);
-        firstRow.append(columnsHeaderPanel.markup);
 
-        /*******************************************************************
-         * ADD ROW HEADER ANNOTATIONS
-         ******************************************************************/
+        firstRow.append(controlPanel.markup);
 
-        var rowspan = (heatmap.cols.annotations.length > 0 ? 2 : 1);
+        firstRow.append(columnHeaderPanel.markup);
 
-        if (heatmap.rows.annotations.length > 0) {
-
-            var annRowHead = $("<th>", {
-                'class': 'border-rows-ann',
-                'rowspan': rowspan
-            });
-            firstRow.append(annRowHead);
-
-            canvasAnnRowHeader = $("<canvas class='header' width='" + 10 * heatmap.rows.annotations.length
-                + "' height='150'></canvas>");
-            annRowHead.append(canvasAnnRowHeader);
-
-            canvasAnnRowHeader.click(function (e) {
-                var pos = $(e.target).offset();
-                var i = Math.floor((e.pageX - pos.left) / 10);
-
-                heatmap.rows.sorter = new jheatmap.sorters.AnnotationSorter(heatmap.rows.annotations[i], !(heatmap.rows.sorter.asc));
-                heatmap.rows.sorter.sort(heatmap, "rows");
-                drawer.paint();
-
-            });
-
+        if (rowAnnotationPanel.visible) {
+            firstRow.append(rowAnnotationPanel.header);
         }
+        firstRow.append($("<th>", {'class': 'border', 'rowspan': rowAnnotationPanel.span }));
+        firstRow.append($("<th>", {'class': 'border', 'rowspan': rowAnnotationPanel.span }));
 
-        firstRow.append($("<th>", {
-            'class': 'border',
-            'rowspan': rowspan
-        }));
-
-        firstRow.append($("<th>", {
-            'class': 'border',
-            'rowspan': rowspan
-        }));
-
-
-        /*******************************************************************
-         * ADD COLUMN ANNOTATIONS
-         ******************************************************************/
-
-        if (heatmap.cols.annotations.length > 0) {
-
-            firstRow = $("<tr class='annotations'>");
-            table.append(firstRow);
-
-            var colAnnHeaderCell = $("<th>", {
-                "class": "border-cols-ann"
-            });
-            canvasAnnColHeader = $("<canvas class='header' style='float:right;' width='200' height='" + 10
-                * heatmap.cols.annotations.length + "'></canvas>");
-            colAnnHeaderCell.append(canvasAnnColHeader);
-            firstRow.append(colAnnHeaderCell);
-
-            var colAnnValuesCell = $("<th>");
-            canvasAnnCols = $("<canvas width='" + heatmap.size.width + "' height='" + 10
-                * heatmap.cols.annotations.length + "'></canvas>");
-            colAnnValuesCell.append(canvasAnnCols);
-            firstRow.append(colAnnValuesCell);
-
-            canvasAnnColHeader.click(function (e) {
-                var pos = $(e.target).offset();
-                var i = Math.floor((e.pageY - pos.top) / 10);
-                heatmap.cols.sorter = new jheatmap.sorters.AnnotationSorter(heatmap.cols.annotations[i], !(heatmap.cols.sorter.asc));
-                heatmap.cols.sorter.sort(heatmap, "columns");
-                drawer.paint();
-            });
+        if (columnAnnotationPanel.visible) {
+            table.append(columnAnnotationPanel.markup);
         }
 
         // Add left border
         var tableRow = $('<tr>');
-        tableRow.append(rowsHeaderPanel.markup);
+        tableRow.append(rowHeaderPanel.markup);
         tableRow.append(cellsBodyPanel.markup);
 
-        /*******************************************************************
-         * Vertical annotations
-         ******************************************************************/
-        if (heatmap.rows.annotations.length > 0) {
-            var rowsAnnCell = $("<td class='borderL'>");
-            tableRow.append(rowsAnnCell);
-            canvasAnnRows = $("<canvas width='" + heatmap.rows.annotations.length * 10 + "' height='" + heatmap.size.height + "'></canvas>");
-            rowsAnnCell.append(canvasAnnRows);
+        if (rowAnnotationPanel.visible) {
+            tableRow.append(rowAnnotationPanel.body);
         }
 
         /*******************************************************************
@@ -270,93 +203,16 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         heatmap.offset.right = this.endCol;
 
         // Column headers panel
-        columnsHeaderPanel.paint();
+        columnHeaderPanel.paint();
 
         // Rows headers
-        rowsHeaderPanel.paint();
+        rowHeaderPanel.paint();
 
         // Row annotations
-        if (heatmap.rows.annotations.length > 0) {
-
-            var annRowHeadCtx = canvasAnnRowHeader.get()[0].getContext('2d');
-            annRowHeadCtx.clearRect(0, 0, annRowHeadCtx.canvas.width, annRowHeadCtx.canvas.height);
-            annRowHeadCtx.fillStyle = "rgb(51,51,51)";
-            annRowHeadCtx.textAlign = "right";
-            annRowHeadCtx.textBaseline = "middle";
-            annRowHeadCtx.font = "bold 11px Helvetica Neue,Helvetica,Arial,sans-serif";
-
-            for (var i = 0; i < heatmap.rows.annotations.length; i++) {
-
-                var value = heatmap.rows.header[heatmap.rows.annotations[i]];
-                annRowHeadCtx.save();
-                annRowHeadCtx.translate(i * 10 + 5, 150);
-                annRowHeadCtx.rotate(Math.PI / 2);
-                annRowHeadCtx.fillText(value, -textSpacing, 0);
-                annRowHeadCtx.restore();
-            }
-
-            var rowsAnnValuesCtx = canvasAnnRows.get()[0].getContext('2d');
-            rowsAnnValuesCtx.clearRect(0, 0, rowsAnnValuesCtx.canvas.width, rowsAnnValuesCtx.canvas.height);
-            for (var row = this.startRow; row < this.endRow; row++) {
-
-                for (var i = 0; i < heatmap.rows.annotations.length; i++) {
-                    var field = heatmap.rows.annotations[i];
-                    var value = heatmap.rows.getValue(row, field);
-
-                    if (value != null) {
-                        rowsAnnValuesCtx.fillStyle = heatmap.rows.decorators[field].toColor(value);
-                        rowsAnnValuesCtx.fillRect(i * 10, (row - this.startRow) * rz, 10, rz);
-                    }
-
-                }
-
-                if ($.inArray(heatmap.rows.order[row], heatmap.rows.selected) > -1) {
-                    rowsAnnValuesCtx.fillStyle = "rgba(0,0,0,0.1)";
-                    rowsAnnValuesCtx.fillRect(0, (row - this.startRow) * rz, heatmap.rows.annotations.length * 10, rz);
-                    rowsAnnValuesCtx.fillStyle = "white";
-                }
-            }
-        }
+        rowAnnotationPanel.paint();
 
         // Columns annotations
-        if (heatmap.cols.annotations.length > 0) {
-
-            var colAnnHeaderCtx = canvasAnnColHeader.get()[0].getContext('2d');
-            colAnnHeaderCtx.clearRect(0, 0, colAnnHeaderCtx.canvas.width, colAnnHeaderCtx.canvas.height);
-            colAnnHeaderCtx.fillStyle = "rgb(51,51,51)";
-            colAnnHeaderCtx.textAlign = "right";
-            colAnnHeaderCtx.textBaseline = "middle";
-            colAnnHeaderCtx.font = "bold 11px Helvetica Neue,Helvetica,Arial,sans-serif";
-
-            for (i = 0; i < heatmap.cols.annotations.length; i++) {
-                var value = heatmap.cols.header[heatmap.cols.annotations[i]];
-                colAnnHeaderCtx.fillText(value, 200 - textSpacing, (i * 10) + 5);
-            }
-
-            var colAnnValuesCtx = canvasAnnCols.get()[0].getContext('2d');
-            colAnnValuesCtx.clearRect(0, 0, colAnnValuesCtx.canvas.width, colAnnValuesCtx.canvas.height);
-            for (i = 0; i < heatmap.cols.annotations.length; i++) {
-                for (var col = this.startCol; col < this.endCol; col++) {
-
-                    var field = heatmap.cols.annotations[i];
-                    value = heatmap.cols.getValue(col, field);
-
-                    if (value != null) {
-                        var color = heatmap.cols.decorators[field].toColor(value);
-                        colAnnValuesCtx.fillStyle = color;
-                        colAnnValuesCtx.fillRect((col - this.startCol) * cz, i * 10, cz, 10);
-                    }
-                }
-            }
-
-            for (var col = this.startCol; col < this.endCol; col++) {
-                if ($.inArray(heatmap.cols.order[col], heatmap.cols.selected) > -1) {
-                    colAnnValuesCtx.fillStyle = "rgba(0,0,0,0.1)";
-                    colAnnValuesCtx.fillRect((col - this.startCol) * cz, 0, cz, heatmap.cols.annotations.length * 10);
-                    colAnnValuesCtx.fillStyle = "white";
-                }
-            }
-        }
+        columnAnnotationPanel.paint();
 
         // Cells
         cellsBodyPanel.paint();

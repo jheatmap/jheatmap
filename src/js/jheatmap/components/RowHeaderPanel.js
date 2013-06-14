@@ -1,5 +1,5 @@
 
-jheatmap.components.RowsHeaderPanel = function(drawer, heatmap) {
+jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
 
     this.heatmap = heatmap;
 
@@ -193,7 +193,7 @@ jheatmap.components.RowsHeaderPanel = function(drawer, heatmap) {
 
 };
 
-jheatmap.components.RowsHeaderPanel.prototype.paint = function() {
+jheatmap.components.RowHeaderPanel.prototype.paint = function() {
 
     var heatmap = this.heatmap;
 

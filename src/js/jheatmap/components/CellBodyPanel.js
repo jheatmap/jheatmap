@@ -1,5 +1,5 @@
 
-jheatmap.components.CellsBodyPanel = function(drawer, heatmap) {
+jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
     this.heatmap = heatmap;
 
     // Create markup
@@ -218,7 +218,7 @@ jheatmap.components.CellsBodyPanel = function(drawer, heatmap) {
 
 };
 
-jheatmap.components.CellsBodyPanel.prototype.paint = function() {
+jheatmap.components.CellBodyPanel.prototype.paint = function() {
 
     var heatmap = this.heatmap;
     var rz = heatmap.rows.zoom;
