@@ -1224,12 +1224,35 @@ jheatmap.sorters.AggregationValueSorter.prototype.sort = function(heatmap, sortT
     }
 
     var asc = this.asc;
-    sortDimension.order.stableSort(function (o_a, o_b) {
+
+    var compareFunction = function (o_a, o_b) {
         var v_a = aggregation[o_a];
         var v_b = aggregation[o_b];
         var val = (asc ? 1 : -1);
         return (v_a == v_b) ? 0 : (v_a > v_b ? val : -val);
-    });
+    };
+
+
+    if (sortDimension.selected.length == 0) {
+        sortDimension.order.stableSort(compareFunction);
+    } else {
+
+        // Un select all elements that are not visible
+        var isVisible = function(x) {return sortDimension.order.indexOf(x)!=-1};
+        sortDimension.selected = sortDimension.selected.filter(isVisible);
+
+        // Sort the selected and visible items
+        sortDimension.selected.stableSort(compareFunction);
+
+        // Map selected order to all visible items.
+        var isNotSelected = function(x) {return sortDimension.selected.indexOf(x)==-1};
+        var c=0;
+        sortDimension.order = sortDimension.order.map(function(x){
+            return isNotSelected(x) ? x : sortDimension.selected[c++];
+        });
+    }
+
+
 
 };
 /**
@@ -1306,10 +1329,10 @@ jheatmap.sorters.DefaultSorter.prototype.sort = function(heatmap, sortType) {
  *
  * @class
  */
-jheatmap.sorters.MutualExclusiveSorter = function (field, asc) {
+jheatmap.sorters.MutualExclusiveSorter = function (field, asc, indices) {
     this.field = field;
     this.asc = asc;
-    this.indices = [];
+    this.indices = indices;
 };
 
 /**
@@ -1323,12 +1346,21 @@ jheatmap.sorters.MutualExclusiveSorter.prototype.sort = function(heatmap, sortTy
     var otherType = (sortType == "rows" ? "columns" : "rows");
     var sortDimension = (sortType == "rows" ? heatmap.rows : heatmap.cols);
 
-    var sorter = new jheatmap.sorters.AggregationValueSorter(this.field, this.asc);
+    var sorter = new jheatmap.sorters.AggregationValueSorter(this.field, this.asc, this.indices);
     sorter.sort(heatmap, sortType);
 
     sorter.indices = [ 0 ];
-    for (var i = sortDimension.order.length - 1; i >= 0; i--) {
-        sorter.indices[0] = sortDimension.order[i];
+
+    var selection;
+    if (sortDimension.selected.length == 0) {
+        selection = sortDimension.order;
+    } else {
+        var isSelected = function(x) {return sortDimension.selected.indexOf(x)>-1};
+        selection = sortDimension.order.filter(isSelected);
+    }
+
+    for (var i = selection.length - 1; i >= 0; i--) {
+        sorter.indices[0] = selection[i];
         sorter.sort(heatmap, otherType);
     }
 
@@ -1473,7 +1505,7 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
 
                 details.html(boxHtml);
                 boxWidth = 300;
-                boxHeight = 60 + (heatmap.cells.header.length * 20);
+                boxHeight = 70 + (heatmap.cells.header.length * 25);
 
 
                 var wHeight = $(document).height();
@@ -1536,45 +1568,34 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
 
     };
 
+    var col, row;
+    var x, y;
+    var startWheel = new Date().getTime();
+
     var zoomHeatmap = function (zoomin, col, row) {
 
         var ncz = null;
         var nrz = null;
+
         if (zoomin) {
-
-            ncz = heatmap.rows.zoom + 3;
-            ncz = ncz < 3 ? 3 : ncz;
-            ncz = ncz > 32 ? 32 : ncz;
-
-            // Zoom rows
+            ncz = heatmap.cols.zoom + 3;
             nrz = heatmap.rows.zoom + 3;
-            nrz = nrz < 3 ? 3 : nrz;
-            nrz = nrz > 32 ? 32 : nrz;
-
-            var ml = Math.round(col - heatmap.offset.left - ((heatmap.cols.zoom * (col - heatmap.offset.left)) / ncz));
-            var mt = Math.round(row - heatmap.offset.top - ((heatmap.rows.zoom * (row - heatmap.offset.top)) / nrz));
-
-            heatmap.offset.left += ml;
-            heatmap.offset.top += mt;
         } else {
-
             ncz = heatmap.cols.zoom - 3;
-            ncz = ncz < 3 ? 3 : ncz;
-            ncz = ncz > 32 ? 32 : ncz;
-
-            // Zoom rows
             nrz = heatmap.rows.zoom - 3;
-            nrz = nrz < 3 ? 3 : nrz;
-            nrz = nrz > 32 ? 32 : nrz;
-
-            var ml = Math.round(col - heatmap.offset.left - ((heatmap.cols.zoom * (col - heatmap.offset.left)) / ncz));
-            var mt = Math.round(row - heatmap.offset.top - ((heatmap.rows.zoom * (row - heatmap.offset.top)) / nrz));
-
-            heatmap.offset.left += ml;
-            heatmap.offset.top += mt;
         }
 
+        ncz = ncz < 3 ? 3 : ncz;
+        ncz = ncz > 32 ? 32 : ncz;
+
+        nrz = nrz < 3 ? 3 : nrz;
+        nrz = nrz > 32 ? 32 : nrz;
+
         if (!(nrz == heatmap.rows.zoom && ncz == heatmap.cols.zoom)) {
+
+            heatmap.offset.left = col - Math.floor(x / ncz);
+            heatmap.offset.top  = row - Math.floor(y / nrz);
+
             heatmap.cols.zoom = ncz;
             heatmap.rows.zoom = nrz;
             drawer.paint();
@@ -1584,8 +1605,8 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
     var onGestureEnd = function (e) {
         e.preventDefault();
 
-        var col = Math.round(startCol + ((endCol - startCol) / 2));
-        var row = Math.round(startRow + ((endRow - startRow) / 2));
+        col = Math.round(heatmap.offset.left + ((heatmap.offset.right - heatmap.offset.left) / 2));
+        row = Math.round(heatmap.offset.top + ((heatmap.offset.bottom - heatmap.offset.top) / 2));
         var zoomin = e.originalEvent.scale > 1;
 
         zoomHeatmap(zoomin, col, row);
@@ -1596,10 +1617,18 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
     };
 
     var onMouseWheel = function (e, delta, deltaX, deltaY) {
+        e.preventDefault();
 
-        var pos = $(e.target).offset();
-        var col = Math.floor((e.pageX - pos.left) / heatmap.cols.zoom) + heatmap.offset.left;
-        var row = Math.floor((e.pageY - pos.top) / heatmap.rows.zoom) + heatmap.offset.top;
+        var currentTime = new Date().getTime();
+        if ((currentTime - startWheel) > 500) {
+            var pos = $(e.target).offset();
+            x = (e.pageX - pos.left);
+            y = (e.pageY - pos.top);
+            col = Math.floor(x / heatmap.cols.zoom) + heatmap.offset.left;
+            row = Math.floor(y / heatmap.rows.zoom) + heatmap.offset.top;
+        }
+        startWheel = currentTime;
+
         var zoomin = delta / 120 > 0;
         zoomHeatmap(zoomin, col, row);
     };
@@ -1816,7 +1845,7 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
             } else {
                 var y = e.pageY - $(e.target).offset().top;
                 if (y > 140) {
-                    heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), heatmap.cols.selected.slice(0));
+                    heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), heatmap.cols.selected.slice(0));
                     heatmap.rows.sorter.sort(heatmap, "rows");
                 } else {
                     var unselectCols = [ col ];
@@ -1934,7 +1963,22 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
             drawer.paint();
         }
 
-    }
+        // 'A' or 'a'
+        if (e.keyCode == 97 || e.charCode == 65) {
+            heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
+            heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.rows.sorter.asc, heatmap.cols.selected.slice(0));
+            heatmap.rows.sorter.sort(heatmap, "rows");
+            drawer.paint();
+        }
+
+        // 'M' or 'm'
+        if (e.keyCode == 109 || e.charCode == 77) {
+            heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
+            heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.rows.sorter.asc, heatmap.cols.selected.slice(0));
+            heatmap.rows.sorter.sort(heatmap, "rows");
+            drawer.paint();
+        }
+    };
 
     // Bind events
     this.canvas.bind('mousedown', function (e) {
@@ -2329,7 +2373,7 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
 
                 var x = e.pageX - $(e.target).offset().left;
                 if (x > 220) {
-                    heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter(heatmap.cells.selectedValue, !(heatmap.cols.sorter.asc), heatmap.rows.selected.slice(0));
+                    heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, !(heatmap.cols.sorter.asc), heatmap.rows.selected.slice(0));
                     heatmap.cols.sorter.sort(heatmap, "columns");
                 } else {
                     var unselectRows = [ row ];
@@ -2451,6 +2495,22 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
             drawer.paint();
         }
 
+        // 'A' or 'a'
+        if (e.keyCode == 97 || e.charCode == 65) {
+            heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
+            heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.cols.sorter.asc, heatmap.rows.selected.slice(0));
+            heatmap.cols.sorter.sort(heatmap, "columns");
+            drawer.paint();
+        }
+
+        // 'M' or 'm'
+        if (e.keyCode == 109 || e.charCode == 77) {
+            heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
+            heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.cols.sorter.asc, heatmap.rows.selected.slice(0));
+            heatmap.cols.sorter.sort(heatmap, "columns");
+            drawer.paint();
+        }
+
     };
 
     // Bind events
@@ -2558,6 +2618,8 @@ jheatmap.components.ShortcutsPanel = function(container) {
         "<dt>H</dt><dd>Hide selected rows/columns</dd>" +
         "<dt>S</dt><dd>Show hidden rows/columns</dd>" +
         "<dt>R</dt><dd>Remove selection from rows/columns</dd>" +
+        "<dt>A</dt><dd>Use aggregation sort at rows/columns</dd>" +
+        "<dt>M</dt><dd>Use mutual exclusive sort at rows/columns</dd>" +
         "</dl>" +
         "</div>" +
         "<div class='modal-footer'>" +
@@ -2879,6 +2941,11 @@ jheatmap.HeatmapDimension = function (heatmap) {
      * @type {jheatmap.sorters.DefaultSorter}
      */
     this.sorter = new jheatmap.sorters.DefaultSorter();
+
+    /**
+     * This is the default sorter to be used when sorting multiple selected items.
+     */
+    this.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
 
     /**
      * Active user filters on items

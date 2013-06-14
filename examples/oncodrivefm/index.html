@@ -43,6 +43,8 @@
 
                 // Mutually exclusive sorting
                 heatmap.rows.sorter = new jheatmap.sorters.MutualExclusiveSorter(2, false);
+                heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
+                heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
 
 			}
 		});
