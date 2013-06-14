@@ -47,7 +47,7 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
             } else {
                 var y = e.pageY - $(e.target).offset().top;
                 if (y > 140) {
-                    heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), heatmap.cols.selected.slice(0));
+                    heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), heatmap.cols.selected.slice(0));
                     heatmap.rows.sorter.sort(heatmap, "rows");
                 } else {
                     var unselectCols = [ col ];

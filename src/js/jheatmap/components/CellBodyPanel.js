@@ -65,7 +65,7 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
 
                 details.html(boxHtml);
                 boxWidth = 300;
-                boxHeight = 60 + (heatmap.cells.header.length * 20);
+                boxHeight = 70 + (heatmap.cells.header.length * 25);
 
 
                 var wHeight = $(document).height();

@@ -44,11 +44,34 @@ jheatmap.sorters.AggregationValueSorter.prototype.sort = function(heatmap, sortT
     }
 
     var asc = this.asc;
-    sortDimension.order.stableSort(function (o_a, o_b) {
+
+    var compareFunction = function (o_a, o_b) {
         var v_a = aggregation[o_a];
         var v_b = aggregation[o_b];
         var val = (asc ? 1 : -1);
         return (v_a == v_b) ? 0 : (v_a > v_b ? val : -val);
-    });
+    };
+
+
+    if (sortDimension.selected.length == 0) {
+        sortDimension.order.stableSort(compareFunction);
+    } else {
+
+        // Un select all elements that are not visible
+        var isVisible = function(x) {return sortDimension.order.indexOf(x)!=-1};
+        sortDimension.selected = sortDimension.selected.filter(isVisible);
+
+        // Sort the selected and visible items
+        sortDimension.selected.stableSort(compareFunction);
+
+        // Map selected order to all visible items.
+        var isNotSelected = function(x) {return sortDimension.selected.indexOf(x)==-1};
+        var c=0;
+        sortDimension.order = sortDimension.order.map(function(x){
+            return isNotSelected(x) ? x : sortDimension.selected[c++];
+        });
+    }
+
+
 
 };

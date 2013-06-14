@@ -51,7 +51,7 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
 
                 var x = e.pageX - $(e.target).offset().left;
                 if (x > 220) {
-                    heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter(heatmap.cells.selectedValue, !(heatmap.cols.sorter.asc), heatmap.rows.selected.slice(0));
+                    heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, !(heatmap.cols.sorter.asc), heatmap.rows.selected.slice(0));
                     heatmap.cols.sorter.sort(heatmap, "columns");
                 } else {
                     var unselectRows = [ row ];

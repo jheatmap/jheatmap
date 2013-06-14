@@ -46,6 +46,11 @@ jheatmap.HeatmapDimension = function (heatmap) {
     this.sorter = new jheatmap.sorters.DefaultSorter();
 
     /**
+     *
+     */
+    this.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
+
+    /**
      * Active user filters on items
      * @type {jheatmap.HeatmapFilters}
      */
