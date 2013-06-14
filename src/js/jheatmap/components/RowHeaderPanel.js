@@ -173,6 +173,22 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
             drawer.paint();
         }
 
+        // 'A' or 'a'
+        if (e.keyCode == 97 || e.charCode == 65) {
+            heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
+            heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.cols.sorter.asc, heatmap.rows.selected.slice(0));
+            heatmap.cols.sorter.sort(heatmap, "columns");
+            drawer.paint();
+        }
+
+        // 'M' or 'm'
+        if (e.keyCode == 109 || e.charCode == 77) {
+            heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
+            heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.cols.sorter.asc, heatmap.rows.selected.slice(0));
+            heatmap.cols.sorter.sort(heatmap, "columns");
+            drawer.paint();
+        }
+
     };
 
     // Bind events
