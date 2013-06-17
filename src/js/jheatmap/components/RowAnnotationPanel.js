@@ -14,7 +14,62 @@ jheatmap.components.RowAnnotationPanel = function(drawer, heatmap) {
     this.bodyCanvas = $("<canvas width='" + heatmap.rows.annotations.length * 10 + "' height='" + heatmap.size.height + "'></canvas>");
     this.body.append(this.bodyCanvas);
 
-    // Bind vents
+    // Bind events
+    this.bodyCanvas.click(function (e) {
+
+        var position = $(e.target).offset();
+        var row = Math.floor((e.originalEvent.pageY - position.top) / heatmap.rows.zoom) + heatmap.offset.top;
+
+        var details = $('table.heatmap div.detailsbox');
+        var boxTop = e.pageY - $(heatmap.options.container).offset().top;
+        var boxLeft = e.pageX - $(heatmap.options.container).offset().left;
+        var boxWidth;
+        var boxHeight;
+
+        var boxHtml = "<dl class='dl-horizontal'>";
+
+        for (var i = 0; i < heatmap.rows.annotations.length; i++) {
+            var field = heatmap.rows.annotations[i];
+            boxHtml += "<dt>" + heatmap.rows.header[field] + ":</dt><dd>";
+            var val = heatmap.rows.getValue(row, field);
+            if (!isNaN(val) && (val % 1 != 0)) {
+                val = Number(val).toFixed(3);
+            }
+            boxHtml += val;
+            boxHtml += "</dd>";
+        }
+        boxHtml += "</dl>";
+
+        details.html(boxHtml);
+        boxWidth = 300;
+        boxHeight = 26 + heatmap.rows.annotations.length * 22;
+
+        var wHeight = $(document).height();
+        var wWidth = $(document).width();
+
+        if (boxTop + boxHeight > wHeight) {
+            boxTop -= boxHeight;
+        }
+
+        if (boxLeft + boxWidth > wWidth) {
+            boxLeft -= boxWidth;
+        }
+
+        details.css('left', boxLeft);
+        details.css('top', boxTop);
+        details.css('width', boxWidth);
+        details.css('height', boxHeight);
+
+        details.css('display', 'block');
+        details.bind('click', function () {
+            $(this).css('display', 'none');
+        });
+
+
+
+    });
+
+
     this.headerCanvas.click(function (e) {
         var pos = $(e.target).offset();
         var i = Math.floor((e.pageX - pos.left) / 10);
