@@ -79,6 +79,7 @@ jheatmap.readers.TsvMatrixReader.prototype.read = function (heatmap, initialize)
                     } else {
                         valuesRowKey = 1;
                         heatmap.rows.header = [ heatmap.cells.header[ valuesRowKey ] ];
+                        heatmap.cells.header[valuesRowKey] = undefined;
                     }
                 }
 
@@ -113,6 +114,7 @@ jheatmap.readers.TsvMatrixReader.prototype.read = function (heatmap, initialize)
                     } else {
                         valuesColKey = 0;
                         heatmap.cols.header = [ heatmap.cells.header[ valuesColKey ]];
+                        heatmap.cells.header[valuesColKey] = undefined;
                     }
                 }
 
