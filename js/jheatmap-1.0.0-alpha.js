@@ -1323,11 +1323,10 @@ jheatmap.sorters.DefaultSorter = function () {
 jheatmap.sorters.DefaultSorter.prototype.sort = function(heatmap, sortType) {
 };
 /**
- * This is the default sorter. In fact it's a NO sorter, because it don't do anything.
- * It's also the signature that all the sorters must implement.
+ * This is a mutual exclusive sorter.
  *
  * @example
- * new jheatmap.sorters.DefaultSorter();
+ * new jheatmap.sorters.MutualExclusiveSorter();
  *
  * @class
  */
@@ -1452,6 +1451,8 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
     // Events
     var downX = null;
     var downY = null;
+    var lastX = null;
+    var lastY = null;
 
     var onMouseUp = function (e) {
         e.preventDefault();
@@ -1543,8 +1544,8 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
 
         if (downX != null) {
             var position = $(e.target).offset();
-            var pX = e.pageX - position.left - downX;
-            var pY = e.pageY - position.top - downY;
+            var pX = e.pageX - position.left - lastX;
+            var pY = e.pageY - position.top - lastY;
 
             var c = Math.round(pX / heatmap.cols.zoom);
             var r = Math.round(pY / heatmap.rows.zoom);
@@ -1554,8 +1555,8 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
                 heatmap.offset.top -= r;
                 heatmap.offset.left -= c;
                 drawer.paint();
-                downX = e.pageX - position.left;
-                downY = e.pageY - position.top;
+                lastX = e.pageX - position.left;
+                lastY = e.pageY - position.top;
             }
         }
 
@@ -1567,6 +1568,8 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
         var position = $(e.target).offset();
         downX = e.pageX - position.left;
         downY = e.pageY - position.top;
+        lastX = downX;
+        lastY = downY;
 
     };
 
