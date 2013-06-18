@@ -21,6 +21,15 @@
                 {
                     data: {
                         values: new jheatmap.readers.TsvMatrixReader({ url: "step1-data.tsv" })
+                    },
+
+                    init: function (heatmap) {
+                        heatmap.cells.decorators["observed"] = new jheatmap.decorators.Linear(
+                                {
+                                    ranges: [[0,100]],
+                                    colors: [[[255,255,255],[255,0,0]]]
+                                });
+                        heatmap.cells.decorators["left-p-value"] = new jheatmap.decorators.PValue();
                     }
                 }
         );
@@ -32,17 +41,14 @@
     <div class="row">
         <ul class="nav nav-pills">
             <li><a href="step0.html">Step 0</a></li>
-            <li class="active">
-                <a href="step1.html">Step 1</a>
-            </li>
-            <li><a href="step2.html">Step 2</a></li>
+            <li><a href="step1.html">Step 1</a></li>
+            <li class="active"><a href="step2.html">Step 2</a></li>
             <li><a href="step3.html">Step 3</a></li>
         </ul>
         <p>
-           The minimum heatmap initialization requires that you define <strong>a data reader</strong> with the url of the file to load,
-           the file must be at the same domain than the html file. Check
-           <a href="../../documentation/out/jheatmap.readers.html">readers</a> documentation for more details on data
-            file formats and readers parameters.
+           A <strong>decorator</strong> is a function that define the color scale to use when painting the heatmap
+           cells. Define the decorators of your cell values as show below. Check
+           <a href="../../documentation/out/jheatmap.decorators.html">decorators</a> documentation for more details.
         </p>
     </div>
 
@@ -81,6 +87,12 @@
     $('#source').html(source);
     window.prettyPrint && prettyPrint();
 
+    $('#source ol.linenums li').each(function(idx, li) {
+        if ($.inArray(idx, [7,8,9,10,11,12,13,14]) != -1) {
+            $(li).css("background-color", "#FFFFB3");
+        }
+    });
+
     jQuery.ajax({
 
         url: "step1-data.tsv",
@@ -89,6 +101,7 @@
 
         success: function (file) {
             $('#data').html(file);
+            var listItems = $("#productList li");
         }
     });
 

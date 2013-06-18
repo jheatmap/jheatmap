@@ -15,6 +15,7 @@
 
         <echo message="Update examples heads"/>
 
+        <filter token="jheatmap.version" value="${jheatmap.version}"/>
         <filter token="jheatmap.css" value="../../css/jheatmap-${jheatmap.version}-min.css"/>
         <filter token="jheatmap.js" value="../../js/jheatmap-${jheatmap.version}-min.js"/>
 
@@ -31,6 +32,7 @@
 
         <echo message="Update examples heads"/>
 
+        <filter token="jheatmap.version" value="${jheatmap.version}"/>
         <filter token="jheatmap.css" value="../../css/jheatmap-${jheatmap.version}.css"/>
         <filter token="jheatmap.js" value="../../js/jheatmap-${jheatmap.version}.js"/>
 
