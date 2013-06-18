@@ -2,7 +2,10 @@
 <head>
     <title>jHeatmap</title>
 
+    <link href="images/colorbox/colorbox.css" rel="stylesheet" type="text/css">
+
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="images/colorbox/jquery.colorbox-min.js"></script>
 
     <style type="text/css">
         * {
@@ -125,6 +128,10 @@
             s.parentNode.insertBefore(ga, s);
         })();
 
+
+        $(document).ready(function(){
+            $(".iframe").colorbox({iframe:true, width:"95%", height:"95%"});
+        });
     </script>
 </head>
 <body>
@@ -149,10 +156,10 @@
         <dt>Examples</dt>
         <dd>
             <ul>
-                <li><a href="examples/enrichment/index.html">Enrichment</a></li>
-                <li><a href="examples/median/index.html">Median</a></li>
-                <li><a href="examples/oncodrivefm/index.html">Oncodrivefm</a></li>
-                <li><a href="examples/bigmatrix/index.html">Two million cells matrix</a></li>
+                <li><a class="iframe cboxelement" href="examples/enrichment/index.html">Enrichment</a></li>
+                <li><a class="iframe cboxelement" href="examples/median/index.html">Median</a></li>
+                <li><a class="iframe cboxelement" href="examples/oncodrivefm/index.html">Oncodrivefm</a></li>
+                <li><a class="iframe cboxelement" href="examples/bigmatrix/index.html">Two million cells matrix</a></li>
             </ul>
         </dd>
         <dd class="clear"></dd>
@@ -160,11 +167,11 @@
         <dt>Documentation</dt>
         <dd>
             <ul>
-                <li><a href="documentation/quickstart.html">Quick start</a></li>
-                <li><a href="documentation/out/jheatmap.readers.html">Readers</a></li>
-                <li><a href="documentation/out/jheatmap.decorators.html">Decorators</a></li>
-                <li><a href="documentation/out/jheatmap.aggregators.html">Aggregators</a></li>
-                <li><a href="documentation/out/jheatmap.Heatmap.html">Heatmap class</a></li>
+                <li><a class="iframe cboxelement" href="examples/quickstart/step1.html">Quick start</a></li>
+                <li><a class="iframe cboxelement" href="documentation/out/jheatmap.readers.html">Readers</a></li>
+                <li><a class="iframe cboxelement" href="documentation/out/jheatmap.decorators.html">Decorators</a></li>
+                <li><a class="iframe cboxelement" href="documentation/out/jheatmap.aggregators.html">Aggregators</a></li>
+                <li><a class="iframe cboxelement" href="documentation/out/jheatmap.Heatmap.html">Heatmap class</a></li>
             </ul>
         </dd>
         <dd class="clear"></dd>

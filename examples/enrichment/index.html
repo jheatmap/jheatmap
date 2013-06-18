@@ -1,95 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>jHeatmap</title>
-<link href="@jheatmap.css@" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="@jquery.js@"></script>
-<script src="@jheatmap.js@" type="text/javascript"></script>
-<script>
-        $(document).ready(function() {
-                $('#heatmap').heatmap(
-                		{
-                			data : {
-                				rows : new jheatmap.readers.TsvTableReader({ url: "analysis-rows.tsv" }),
-                        		cols : new jheatmap.readers.TsvTableReader({ url: "analysis-columns.tsv" }),
-                        		values : new jheatmap.readers.TsvMatrixReader({ url: "analysis-results.tsv", orderedValues: true })
-                			},
-                			
-                			init : function(heatmap) {
-                				
-                				// Size
-                				heatmap.size.width = 600;
-                				heatmap.size.height = 600;
-                				
-                				// Setup default zoom 
-                				heatmap.cols.zoom = 12;
-                				heatmap.rows.zoom = 12;
-                				
-                				// Default cell value
-                				heatmap.cells.selectedValue = "left-p-value";
-                				
-                				// Configure decorators and aggregators
-                                var decoratorPValue = new jheatmap.decorators.PValue();
-                                var aggregatorPValue = new jheatmap.aggregators.PValue({});
-                				$.each( [
-                                    "left-p-value",
-                                    "right-p-value",
-                                    "two-tail-p-value",
-                                    "corrected-left-p-value",
-                                    "corrected-right-p-value",
-                                    "corrected-two-tail-p-value"], function(pos, value) {
-                					heatmap.cells.decorators[value] = decoratorPValue;
-                    				heatmap.cells.aggregators[value] = aggregatorPValue;
-                				});
-                				
-                				// Column annotations
-                				heatmap.cols.decorators["Ratio"] = new jheatmap.decorators.Constant({});
-                				heatmap.cols.decorators["Sex"] = new jheatmap.decorators.Categorical({
-                                        values: ["F", "M"],
-                                        colors: ["pink", "blue"]
-                                        });
-                				heatmap.cols.annotations = ["Ratio", "Sex"];
-                				
-                				// Row annotations
-                				heatmap.rows.decorators["p-value"] = decoratorPValue;
-                				heatmap.rows.annotations = ["p-value"];
-                				
-                				// Add filters
-                				heatmap.rows.filters.add(
-                						"Hide non-significant rows",
-                						new jheatmap.filters.NonSignificance(),
-                                        [
-                                                "left-p-value"
-                                        ],
-                						[
-                                                "left-p-value",
-                                                "right-p-value",
-                                                "two-tail-p-value",
-                                                "corrected-left-p-value",
-                                                "corrected-right-p-value",
-                                                "corrected-two-tail-p-value"
-                                        ]
-                                );
+    <title>jHeatmap</title>
+    <link href="@jheatmap.css@" rel="stylesheet" type="text/css"/>
+    <style>
+        /* To center the heatmap */
+        #heatmap { margin-top: 20px }
+        table.heatmap { margin: 0px auto; }
+    </style>
+    <script type="text/javascript" src="@jquery.js@"></script>
+    <script src="@jheatmap.js@" type="text/javascript"></script>
+    <script>
+        $(document).ready(function () {
+            $('#heatmap').heatmap(
+                    {
+                        data: {
+                            rows: new jheatmap.readers.TsvTableReader({ url: "analysis-rows.tsv" }),
+                            cols: new jheatmap.readers.TsvTableReader({ url: "analysis-columns.tsv" }),
+                            values: new jheatmap.readers.TsvMatrixReader({ url: "analysis-results.tsv", orderedValues: true })
+                        },
 
-                				// Sorting
-                				heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter("left-p-value");
-                                heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter("left-p-value");
+                        init: function (heatmap) {
 
-                			}
-                		}
-                );
+                            // Setup default zoom
+                            heatmap.cols.zoom = 12;
+                            heatmap.rows.zoom = 12;
+
+                            // Default cell value
+                            heatmap.cells.selectedValue = "left-p-value";
+
+                            // Configure decorators and aggregators
+                            var decoratorPValue = new jheatmap.decorators.PValue();
+                            var aggregatorPValue = new jheatmap.aggregators.PValue({});
+                            $.each([
+                                "left-p-value",
+                                "right-p-value",
+                                "two-tail-p-value",
+                                "corrected-left-p-value",
+                                "corrected-right-p-value",
+                                "corrected-two-tail-p-value"], function (pos, value) {
+                                heatmap.cells.decorators[value] = decoratorPValue;
+                                heatmap.cells.aggregators[value] = aggregatorPValue;
+                            });
+
+                            // Column annotations
+                            heatmap.cols.decorators["Ratio"] = new jheatmap.decorators.Constant({});
+                            heatmap.cols.decorators["Sex"] = new jheatmap.decorators.Categorical({
+                                values: ["F", "M"],
+                                colors: ["pink", "blue"]
+                            });
+                            heatmap.cols.annotations = ["Ratio", "Sex"];
+
+                            // Row annotations
+                            heatmap.rows.decorators["p-value"] = decoratorPValue;
+                            heatmap.rows.annotations = ["p-value"];
+
+                            // Add filters
+                            heatmap.rows.filters.add(
+                                    "Hide non-significant rows",
+                                    new jheatmap.filters.NonSignificance(),
+                                    [
+                                        "left-p-value"
+                                    ],
+                                    [
+                                        "left-p-value",
+                                        "right-p-value",
+                                        "two-tail-p-value",
+                                        "corrected-left-p-value",
+                                        "corrected-right-p-value",
+                                        "corrected-two-tail-p-value"
+                                    ]
+                            );
+
+                            // Sorting
+                            heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter("left-p-value");
+                            heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter("left-p-value");
+
+                        }
+                    }
+            );
         });
-        </script>
+    </script>
 </head>
 <body>
 
-    <div id="heatmap-loader">
-        <div class="background"></div>
-        <div class="loader">
-            <img src="../images/loading.gif">
-        </div>
+<div id="heatmap-loader">
+    <div class="background"></div>
+    <div class="loader">
+        <img src="../images/loading.gif">
     </div>
-	<div id="heatmap"></div>
-
+</div>
+<div id="heatmap"></div>
 </body>
 </html>

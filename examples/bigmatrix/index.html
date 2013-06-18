@@ -15,10 +15,6 @@
                 			
                 			init : function(heatmap) {
 
-                                // Size
-                                heatmap.size.width = 600;
-                                heatmap.size.height = 600;
-
                                 // Default zoom
                                 heatmap.cols.zoom = 5;
                                 heatmap.rows.zoom = 5;
@@ -37,10 +33,6 @@
                                         [ 0 ],
                 						[ 0 ]
                                 );
-
-                				// Default sort
-                                heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter(0);
-                                heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter(0);
 
                 			}
                 		}

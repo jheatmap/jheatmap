@@ -17,13 +17,9 @@ jheatmap.Heatmap = function (options) {
     /**
      * Size of the cells panel
      *
-     * @property {number}   width   - Cells panel width
-     * @property {number}   height  - Cells panel heigth
+     * @type {jheatmap.HeatmapSize}
      */
-    this.size = {
-        width:800,
-        height:800
-    };
+    this.size = new jheatmap.HeatmapSize(this);
 
     /**
      * Position of the first cell on the top left corner
@@ -71,9 +67,12 @@ jheatmap.Heatmap = function (options) {
         this.rows.init();
         this.cols.init();
         this.cells.init();
+        this.size.init();
 
         // Call user init function
-        this.options.init(this);
+        if (this.options.init != undefined) {
+            this.options.init(this);
+        }
 
         // Reindex configuration. Needed to let the user use position or header id interchangeably
         this.rows.reindex(this);

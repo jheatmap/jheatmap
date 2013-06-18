@@ -61,7 +61,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
 
         var scrollRow = $("<tr class='horizontalScroll'>");
         scrollRow.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 10px; padding-top: 7px;'>" +
-            "<span>visualized with <a href='http://bg.upf.edu/jheatmap/' target='_blank'>jHeatmap</a></span>" +
+            "<span>visualized with <a href='http://jheatmap.github.io/jheatmap' target='_blank'>jHeatmap</a></span>" +
             "</td>");
 
         scrollRow.append(horizontalScrollBar.markup);

@@ -49,12 +49,20 @@ jheatmap.HeatmapCells.prototype.init = function () {
 
     // Initialize decorators & aggregators
     var f;
-    var defaultDecorator = new jheatmap.decorators.Constant({});
+    var defaultDecorator = new jheatmap.decorators.Linear();
     var defaultAggregator = new jheatmap.aggregators.Addition();
     for (f = 0; f < this.header.length; f++) {
         this.decorators[f] = defaultDecorator;
         this.aggregators[f] = defaultAggregator;
     }
+
+    for (f = 0; f < this.header.length; f++) {
+        if (this.header[f] != undefined) {
+            this.selectedValue = f;
+            break;
+        }
+    }
+
 };
 
 jheatmap.HeatmapCells.prototype.reindex = function () {
