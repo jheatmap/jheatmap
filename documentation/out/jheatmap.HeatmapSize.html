@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>JSDoc: Class: Median</title>
+	<title>JSDoc: Class: HeatmapSize</title>
 	
 	<script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -15,21 +15,21 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Median</h1>
+    <h1 class="page-title">Class: HeatmapSize</h1>
     
     
     
     <section>
      
     <header>
-        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.decorators.html">.decorators</a>.</span>Median</h2>
+        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a>.</span>HeatmapSize</h2>
         
     </header>  
     
     <article>
         <div class="container-overview">
         <dt>
-    <h4 class="name" id="Median"><span class="type-signature"></span>new Median</h4>
+    <h4 class="name" id="HeatmapSize"><span class="type-signature"></span>new HeatmapSize</h4>
     
     
 </dt>
@@ -37,91 +37,13 @@
     
     
     <p class="description">
-        Median decorator
+        Heatmap size
     </p>
     
     
     
     
-    <h5>Parameters:</h5>
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Argument</th>
-		
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.maxValue</code></td>
-            
-            
-            <td class="type">
-            number
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                3
-                </td>
-            
-            
-            <td class="description last">Absolute maximum and minimum of the median</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.nullColor</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [255,255,255]
-                </td>
-            
-            
-            <td class="description last">NaN values color [r,g,b]</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
+    
     
     <dl class="details">
     
@@ -142,7 +64,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 891</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 3401</li></ul></dd>
 	
     
     
@@ -159,9 +81,7 @@
     
     
     
-    <h5>Example</h5>
-    <pre class="sh_javascript"><code>new jheatmap.decorators.Median({ maxValue: 4 });</code></pre>
-
+    
 
 </dd>
 
@@ -178,67 +98,21 @@
         
         
         
-        
-        
             
-            <h3 class="subsection-title">Methods</h3>
+            <h3 class="subsection-title">Members</h3>
             
-            <dl><dt>
-    <h4 class="name" id="toColor"><span class="type-signature"></span>toColor</h4>
+            <dl>
+<dt>
+    <h4 class="name" id="height"><span class="type-signature"></span>height<span class="type-signature"> :number</span></h4>
     
     
 </dt>
 <dd>
     
-    
     <p class="description">
-        Convert a value to a color
+        Header of the items values
     </p>
     
-    
-    
-    
-    <h5>Parameters:</h5>
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-            
-            <td class="type">
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The cell value</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     <dl class="details">
     
@@ -259,7 +133,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 903</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 3416</li></ul></dd>
 	
     
     
@@ -271,24 +145,56 @@
 
     
     
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-<div class="param-desc">
-    The corresponding color string definition.
-</div>
+</dd>
 
-
+<dt>
+    <h4 class="name" id="width"><span class="type-signature"></span>width<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <p class="description">
+        Heatmap width in pixels
+    </p>
+    
+    
+    <dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 3409</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
 
     
     
-
 </dd>
 </dl>
             
+        
+        
         
         
         

@@ -473,6 +473,7 @@ jheatmap.readers.TsvMatrixReader.prototype.read = function (heatmap, initialize)
                     } else {
                         valuesRowKey = 1;
                         heatmap.rows.header = [ heatmap.cells.header[ valuesRowKey ] ];
+                        heatmap.cells.header[valuesRowKey] = undefined;
                     }
                 }
 
@@ -507,6 +508,7 @@ jheatmap.readers.TsvMatrixReader.prototype.read = function (heatmap, initialize)
                     } else {
                         valuesColKey = 0;
                         heatmap.cols.header = [ heatmap.cells.header[ valuesColKey ]];
+                        heatmap.cells.header[valuesColKey] = undefined;
                     }
                 }
 
@@ -2840,13 +2842,9 @@ jheatmap.Heatmap = function (options) {
     /**
      * Size of the cells panel
      *
-     * @property {number}   width   - Cells panel width
-     * @property {number}   height  - Cells panel heigth
+     * @type {jheatmap.HeatmapSize}
      */
-    this.size = {
-        width:800,
-        height:800
-    };
+    this.size = new jheatmap.HeatmapSize(this);
 
     /**
      * Position of the first cell on the top left corner
@@ -2894,9 +2892,12 @@ jheatmap.Heatmap = function (options) {
         this.rows.init();
         this.cols.init();
         this.cells.init();
+        this.size.init();
 
         // Call user init function
-        this.options.init(this);
+        if (this.options.init != undefined) {
+            this.options.init(this);
+        }
 
         // Reindex configuration. Needed to let the user use position or header id interchangeably
         this.rows.reindex(this);
@@ -2970,12 +2971,20 @@ jheatmap.HeatmapCells.prototype.init = function () {
 
     // Initialize decorators & aggregators
     var f;
-    var defaultDecorator = new jheatmap.decorators.Constant({});
+    var defaultDecorator = new jheatmap.decorators.Linear();
     var defaultAggregator = new jheatmap.aggregators.Addition();
     for (f = 0; f < this.header.length; f++) {
         this.decorators[f] = defaultDecorator;
         this.aggregators[f] = defaultAggregator;
     }
+
+    for (f = 0; f < this.header.length; f++) {
+        if (this.header[f] != undefined) {
+            this.selectedValue = f;
+            break;
+        }
+    }
+
 };
 
 jheatmap.HeatmapCells.prototype.reindex = function () {
@@ -3184,7 +3193,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
 
         var scrollRow = $("<tr class='horizontalScroll'>");
         scrollRow.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 10px; padding-top: 7px;'>" +
-            "<span>visualized with <a href='http://bg.upf.edu/jheatmap/' target='_blank'>jHeatmap</a></span>" +
+            "<span>visualized with <a href='http://jheatmap.github.io/jheatmap' target='_blank'>jHeatmap</a></span>" +
             "</td>");
 
         scrollRow.append(horizontalScrollBar.markup);
@@ -3383,6 +3392,69 @@ jheatmap.HeatmapFilters.prototype.filter = function (heatmap, filterType) {
     }
 
 };
+/**
+ *
+ * Heatmap size
+ *
+ * @class
+ */
+jheatmap.HeatmapSize = function (heatmap) {
+
+
+    /**
+     * Heatmap width in pixels
+     *
+     * @type {number}
+     */
+    this.width = 400;
+
+    /**
+     * Header of the items values
+     *
+     * @type {number}
+     */
+    this.height = 400;
+
+
+    this.heatmap = heatmap;
+
+};
+
+jheatmap.HeatmapSize.prototype.init = function () {
+
+    var top = this.heatmap.options.container.offset().top;
+    this.heatmap.options.container.css("overflow", "hidden");
+    var wHeight = $(window).height();
+
+    this.width = this.heatmap.options.container.width() - 290;
+    this.height = wHeight - top - 291;
+
+    // Check a minimum width
+    if (this.width < 100) {
+        this.width = 200;
+    }
+
+    // Check a maximum width
+    var maxWidth = (this.heatmap.cols.values.length * this.heatmap.cols.zoom);
+    if (this.width > maxWidth) {
+        this.width = maxWidth;
+    }
+
+    // Check minimum height
+    if (this.height < 100) {
+        if (wHeight > 500) {
+            this.height = wHeight - 250;
+        } else {
+            this.height = 200;
+        }
+    }
+
+    // Check maximum height
+    var maxHeight = (this.heatmap.rows.values.length * this.heatmap.rows.zoom);
+    if (this.height > maxHeight) {
+        this.height = maxHeight;
+    }
+};
 /* =========================================================
  * bootstrap-modal.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#modals
@@ -3401,7 +3473,6 @@ jheatmap.HeatmapFilters.prototype.filter = function (heatmap, filterType) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ========================================================= */
-
 
 !function ($) {
 
