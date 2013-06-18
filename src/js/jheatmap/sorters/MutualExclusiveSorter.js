@@ -1,9 +1,8 @@
 /**
- * This is the default sorter. In fact it's a NO sorter, because it don't do anything.
- * It's also the signature that all the sorters must implement.
+ * This is a mutual exclusive sorter.
  *
  * @example
- * new jheatmap.sorters.DefaultSorter();
+ * new jheatmap.sorters.MutualExclusiveSorter();
  *
  * @class
  */
