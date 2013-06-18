@@ -21,6 +21,19 @@
                 {
                     data: {
                         values: new jheatmap.readers.TsvMatrixReader({ url: "step1-data.tsv" })
+                    },
+
+                    init: function (heatmap) {
+                        // Default cell value to show
+                        heatmap.cells.selectedValue = "left-p-value";
+
+                        heatmap.cells.decorators["observed"] = new jheatmap.decorators.Linear(
+                                {
+                                    ranges: [[0,100]],
+                                    colors: [[[255,255,255],[255,0,0]]]
+                                });
+                        heatmap.cells.decorators["left-p-value"] = new jheatmap.decorators.PValue();
+                        heatmap.cells.aggregators["left-p-value"] = new jheatmap.aggregators.PValue();
                     }
                 }
         );
@@ -32,17 +45,15 @@
     <div class="row">
         <ul class="nav nav-pills">
             <li><a href="step0.html">Step 0</a></li>
-            <li class="active">
-                <a href="step1.html">Step 1</a>
-            </li>
+            <li><a href="step1.html">Step 1</a></li>
             <li><a href="step2.html">Step 2</a></li>
-            <li><a href="step3.html">Step 3</a></li>
+            <li class="active"><a href="step3.html">Step 3</a></li>
         </ul>
         <p>
-           The minimum heatmap initialization requires that you define <strong>a data reader</strong> with the url of the file to load,
-           the file must be at the same domain than the html file. Check
-           <a href="../../documentation/out/jheatmap.readers.html">readers</a> documentation for more details on data
-            file formats and readers parameters.
+           An <strong>aggregator</strong> is a function that given an array of numbers returns a single number that
+            aggregates all the values. Aggregators are used when sorting with multiple columns/rows selected.
+            By default 'Addition' aggregator is used, but you can define specific aggregators as show below. Check
+           <a href="../../documentation/out/jheatmap.aggregators.html">aggregators</a> documentation for more details.
         </p>
     </div>
 
@@ -80,6 +91,12 @@
     source = source.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     $('#source').html(source);
     window.prettyPrint && prettyPrint();
+
+    $('#source ol.linenums li').each(function(idx, li) {
+        if ($.inArray(idx, [8,9,17]) != -1) {
+            $(li).css("background-color", "#FFFFB3");
+        }
+    });
 
     jQuery.ajax({
 
