@@ -132,7 +132,7 @@ table.heatmap th div.col {
 }
 
 table.heatmap th.topleft > div.selector {
-    width: 230px;
+    width: 220px;
     float: right;
 }
 

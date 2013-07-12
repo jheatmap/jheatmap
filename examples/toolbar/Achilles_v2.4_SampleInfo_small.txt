@@ -1,0 +1,247 @@
+Name	Type	Subtype	Published	Data_status	Fingerprint	QC_notes	Mean.75th.percentile.distribution.score	Conditions	Passage_number	Pathology	Site_primary	KRAS	PIK3CA	BRAF	NRAS	PTEN	APC	CTNNB1	EGFR	Mut_source	GenomicDNA_isolation_date
+22RV1_PROSTATE	Prostate	Carcinoma		"Array, Seq"	match SNP6.0 ref	"Array failed QC, remove"	3.862775	Adherent	8	primary	prostate	WT	PIK3CA_Q546R	BRAF_L597R	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc(BRAF)"	20090812
+697_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	B-ALL		Seq	match SNP6.0 ref		4.180375	Suspension	8		haematopoietic_and_lymphoid_tissue	WT	WT	WT	NRAS_G12D	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110804
+786O_KIDNEY	Renal Cell Carcinoma	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.55195	Adherent	8	primary	kidney	WT	WT	WT	WT	PTEN_Q149*	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20100511
+A1207_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	no reference		4.381733333	Adherent	9		central_nervous_system	NA/WT	NA/WT	BRAF_V600E	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20120509
+A172_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.249325	Adherent	NA	primary	central_nervous_system	WT	WT	WT	WT	PTEN_R55fs*1	WT	WT	WT	"Sanger(PTEN); CCLE Oncomap, hc"	20110113
+A204_SOFT_TISSUE	Soft Tissue Sarcoma	Rhabdomyosarcoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.2554	Adherent	8	primary	soft_tissue	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20100914
+A2058_SKIN	Melanoma		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.5061	Adherent	7	metastasis	skin	WT	WT	BRAF_V600E	WT	PTEN_L112Q; PTEN_V175fs*3	WT	WT	WT	"Sanger(PTEN,TP53); CCLE Oncomap, hc(TP53)"	20100701
+A2780_OVARY	Ovarian	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref	"Seq failed QC, remove"	4.075725	Adherent	8	primary	ovary	WT	PIK3CA_E365K	BRAF_V226M	WT	PTEN_K128_R130del	WT	WT	WT	"Sanger; CCLE Oncomap, hc(PIK3CA,BRAF)"	20090617
+A549_LUNG	Lung NSCLC		"Cheung et al., Luo et al."	"Array, Seq"	match SNP6.0 ref		4.505675	Adherent	8	primary	lung	KRAS_G12S	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc(STK11-wt)"	20100729
+A673_BONE	Bone sarcoma	Ewings		Seq	match SNP6.0 ref		3.753775	Adherent	8		bone	WT	WT	BRAF_V600E	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20110818
+ACHN_KIDNEY	Renal Cell Carcinoma			Seq			4.280125	Adherent	8		kidney	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(NF2); CCLE Oncomap(MET), hc"	20110113
+AGS_STOMACH	Gastric		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.582725	Adherent	9		stomach	KRAS_G12D	PIK3CA_E453K;PIK3CA_E545A	WT	WT	WT	WT	CTNNB1_G34E	WT	"Sanger; CCLE Oncomap, hc(PIK3CA)"	20101111
+AM38_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.5016	Suspension	5		central_nervous_system	WT	WT	BRAF_V600E	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110504
+AML193_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M5		Seq	match SNP6.0 ref		4.6047	Suspension	4		haematopoietic_and_lymphoid_tissue	WT	WT	WT	NRAS_G13V	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20110928
+ASPC1_PANCREAS	Pancreas	ascites	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.0751	Adherent	9	metastasis	pancreas	KRAS_G12D	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20091123
+BJHTERT_FIBROBLAST	Fibroblast			Seq	match pre-screen FP ref	"Seq failed QC, remove"	2.278925	Adherent	9		skin	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110427
+BT20_BREAST	Breast	ductal Carcinoma		Seq	match SNP6.0 ref		4.52935	Adherent	8		breast	WT	"PIK3CA_H1047R, PIK3CA_P539R"	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20110525
+BT474_BREAST	Breast	ductal Carcinoma		Seq	match SNP6.0 ref		4.584725	Adherent	5		breast	WT	PIK3CA_K111N	WT	WT	WT	WT	WT	WT	"Sanger(PIK3CA,TP53); CCLE Oncomap, hc(PIK3CA)"	20110804
+BT549_BREAST	Breast	ductal Carcinoma		Seq	match SNP6.0 ref	"Seq failed QC, remove"	2.71325	Adherent	8		breast	WT	WT	WT	WT	PTEN_V275fs*1	WT	WT	WT	"Sanger(PTEN,TP53); CCLE Oncomap, hc(PTEN)"	20110810
+BXPC3_PANCREAS	Pancreas		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.318125	Adherent	9	primary	pancreas	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20091124
+C2BBE1_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.5807	Adherent	8	primary	large_intestine	WT	WT	WT	WT	WT	APC_Q1367*	CTNNB1_G245A	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53,CTNNB1)"	20100429
+C32_SKIN	Melanoma			Seq	match SNP6.0 ref		4.381325	Adherent	10	primary	skin	WT	WT	BRAF_V600E	WT	WT	WT	WT	WT	"Sanger(CDKN2A); CCLE Oncomap, hc"	20110518
+CADOES1_BONE	Bone sarcoma	Ewings		Seq	match SNP6.0 ref		4.0673	Suspension	7		bone	WT	WT	WT	WT	WT	WT	WT	WT	CCLE hc	20110728
+CAKI1_KIDNEY	Renal Cell Carcinoma			Seq	match SNP6.0 ref	"Seq failed QC, remove"	3.3888	Adherent	12		kidney	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110518
+CAL120_BREAST	Breast			Seq	match SNP6.0 ref		4.5478		10		breast	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20110525
+CAL51_BREAST	Breast			Seq	match SNP6.0 ref		4.2713	Adherent	8		breast	WT	PIK3CA_E542K	WT	WT	PTEN_T321fs	WT	WT	WT	"Sanger; CCLE Oncomap, hc(PTEN)"	20110517
+CALU1_LUNG	Lung NSCLC	"Carcinoma, Epidermoid"		Seq	match SNP6.0 ref		4.51565	Adherent	9	metastasis	lung	KRAS_G12C	WT	WT	WT	WT	APC_R1171C	WT	WT	"Sanger; CCLE Oncomap, hc(APC)"	20110427
+CAOV3_OVARY	Ovarian	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.5055	Adherent	7	primary	ovary	WT	WT	WT	WT	WT	WT	WT	EGFR_R255Q	"Sanger(TP53); CCLE Oncomap, hc(TP53,EGFR)"	20110211
+CAOV4_OVARY	Ovarian	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.52335	Adherent	5	metastasis	ovary	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20110211
+CAS1_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		3.920325	Adherent	8	primary	central_nervous_system	WT	WT	WT	WT	PTEN_S287fs*4	WT	WT	WT	"Sanger(PTEN); CCLE Oncomap, hc(PTEN)"	20110504
+CFPAC1_PANCREAS	Pancreas		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.61615	Adherent	8	primary	pancreas	KRAS_G12V	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20100304
+CH157MN_CENTRAL_NERVOUS_SYSTEM	Meningioma		Cheung et al.	"Array, Seq"	match pre-screen FP ref		4.5269	Adherent	8		central_nervous_system	NA/WT	NA/WT	NA/WT	NRAS_Q61K	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20100728
+COLO205_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.5426	Mixed Adherent and suspension	8	metastasis	large_intestine	WT	WT	BRAF_V600E	WT	WT	APC_T1556fs*3	WT	WT	"Sanger(APC,TP53); Oncomap; CCLE Oncomap, hc"	20091006
+COLO704_OVARY	Ovarian	Carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.337125	Suspension	8	metastasis	ovary	WT	WT	WT	WT	PTEN_R130*	WT	WT	WT	CCLE hc	20091201
+COLO741_SKIN	Melanoma	Carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.3244	Adherent	8	primary	skin	WT	WT	BRAF_V600E	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20091124
+COLO783_SKIN	Melanoma			Seq	match SNP6.0 ref		4.5862	Adherent	3	metastasis	skin	WT	WT	BRAF_V600E	WT	WT	WT	WT	WT	"CCLE Oncomap, hc(CDKN2A, TP53)"	20110414
+CORL23_LUNG	Lung NSCLC	Large cell		Seq	match SNP6.0 ref		4.56285	Adherent	8	primary	lung	KRAS_G12V	WT	WT	WT	WT	WT	WT	WT	"Sanger(CDKN2A); CCLE Oncomap, hc"	20110119
+COV318_OVARY	Ovarian	Serous carcinoma		Seq	match SNP6.0 ref	"Seq failed QC, remove; (FP now matches)"	2.594875	Mixed Adherent and suspension	10	primary	ovary	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc(TP53)"	20110204
+COV362_OVARY	Ovarian		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.542125	Adherent	9		ovary	WT	WT	WT	WT	WT	APC_R1920G	WT	EGFR_H1124Q	"CCLE Oncomap, hc"	20110202
+COV434_OVARY	Ovarian		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.33465	Adherent (very small and grows densely)	7		ovary	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20111128
+COV504_OVARY	Ovarian	Serous carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.463975	Adherent	9	primary	ovary	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20091020
+COV644_OVARY	Ovarian			Seq	match SNP6.0 ref		3.8607	Adherent	8		ovary	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20110510
+DBTRG05MG_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.082475	Adherent	9	primary	central_nervous_system	WT	WT	BRAF_V600E	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110503
+DKMG_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref	"p6 failed QC, use p5"	4.2454	Adherent	5		central_nervous_system	WT	PIK3CA_N345S	WT	WT	PTEN_T167A	WT	WT	WT	"Sanger(PIK3CA); CCLE Oncomap, hc(PTEN)"	20111102
+DLD1_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	Array	match SNP6.0 ref		4.5853	Adherent	8	primary	large_intestine	KRAS_G13D	PIK3CA_E545K	WT	WT	WT	WT	WT	WT	Sanger(same  FP as HCT-15); CCLE Oncomap	20100112
+DU4475_BREAST	Breast	ductal Carcinoma		"Array, Seq"	match SNP6.0 ref	"Array and Seq failed QC, remove"	3.720675	Suspension	6	metastasis	breast	WT	WT	BRAF_V600E	WT	WT	APC_E1577*	WT	WT	"Sanger(APC); CCLE Oncomap, hc(APC)"	20100126
+EFE184_ENDOMETRIUM	Endometrial	Carcinoma		"Array, Seq"	match SNP6.0 ref	"Array failed QC, remove"	4.57485	Adherent	6	metastasis	endometrium	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20110713
+EFM19_BREAST	Breast	ductal Carcinoma		"Array, Seq"	match SNP6.0 ref	"Seq fine; Array - only 2 replicates, remove"	4.5852	Adherent	6	metastasis	breast	WT	PIK3CA_H1047L	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20100914
+EFO21_OVARY	Ovarian	Serous carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.571575	Adherent	11	metastasis	ovary	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20100315
+EFO27_OVARY	Ovarian	Mucinous carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.536325	Adherent	8	metastasis	ovary	WT	WT	WT	WT	PTEN_K267fs*9	WT	WT	WT	"Sanger; CCLE Oncomap, hc(PTEN wt)"	20090618
+EJM_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma			Seq		"Seq fail QC, remove"	3.5337	Mixed Adherent and suspension	9	primary	haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20110713
+EW8_BONE	Bone sarcoma	Ewings		Seq	match pre-screen FP ref		4.5012	Adherent	9		bone	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110511
+EWS502_BONE	Bone sarcoma	Ewings		Seq	match pre-screen FP ref/SNP6.0 ref		4.465725	Adherent	8		bone	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110713
+F36P_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M6		Seq	match SNP6.0 ref		4.344575	Suspension	8		haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20110525
+F5_CENTRAL_NERVOUS_SYSTEM	Meningioma		Cheung et al.	"Array, Seq"	match pre-screen FP ref	"Seq failed QC, remove"	3.286575	Adherent	8		central_nervous_system	NA/WT	NA/WT	NA/WT	NRAS_Q61K	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20100728
+FUOV1_OVARY	Ovarian	Serous carcinoma		"Array, Seq"	match SNP6.0 ref	"Array and Seq failed QC, remove"	3.6367	Adherent	7	primary	ovary	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20110211
+GB1_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.534925	Adherent	8	primary	central_nervous_system	WT	WT	WT	WT	WT	WT	WT	WT	Sanger(TP53); CCLE Oncomap	20110120
+GCIY_STOMACH	Gastric	Adenocarcinoma		"Array, Seq"	match SNP6.0 ref	"Array and Seq failed QC, remove"	3.439625	Adherent	11	primary	stomach	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20091105
+GMS10_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref	"Seq failed QC, remove"	3.111575	Adherent	8		central_nervous_system	WT	WT	WT	WT	WT	WT	WT	WT	Sanger(TP53); CCLE Oncomap	20110511
+GP2D_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.6088	Adherent	8	primary	large_intestine	KRAS_G12D	PIK3CA_H1047	BRAF_T529A	WT	PTEN_E106G	APC_L2384I;APC_S2562G;APC_Q1444fs	CTNNB1_D755V	WT	"Sanger (same patient as GP5d), CCLE hc(FGFR1,2, CTNNB1, PTEN)"	20110425
+HCC1187_BREAST	Breast	ductal Carcinoma		Seq	match SNP6.0 ref		4.581325	Mixed Adherent and suspension	8		breast	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110525
+HCC1395_BREAST	Breast	ductal Carcinoma		Seq	match SNP6.0 ref		4.449425	Adherent	5		breast	WT	WT	WT	WT	PTEN_N212fs*1	WT	WT	WT	"Sanger(PTEN); CCLE Oncomap, hc"	20110824
+HCC1954_BREAST	Breast	ductal Carcinoma		Seq	match SNP6.0 ref		4.575175	Adherent	10		breast	WT	PIK3CA_H1047R	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20110517
+HCC2218_BREAST	Breast	ductal Carcinoma		Seq	match SNP6.0 reference		4.599325	Suspension	6		breast	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20120305
+HCC2814_LUNG	Lung NSCLC	Squamous	Cheung et al.	"Array, Seq"	match pre-screen FP ref		4.5424	Adherent	10		lung	WT	NA/WT	WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	"Sequencing of KRAS exon 2, BRAF exon 15, Achilles Oncomap"	20090811
+HCC364_LUNG	Lung NSCLC	Adenocarcinoma	Cheung et al.	Array	match pre-screen FP ref		4.5547	Adherent	7		lung	NA/WT	NA/WT	BRAF_V600E	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	"Pasi; Oncomap, Achilles Oncomap"	20090828
+HCC44_LUNG	Lung NSCLC			Seq	match SNP6.0 ref		4.40105	Adherent	9	primary	lung	KRAS_G12C	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20110113
+HCC70_BREAST	Breast	ductal Carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.596775	Adherent	6	primary	breast	WT	WT	WT	WT	PTEN_F90fs*9	WT	WT	WT	"Sanger(PTEN); CCLE Oncomap, hc(PTEN)"	20100727
+HCC827_LUNG	Lung NSCLC	Adenocarcinoma	"Cheung et al., Luo et al."	"Array, Seq"	match pre-screen FP ref/SNP6.0 ref		4.201225	Adherent (density>30%)	7	primary	lung	WT	WT	WT	WT	WT	WT	WT	EGFR_E746K	"CCLE Oncomap, hc(TP53); Oncomap"	20090706
+HCC827GR5_LUNG	Lung NSCLC			Seq	match pre-screen FP ref		4.502	Adherent (density>30%)	6	primary	lung	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	EGFR_E746K	"Pasi, Achilles Oncomap"	20111005
+HCT116_LARGE_INTESTINE	Colon			Seq	match SNP6.0 ref/pre-screen FP ref		4.575725	Adherent	8		large_intestine	NA	NA	NA	NA	NA	NA	NA	NA	no data	20110628
+HCT116G9B_ENGINEERED	Engineered			Seq	match SNP6.0 ref/pre-screen FP ref	matches HCT116	4.5175	Adherent	9		large_intestine	NA	NA	NA	NA	NA	NA	NA	NA	no data	20110719
+HEC1A_ENDOMETRIUM	Endometrial	Adenocarcinoma; uterus	Cheung et al.	"Array, Seq"	match SNP6.0 ref		3.8771	Adherent	8	primary	endometrium	KRAS_G12D	PIK3CA_G1049R	BRAF_R682Q	WT	WT	WT	CTNNB1_R528H	WT	"Oncomap; CCLE Oncomap(PIK3CA), hc"	20101111
+HEYA8_OVARY	Ovarian	Carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.519175	Adherent	8	primary	ovary	KRAS_G12D	WT	BRAF_G464E	WT	WT	WT	WT	WT	"CCLE Oncomap, hc(BRAF)"	20090618
+HL60_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M3	Cheung et al.	"Array, Seq"	match SNP6.0 ref		3.9348	Suspension	8	primary	haematopoietic_and_lymphoid_tissue	WT	WT	WT	NRAS_Q61L	WT	WT	WT	WT	"Sanger(CDKN2A, TP53); Oncomap; CCLE Oncomap"	20091217
+HLF_LIVER	Liver	Hepatoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.19215	Adherent	8	primary	liver	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20100618
+HNT34_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M4		Seq	match pre-screen FP ref 	lot's of failed ref FP assays-redo ref FP?	4.168875	Suspension	9		haematopoietic_and_lymphoid_tissue	NA	NA	NA	NA	NA	NA	NA	NA	no data	20110804
+HPAC_PANCREAS	Pancreas		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.577175	Adherent	8	primary	pancreas	KRAS_G12D	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	CCLE Oncomap	20100113
+HPAFII_PANCREAS	Pancreas			"Array, Seq"	match SNP6.0 ref	"Array failed QC, remove"	4.33235	Adherent	5	metastasis	pancreas	KRAS_G12D	WT	WT	WT	WT	WT	WT	WT	"Sanger(CDKN2A); CCLE Oncomap, hc(CDKN2A, TP53-wt)"	20110713
+HS683_CENTRAL_NERVOUS_SYSTEM	GBM			"Array, Seq"	match SNP6.0 ref	"Array failed QC, remove"	4.26035	Adherent	8	primary	central_nervous_system	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20100622
+HS766T_PANCREAS	Pancreas			"Array, Seq"	match SNP6.0 ref	"Array and Seq p8 failed QC, use p6"	3.890975	Adherent	6	primary	pancreas	KRAS_Q61H	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	CCLE Oncomap	20120524
+HS944T_SKIN	Melanoma		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.466225	Adherent	8	metastasis	skin	WT	WT	WT	NRAS_Q61K	PTEN_D162fs	WT	WT	WT	"CCLE Oncomap(CDKN2A), hc(PTEN)"	20100728
+HT1197_URINARY_TRACT	Bladder	Carcinoma		Seq	match SNP6.0 ref		4.42015	Adherent	10	primary	urinary_tract	WT	PIK3CA_E545K	WT	NRAS_Q61R	WT	WT	WT	WT	Sanger; CCLE Oncomap	20110111
+HT29_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.59445	Adherent	8	primary	large_intestine	WT	PIK3CA_P449T	BRAF_V600E;BRAF_T119S	WT	WT	APC_E853*;APC_T1556fs*3	WT	WT	"Sanger; Oncomap(BRAF); CCLE Oncomap, hc"	20090724
+HT55_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.606375	Adherent	8	primary	large_intestine	WT	WT	BRAF_N581Y	WT	WT	APC_R1463S;APC_Q1131*;APC_Q1303*	CTNNB1_L275F	WT	"Sanger(TP53),CCLE hc(BRAF, CTNNB1)"	20100602
+HUG1N_STOMACH	Gastric		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.30085	Mixed Adherent and suspension	7	primary	stomach	WT	WT	WT	WT	WT	APC_E313*	NA/WT	WT	"CCLE Oncomap, hc(APC, TP53)"	20111028
+HUTU80_SMALL_INTESTINE	Colon	Adenocarcinoma; Duodenum	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.244166667	Adherent	7	primary	small_intestine	WT	WT	WT	WT	WT	WT	CTNNB1_S37F	WT	Sanger; CCLE Oncomap	20111221
+IGR39_SKIN	Melanoma		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.356225	Adherent	8		skin	WT	WT	BRAF_V600E	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20101208
+IGROV1_OVARY	Ovarian	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.54705	Adherent	7	primary	ovary	WT	PIK3CA_R38C	WT	WT	PTEN_Y155C;PTEN_V317fs	WT	WT	WT	"Sanger; CCLE Oncomap(PTEN), hc(PIK3CA,PTEN)"	20110422
+IOMMLEE_CENTRAL_NERVOUS_SYSTEM	Meningioma		Cheung et al.	"Array, Seq"	match pre-screen FP ref		3.9505	Adherent	8		central_nervous_system	WT	NA/WT	BRAF_V600E	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	"Sequencing of KRAS exon 2, BRAF exon 15, Achilles Oncomap"	20090617
+JHESOAD1_OESOPHAGUS	Esophageal	Adenocarcinoma	Cheung et al.	"Array, Seq"	match pre-screen FP ref		4.506075	Adherent	8		oesophagus	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20100519
+JHOC5_OVARY	Ovarian		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.586325	Adherent	8		ovary	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20110201
+JHOM1_OVARY	Ovarian			Seq	match SNP6.0 ref		4.60155	Adherent	9		ovary	WT	WT	WT	WT	PTEN_L318fs	WT	WT	WT	"CCLE Oncomap, hc(PTEN)"	20110504
+JHOS4_OVARY	Ovarian	Serous adenocarcinoma		"Array, Seq"	match SNP6.0 ref	"Array and Seq failed QC, remove"	4.174225	Adherent	7	primary	ovary	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	CCLE Oncomap	20110728
+JJN3_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma			Seq	no reference		3.849675	Suspension	8	primary	haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	CCLE hc	20110120
+K562_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	CML-BC myeloid	Luo et al.	"Array, Seq"	match SNP6.0 ref		4.63605	Suspension	8	metastasis	haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20110803
+KALS1_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.002925	Adherent	11		central_nervous_system	WT	WT	WT	WT	PTEN_R130*	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(PTEN)"	20110511
+KASUMI1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M2		Seq	match SNP6.0 ref		4.409425	Suspension	7		haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110628
+KM12_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.52545	Adherent	8	primary	large_intestine	WT	WT	BRAF_A712T	WT	"PTEN_K267fs*9, PTEN_G129*"	APC_G471E;APC_L1816fs	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(APC,BRAF,TP53_H179R)"	20100618
+KMS11_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma			Seq	match SNP6.0 ref	"Seq failed QC, borderline"	3.6665	Adherent	5	primary	haematopoietic_and_lymphoid_tissue	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	CCLE Oncomap	20120524
+KMS12BM_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.506	Suspension	8	primary	haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20091214
+KMS20_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma			Seq	match SNP6.0 ref	"Seq failed QC, borderline"	3.209275	Suspension	7	primary	haematopoietic_and_lymphoid_tissue	KRAS_G12S	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc(TP53)"	20110802
+KMS26_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma			Seq	match SNP6.0 ref	"Seq failed QC, borderline"	3.16845	Suspension	8	primary	haematopoietic_and_lymphoid_tissue	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	CCLE Oncomap	20110413
+KMS34_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma			Seq	match SNP6.0 ref	"Seq failed QC, borderline"	3.636125	Suspension	7	primary	haematopoietic_and_lymphoid_tissue	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	CCLE Oncomap	20110518
+KNS60_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.463825	Adherent	8	primary	central_nervous_system	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc(TP53)"	20110101
+KNS81_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.4277	Adherent	9		central_nervous_system	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	CCLE Oncomap	20110426
+KP1NL_PANCREAS	Pancreas	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref	"matches Panc-1, keep"	4.585725	Adherent	9	metastasis	pancreas	KRAS_G12D	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	CCLE Oncomap	20100914
+KP2_PANCREAS	Pancreas	Carcinoma		Seq	match SNP6.0 ref		4.130275	Adherent	7	primary	pancreas	KRAS_G12R	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc(TP53)"	20110504
+KP4_PANCREAS	Pancreas		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.627575	Adherent	8	metastasis	pancreas	KRAS_G12D	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20100309
+KURAMOCHI_OVARY	Ovarian	Undifferentiated carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref	"redone, now FP matches"	4.554375	Adherent	8	primary	ovary	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20110210
+KYSE150_OESOPHAGUS	Esophageal	Squamous	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.471025		NA		oesophagus	NA	NA	NA	NA	NA	NA	NA	NA		NA
+KYSE30_OESOPHAGUS	Esophageal	Squamous	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.546333333	Adherent	8	primary	oesophagus	WT	WT	WT	WT	WT	APC_L2198F	WT	WT	"CCLE Oncomap, hc(APC, TP53)"	20100914
+KYSE450_OESOPHAGUS	Esophageal	Squamous	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.534975		NA		oesophagus	NA	NA	NA	NA	NA	NA	NA	NA		NA
+KYSE510_OESOPHAGUS	Esophageal	Squamous	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.596425	Adherent	8	primary	oesophagus	WT	PIK3CA_E545K	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20091106
+L33_PANCREAS	Pancreas		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.563725	Mixed Adherent and suspension	8	primary	pancreas	KRAS_G12D	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20101215
+L363_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma			"Array, Seq"	match SNP6.0 ref	"Array failed QC, remove"	3.95095	Suspension	7	primary	haematopoietic_and_lymphoid_tissue	WT	PIK3CA_E545K	WT	NRAS_Q61H	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20110728
+LAMA84_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	CML-BC (megakaryocytic)		Seq	match SNP6.0 ref		4.60415	Suspension	8		haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	Sanger(TP53); CCLE Oncomap	20110803
+LK2_LUNG	Lung NSCLC	Squamous		Seq			4.3711	Adherent	8		lung	WT	WT	WT	WT	WT	APC_E1020K;APC_W685*	WT	WT	"Sanger(APC, TP53); CCLE Oncomap, hc(APC)"	20110111
+LN215_CENTRAL_NERVOUS_SYSTEM	GBM		Cheung et al.	"Array, Seq"	match pre-screen FP ref		4.47495	Adherent	8		central_nervous_system	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20100729
+LN229_CENTRAL_NERVOUS_SYSTEM	GBM		"Cheung et al., Luo et al."	"Array, Seq"	match SNP6.0 ref		4.362	Adherent	8	primary	central_nervous_system	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc(TP53)"	20090519
+LN235_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match pre-screen FP ref		4.331825	Adherent	10		central_nervous_system	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20101115
+LN319_CENTRAL_NERVOUS_SYSTEM	GBM		Cheung et al.	"Array, Seq"	match pre-screen FP ref		4.608475	Adherent	8		central_nervous_system	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20100525
+LN340_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match pre-screen FP ref		4.4258	Adherent	9		central_nervous_system	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20100914
+LN382_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match pre-screen FP ref		4.611975	Adherent	8		central_nervous_system	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20101115
+LN428_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	no reference		4.512	Adherent	8		central_nervous_system	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110201
+LN443_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match pre-screen FP ref		4.5005	Adherent	9		central_nervous_system	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20101208
+LN464_CENTRAL_NERVOUS_SYSTEM	GBM		Cheung et al.	"Array, Seq"	match pre-screen FP ref		4.506525	Adherent	8		central_nervous_system	NA/WT	NA/WT	BRAF_V600E	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20100617
+LNZ308_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match pre-screen FP ref		4.627025	Adherent	8		central_nervous_system	NA	NA	NA	NA	NA	NA	NA	NA	no data	20101115
+LOVO_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.519875	Adherent	8		large_intestine	KRAS_G13D	WT	WT	WT	WT	APC_R2816Q;APC_R1114*;APC_T1430fs	WT	WT	"Sanger(FBXW7); CCLE Oncomap, hc"	20111102
+LP1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma			Seq	match SNP6.0 ref	"Seq failed QC, borderline"	3.448775	Adherent	7	primary	haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	Sanger(TP53); CCLE Oncomap	20110525
+LS411N_LARGE_INTESTINE	Colon	Adenocarcinoma; Cecum	Cheung et al.	"Array, Seq"	match SNP6.0 ref	"redone, now FP matches"	4.6317	Adherent	7	primary	large_intestine	WT	WT	BRAF_V600E	WT	PTEN_F104fs;PTEN_K163fs	APC_Q789*; APC_T1556fs*3	WT	EGFR_T940A	"Sanger; CCLE Oncomap, hc(PTEN,EGFR)"	20101123
+LS513_LARGE_INTESTINE	Colon	Adenocarcinoma; Cecum	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.28415	Adherent	8	primary	large_intestine	KRAS_G12D	WT	BRAF_E204L	WT	WT	WT	CTNNB1_A5_A80del	WT	"Sanger(CTNNB1); CCLE Oncomap, hc(BRAF)"	20111102
+MCF7_BREAST	Breast	Carcinoma		Seq	match SNP6.0 ref		4.511025	Adherent	6		breast	WT	PIK3CA_E545K	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110608
+MDAMB453_BREAST	Breast	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.60535	Adherent	7	metastasis	breast	WT	PIK3CA_H1047R	WT	WT	PTEN_E307K	WT	WT	WT	"Sanger; CCLE Oncomap, hc(PTEN)"	20100914
+MIAPACA2_PANCREAS	Pancreas		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.38415	Mixed Adherent and suspension	8	primary	pancreas	KRAS_G12C	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20090827
+MKN7_STOMACH	Gastric	Adenocarcinoma		"Array, Seq"	match SNP6.0 ref	"Array failed QC, remove"	4.528525	Adherent	9	metastasis	stomach	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc(TP53-wt)"	20110713
+MM1S_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma			"Array, Seq"	match SNP6.0 ref	"Array failed QC, remove"	3.417375	Mixed Adherent and suspension	4	primary	haematopoietic_and_lymphoid_tissue	KRAS_G12A	WT	WT	WT	WT	WT	WT	EGFR_G917R	"CCLE Oncomap; Oncomap, hc(EGFR)"	20110802
+MOLM13_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M5a		Seq	match SNP6.0 ref		3.937975	Suspension	8		haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20110627
+MONOMAC1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M5		Seq	match SNP6.0 ref		4.286125		6		haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	CCLE hc	20110517
+MONOMAC6_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML		Seq	match SNP6.0 ref		4.61335	Suspension	8		haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger, CCLE hc"	20110608
+MUTZ2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M2		Seq	mismatch in vial given (matches OCI-AML5)	"Fingerprint error, keep because OCI-AML5 fails QC"	4.0946	Suspension	8		haematopoietic_and_lymphoid_tissue	NA	NA	NA	NA	NA	NA	NA	NA	no data	20110802
+MV411_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M5		Seq	match SNP6.0 ref	"p8 failed QC, use p7"	3.83845	Suspension	7		haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	Sanger; CCLE Oncomap	20110810
+NALM6_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	B-ALL		Seq	match SNP6.0 ref		4.441525	Suspension	7		haematopoietic_and_lymphoid_tissue	WT	WT	WT	NRAS_A146T	WT	APC_R856H	WT	EGFR_R1068*	"Sanger; CCLE Oncomap, hc(APC, EGFR)"	20110525
+NB4_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M3		Seq	match SNP6.0 ref		4.342425	Suspension	8		haematopoietic_and_lymphoid_tissue	KRAS_A18D	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc(KRAS)"	20110826
+NCIH1299_LUNG	Lung NSCLC			Seq	match SNP6.0 ref		4.6285	Adherent	8		lung	WT	WT	WT	NRAS_Q61K	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110106
+NCIH1437_LUNG	Lung NSCLC	Adenocarcinoma		Seq	match SNP6.0 ref		4.4032	Adherent	8	metastasis	lung	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20110802
+NCIH1650_LUNG	Lung NSCLC	"Adenocarcinoma, BAC"	"Cheung et al., Luo et al."	"Array, Seq"	match SNP6.0 ref		4.5704	Adherent	8	metastasis	lung	WT	WT	WT	WT	WT	WT	WT	EGFR_E746_A750del	"Sanger(TP53); Oncomap; CCLE Oncomap, hc(EGFR-wt)"	20100728
+NCIH1792_LUNG	Lung NSCLC	Adenocarcinoma		Seq	match SNP6.0 ref		4.506375	Adherent	8	metastasis	lung	KRAS_G12C 	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20110413
+NCIH196_LUNG	Lung SCLC		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.59695	Adherent	6	metastasis	lung	WT	WT	WT	WT	PTEN_Y138C	WT	WT	WT	"CCLE Oncomap; Oncomap, hc(PTEN)"	20111102
+NCIH1975_LUNG	Lung NSCLC	Adenocarcinoma	"Cheung et al., Luo et al."	"Array, Seq"	match SNP6.0 ref		4.3889	Adherent (density>30%)	8	primary	lung	WT	PIK3CA_G118D	WT	WT	WT	APC_S2134C	WT	"EGFR_L858R, EGFR_T790M"	"Sanger; Oncomap; CCLE Oncomap, hc(APC)"	20090617
+NCIH2052_PLEURA	Lung Mesothelioma			Seq	match SNP6.0 ref		4.384925	Adherent	10	metastasis	pleura	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110425
+NCIH2122_LUNG	Lung NSCLC	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		3.95795	Adherent	8	metastasis	lung	KRAS_G12C	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20100623
+NCIH2171_LUNG	Lung SCLC		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.405975		7	metastasis	lung	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20091217
+NCIH23_LUNG	Lung NSCLC	Adenocarcinoma		"Array, Seq"	match SNP6.0 ref	"Array failed QC, remove"	4.6047	Adherent	7	primary	lung	KRAS_G12C	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20110628
+NCIH2452_PLEURA	Lung Mesothelioma			Seq	match SNP6.0 ref		3.906425	Adherent	9	metastasis	pleura	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110504
+NCIH441_LUNG	Lung NSCLC	Adenocarcinoma		Seq	match SNP6.0 ref		4.540575	Adherent	7	metastasis	lung	KRAS_G12V	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20110429
+NCIH508_LARGE_INTESTINE	Colon	Adenocarcinoma; Cecum	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.51095	Adherent	8	metastasis	large_intestine	WT	PIK3CA_E545K	BRAF_G596R	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20100406
+NCIH524_LUNG	Lung SCLC			"Array, Seq"	match SNP6.0 ref	"Array and Seq failed QC, remove"	2.45005	Suspension	7	metastasis	lung	WT	WT	WT	WT	WT	WT	WT	WT	Sanger(TP53); CCLE Oncomap	20091023
+NCIH660_PROSTATE	Prostate	Neuroendocrine		Seq	match SNP6.0 ref		4.5932	Mixed Adherent and suspension	4	metastasis	prostate	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	CCLE Oncomap	20120628
+NCIH661_LUNG	Lung NSCLC	Large cell	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.601275	Adherent	9	metastasis	lung	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20090922
+NCIH716_LARGE_INTESTINE	Colon	Adenocarcinoma		"Array, Seq"	match SNP6.0 ref	"Array failed QC, remove"	4.179475	Mixed Adherent and suspension	8	metastasis	large_intestine	KRAS_R97I	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20100401
+NCIH82_LUNG	Lung SCLC		"Cheung et al., Luo et al."	"Array, Seq"	match SNP6.0 ref	"Seq failed QC, remove"	4.1359	Suspension	8	metastasis	lung	WT	WT	WT	WT	WT	WT	WT	WT	Sanger; CCLE Oncomap	20090504
+NCIH838_LUNG	Lung NSCLC	Adenocarcinoma		Seq	match SNP6.0 ref		4.28895	Adherent	9	metastasis	lung	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53, STK11); CCLE Oncomap, hc"	20110414
+NCIN87_STOMACH	Gastric	Carcinoma		"Array, Seq"	match SNP6.0 ref	"Array failed QC, remove"	4.210675	Adherent	6	metastasis	stomach	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110802
+NIHOVCAR3_OVARY	Ovarian	Carcinoma	Cheung et al.	Array	match SNP6.0 ref		4.419125	Adherent	10	metastasis	ovary	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20091105
+NOMO1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M5a		Seq	match SNP6.0 ref		3.933525	Suspension	8		haematopoietic_and_lymphoid_tissue	KRAS_G13D	WT	WT	WT	WT	WT	WT	WT	Sanger(TP53); CCLE Oncomap	20110719
+OAW42_OVARY	Ovarian			Seq	match SNP6.0 ref		4.5344	Adherent	8		ovary	WT	PIK3CA_H1047L	WT	WT	WT	WT	WT	WT	"Sanger(PIK3CA); CCLE Oncomap, hc(PIK3CA)"	20110413
+OCIAML2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M4		Seq	match SNP6.0 ref		4.0329	Suspension	8		haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110628
+OCIAML3_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M4		Seq	match SNP6.0 ref		4.406575	Suspension	8		haematopoietic_and_lymphoid_tissue	WT	WT	WT	NRAS_Q61L	WT	WT	WT	WT	"CCLE Oncomap, hc"	20110802
+OCIAML5_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M4		Seq	match SNP6.0 ref	"Seq failed QC, borderline"	3.30785	Suspension	7		haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	CCLE Oncomap	20110627
+OE33_OESOPHAGUS	Esophageal	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.471025	Adherent	8	primary	oesophagus	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(CDKN2A); CCLE Oncomap, hc"	20100301
+OELE_OVARY	Ovarian			Seq	match SNP6.0 ref		3.7361	Adherent	7		ovary	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110503
+OPM2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma			Seq	match SNP6.0 ref		4.032525	Suspension	9	primary	haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	PTEN_0?	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20110621
+OV7_OVARY	Ovarian			Seq	match SNP6.0 ref		4.15715	Adherent	8		ovary	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	CCLE Oncomap	20110518
+OV90_OVARY	Ovarian	Mixed carcinoma; papillary serous adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.014975	Adherent	10	metastasis	ovary	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc(TP53, CDKN2A)"	20111116
+OVCAR4_OVARY	Ovarian	Carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.27265	Adherent	10	primary	ovary	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53, CDKN2A)"	20100412
+OVCAR8_OVARY	Ovarian	Mixed carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.458225	Adherent	8	primary	ovary	KRAS_P121H	WT	WT	WT	WT	WT	CTNNB1_Q26R	WT	"Sanger(TP53); Oncomap; CCLE Oncomap, hc(KRAS, CTNNB1)"	20101207
+OVISE_OVARY	Ovarian	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.59745	Adherent	9	primary	ovary	WT	PIK3CA_C420R	WT	WT	WT	APC_D807G;APC_L2342F	WT	WT	"CCLE Oncomap(PIK3CA), hc(APC)"	20100729
+OVMANA_OVARY	Ovarian	Clear cell carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref	"Seq failed QC, remove"	4.152175	Adherent	8	primary	ovary	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	CCLE Oncomap	20111116
+PANC0327_PANCREAS	Pancreas		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.369675	Adherent	8	primary	pancreas	KRAS_G12V	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20090918
+PANC0813_PANCREAS	Pancreas		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.299	Adherent	6	primary	pancreas	KRAS_G12D	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20111116
+PANC1005_PANCREAS	Pancreas		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.1076	Adherent	10	primary	pancreas	KRAS_G12D	WT	WT	WT	WT	WT	WT	WT	"Sanger, CCLE hc"	20100223
+PLB985_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M4		Seq	match pre-screen FP ref		4.287075	Suspension	7		haematopoietic_and_lymphoid_tissue	NA	NA	NA	NA	NA	NA	NA	NA	no data	20110627
+PSN1_PANCREAS	Pancreas			Seq	match SNP6.0 ref		4.29665	Adherent	8	primary	pancreas	KRAS_G12R	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53,STK11-wt)"	20110101
+QGP1_PANCREAS	Pancreas		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.526075	Adherent	7	primary	pancreas	KRAS_G12V	WT	WT	WT	WT	APC_R2166Q	WT	WT	"CCLE Oncomap, hc(APC)"	20111116
+REH_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	B-ALL 	Luo et al.	"Array, Seq"	match SNP6.0 ref		4.563375	Suspension	8	primary	haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	PTEN_R173C	WT	WT	WT	"Sanger(TP53); CCLE Oncomap(PTEN), hc(PTEN)"	20110608
+RKN_SOFT_TISSUE	Soft Tissue Sarcoma		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.6009	Adherent	6		soft_tissue	KRAS_G12V	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20110211
+RKO_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.569325	Adherent	8	primary	large_intestine	WT	PIK3CA_H1047R	BRAF_V600E	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20100729
+RMGI_OVARY	Ovarian	Clear cell carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref	"Seq failed QC, remove"	3.687025	Adherent	9	primary	ovary	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110422
+RMUGS_OVARY	Ovarian			Seq	match SNP6.0 ref		4.6043	Adherent	8		ovary	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc(TP53)"	20110414
+RPE101_ENGINEERED	Immortalized Retinal epithelial cells			Seq	no reference (all RPE lines match each other)	"p8 failed QC, use p5"	3.9793	Adherent	5			NA	NA	NA	NA	NA	NA	NA	NA	no data	20110818
+RPE1A4D_ENGINEERED	Immortalized Retinal epithelial cells			Seq	no reference (all RPE lines match each other)	"p8 failed QC, use p5"	4.45355	Adherent	4			NA	NA	NA	NA	NA	NA	NA	NA	no data	20110818
+RPE74_ENGINEERED	Immortalized Retinal epithelial cells			Seq	no reference (all RPE lines match each other)	"p8 failed QC, use p5"	3.971225	Adherent	5			NA	NA	NA	NA	NA	NA	NA	NA	no data	20110818
+RPMI8226_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma			Seq	match SNP6.0 ref	"Seq failed QC, remove"	0.483525	Suspension	8	primary	haematopoietic_and_lymphoid_tissue	KRAS_G12A	WT	WT	WT	WT	WT	WT	EGFR_E746_A750del; V ins; EGFR_T751I	"Sanger(EGFR_T751I, TP53) ; CCLE Oncomap; Oncomap(EGFR)"	20120523
+RS411_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	B-ALL		Seq	match SNP6.0 ref		4.58615	Suspension	7		haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	EGFR_L815F	"Sanger; CCLE Oncomap, hc(EGFR)"	20110804
+RT112_URINARY_TRACT	Bladder	Carcinoma; transitional cell	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.255625	Adherent	8	primary	urinary_tract	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20100626
+SEM_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	B-ALL		Seq	match SNP6.0 ref		4.32005	Suspension	6		haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap(CDKN2A), hc"	20110621
+SF126_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.5123	Adherent	9		central_nervous_system	WT	WT	WT	WT	PTEN_G129R	WT	WT	WT	"Sanger(PTEN); CCLE Oncomap, hc"	20110429
+SF172_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.597725	Adherent	8		central_nervous_system	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110201
+SF295_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.363975	Adherent	10		central_nervous_system	WT	WT	WT	WT	PTEN_R233*	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110425
+SF767_CENTRAL_NERVOUS_SYSTEM	GBM		Cheung et al.	"Array, Seq"	match pre-screen FP ref		4.455225	Adherent	7		central_nervous_system	NA/WT	PIK3CA_E545K	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20100429
+SJSA1_BONE	Bone sarcoma	Osteosarcoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.3002	Adherent	8	primary	bone	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20091029
+SKCO1_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.534225	Adherent	9	primary	large_intestine	KRAS_G12V	WT	WT	WT	WT	APC_F1089fs*37; APC_P1443fs*30	WT	WT	"Sanger; CCLE Oncomap, hc"	20100301
+SKMEL5_SKIN	Melanoma			Seq	match SNP6.0 ref		4.208925	Adherent	8	metastasis	skin	WT	WT	BRAF_V600E	WT	WT	APC_L407F	WT	WT	"Sanger(STK11); CCLE Oncomap, hc(APC)"	20110504
+SKMM2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Multiple Myeloma			Seq	match SNP6.0 ref		4.19955	Suspension	6	primary	haematopoietic_and_lymphoid_tissue	WT	WT	WT	WT	WT	WT	WT	WT	Sanger(TP53); CCLE Oncomap	20110719
+SKNO1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M2		Seq	no reference		4.58	Suspension	8		haematopoietic_and_lymphoid_tissue	NA	NA	NA	NA	NA	NA	NA	NA	no data	20110621
+SKOV3_OVARY	Ovarian			Seq	match SNP6.0 ref		4.55335	Adherent	6		ovary	WT	PIK3CA_H1047R	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20110503
+SKRC20_KIDNEY	Renal Cell Carcinoma			Seq	match pre-screen FP ref		4.532125	Adherent	8		kidney	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110224
+SKRC31_KIDNEY	Renal Cell Carcinoma			Seq	no reference	"Seq failed QC, remove"	2.571925	Adherent	8		kidney	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110511
+SLR20_KIDNEY	Renal Cell Carcinoma			Seq	match SNP6.0 ref		4.452675	Adherent	8		kidney	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110119
+SLR21_KIDNEY	Renal Cell Carcinoma		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.483225	Adherent	10		kidney	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20100914
+SLR23_KIDNEY	Renal Cell Carcinoma			Seq	match SNP6.0 ref		4.1924	Adherent	9		kidney	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110425
+SLR24_KIDNEY	Renal Cell Carcinoma			Seq	match pre-screen FP ref		4.038875	Adherent	8		kidney	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110223
+SLR25_KIDNEY	Renal Cell Carcinoma			Seq	match pre-screen FP ref		4.317025	Adherent	9		kidney	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110713
+SLR26_KIDNEY	Renal Cell Carcinoma			Seq	match pre-screen FP ref		3.733875	Adherent	11		kidney	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20100914
+SNU1105_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.319	Adherent	6		central_nervous_system	WT	WT	WT	WT	WT	WT	WT	EGFR_V742I	"CCLE Oncomap, hc(TP53, EGFR)"	20110426
+SNU201_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref	"Seq failed QC, remove"	2.906175	Adherent	11		central_nervous_system	WT	WT	WT	WT	PTEN_Y155C	WT	WT	WT	"CCLE Oncomap, hc(TP53, PTEN)"	20110504
+SNU840_OVARY	Ovarian		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.55285	Adherent	9		ovary	WT	PIK3CA_H1047R	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc(PIK3CA)"	20110202
+SNUC1_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.139325	Mixed Adherent and suspension	9	metastasis	large_intestine	WT	WT	WT	WT	WT	WT	WT	WT	Sanger(TP53); CCLE Oncomap	20100405
+SNUC2A_LARGE_INTESTINE	Colon	Carcinoma; Cecum	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.418075	Adherent	7	primary	large_intestine	KRAS_G12D	PIK3CA_D725G	WT	WT	WT	APC_P2048fs	WT	EGFR_R165Q	"CCLE Oncomap, hc(APC, EGFR, PIK3CA)"	20110525
+SU8686_PANCREAS	Pancreas		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.567375	Adherent	9	primary	pancreas	KRAS_G12D	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap; Oncomap, hc"	20100119
+SW1417_LARGE_INTESTINE	Colon	Adenocarcinoma		"Array, Seq"	match SNP6.0 ref	"Array failed QC, remove"	4.418425	Adherent	5	primary	large_intestine	WT	WT	BRAF_V600E	WT	WT	APC_R1450*	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20110713
+SW1783_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.343125	Adherent	8		central_nervous_system	WT	WT	WT	WT	PTEN_R233*	WT	WT	WT	"Sanger; CCLE Oncomap, hc(TP53-wt)"	20110504
+SW1990_PANCREAS	Pancreas			"Array, Seq"	match SNP6.0 ref	"Array and Seq failed QC, remove"	4.06665	Adherent	9	primary	pancreas	KRAS_G12D	WT	WT	WT	WT	WT	WT	WT	Sanger; CCLE Oncomap	20110719
+SW48_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.5419	Adherent	8	primary	large_intestine	WT	WT	WT	WT	WT	APC_R2714C	CTNNB1_S33Y	EGFR_G719S	"Sanger; CCLE Oncomap, hc(APC)"	20091117
+SW480_LARGE_INTESTINE	Colon	Adenocarcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.508325	Adherent	7	primary	large_intestine	KRAS_G12V	WT	WT	WT	WT	APC_Q1338*	WT	WT	"Sanger(same patient as SW620; TP53_P309S); CCLE Oncomap,hc"	20110525
+T98G_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.5987	Adherent	8	primary	central_nervous_system	WT	WT	WT	WT	PTEN_L42R	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(PTEN,TP53)"	20110209
+TC32_BONE	Bone sarcoma	Ewings		Seq	match SNP6.0 ref	"Seq failed QC, borderline"	3.48445	Adherent	8		bone	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110627
+TC71_BONE	Bone sarcoma	Ewings		Seq	match SNP6.0 ref		4.6126	Adherent	7		bone	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20110803
+TCCSUP_URINARY_TRACT	Bladder	Carcinoma; transitional cell		Seq			4.0467	Adherent	8	primary	urinary_tract	WT	PIK3CA_E545K	WT	WT	WT	WT	WT	WT	Sanger(TP53); CCLE Oncomap	20110210
+TE10_OESOPHAGUS	Esophageal	Squamous		Seq	match SNP6.0 ref		4.53935	Adherent	8		oesophagus	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20100617
+TE15_OESOPHAGUS	Esophageal	Squamous	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.50315	Adherent	8	primary	oesophagus	WT	WT	WT	WT	WT	WT	WT	WT	Sanger(TP53); CCLE Oncomap	20091214
+TE9_OESOPHAGUS	Esophageal	Squamous	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.478075	Adherent	8	primary	oesophagus	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20100112
+THP1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	Leukemia	AML M5 (Monocytic)		Seq	match SNP6.0 ref		4.49865	Suspension	8		haematopoietic_and_lymphoid_tissue	WT	WT	WT	NRAS_G12D	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc"	20110111
+TOV112D_OVARY	Ovarian	Endometrioid carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.423275	Adherent	8	primary	ovary	NA	NA	NA	NA	NA	NA	NA	NA	no data	20091023
+TOV21G_OVARY	Ovarian	Clear cell carcinoma	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.466475	Adherent	8	primary	ovary	KRAS_G13C	PIK3CA_H1047Y	WT	WT	PTEN_R142fs;PTEN_K267fs*9	WT	WT	WT	"CCLE Oncomap, hc(STK11-wt); Oncomap"	20090929
+TT_OESOPHAGUS	Esophageal	Squamous	Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.5878	Adherent	7		oesophagus	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc(TP53)"	20110422
+TYKNU_OVARY	Ovarian		Cheung et al.	"Array, Seq"	match SNP6.0 ref		4.55645	Adherent	8		ovary	WT	WT	WT	NRAS_G12D	WT	WT	WT	WT	"Sanger(TP53); CCLE Oncomap, hc(TP53)"	20110202
+U178_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match pre-screen FP ref		3.9389	Adherent	8		central_nervous_system	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20101208
+U251MG_CENTRAL_NERVOUS_SYSTEM	GBM		"Cheung et al., Luo et al."	"Array, Seq"	match SNP6.0 ref		4.433275	Adherent	8	primary	central_nervous_system	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	CCLE Oncomap	20090519
+U343_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match pre-screen FP ref		4.058075	Adherent	8		central_nervous_system	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110209
+U87MG_CENTRAL_NERVOUS_SYSTEM	GBM			Seq	match SNP6.0 ref		4.346275	Adherent	7	primary	central_nervous_system	WT	WT	WT	WT	PTEN_?	WT	WT	WT	"Sanger(PTEN); CCLE Oncomap, hc"	20111116
+UOK101_KIDNEY	Renal Cell Carcinoma			Seq	match pre-screen FP ref		4.322375	Adherent	8		kidney	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	NA/WT	Achilles Oncomap	20110224
+VCAP_PROSTATE	Prostate			Seq	match SNP6.0 ref		4.528425	Adherent	4	metastasis	prostate	WT	WT	WT	WT	WT	WT	WT	WT	"CCLE Oncomap, hc"	20110608
+YKG1_CENTRAL_NERVOUS_SYSTEM	GBM			Seq			4.5476	Adherent	8	primary	central_nervous_system	WT	PIK3CA_R93W	WT	WT	PTEN_?	WT	WT	WT	"Sanger(PTEN); CCLE Oncomap, hc(PIK3CA)"	20110120
+ZR7530_BREAST	Breast	ductal Carcinoma		Seq	match SNP6.0 ref/ pre-screen FP ref		4.543075	Adherent	6		breast	WT	WT	WT	WT	WT	WT	WT	WT	"Sanger; CCLE Oncomap, hc"	20110721
