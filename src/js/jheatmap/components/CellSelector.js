@@ -1,15 +1,16 @@
 
 jheatmap.components.CellSelector = function(drawer, heatmap, container) {
 
+    var div = $("<div class='selector'></div>");
     var selectCell = $("<select>").change(function () {
         heatmap.cells.selectedValue = $(this)[0].value;
         drawer.loading(function () {
             drawer.paint();
         });
     });
-    container.append($("<span>Cells</span>"));
-    container.append(selectCell);
-    container.append($("<br>"));
+    div.append($("<span>Cells</span>"));
+    div.append(selectCell);
+    container.append(div);
 
     for (o = 0; o < heatmap.cells.header.length; o++) {
         if (heatmap.cells.header[o] == undefined) {

@@ -5,7 +5,7 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
 
     // Create markup
     this.markup = $("<td>", {"class": "row" });
-    this.canvas = $("<canvas class='header' width='230' height='" + heatmap.size.height + "' tabindex='1'></canvas>");
+    this.canvas = $("<canvas class='header' width='" + heatmap.rows.labelSize + "' height='" + heatmap.size.height + "' tabindex='1'></canvas>");
     this.markup.append(this.canvas);
 
     // Event functions
@@ -50,7 +50,7 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
             } else {
 
                 var x = e.pageX - $(e.target).offset().left;
-                if (x > 220) {
+                if (x > (heatmap.rows.labelSize - 10)) {
                     heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, !(heatmap.cols.sorter.asc), heatmap.rows.selected.slice(0));
                     heatmap.cols.sorter.sort(heatmap, "columns");
                 } else {
@@ -227,11 +227,11 @@ jheatmap.components.RowHeaderPanel.prototype.paint = function() {
 
     for (var row = startRow; row < endRow; row++) {
         var value = heatmap.rows.getValue(row, heatmap.rows.selectedValue);
-        rowCtx.fillText(value, 225 - textSpacing, ((row - startRow) * rz) + (rz / 2));
+        rowCtx.fillText(value, (heatmap.rows.labelSize - 5) - textSpacing, ((row - startRow) * rz) + (rz / 2));
 
         // Order mark
         rowCtx.save();
-        rowCtx.translate(226, ((row - startRow) * rz) + (rz / 2));
+        rowCtx.translate((heatmap.rows.labelSize - 4), ((row - startRow) * rz) + (rz / 2));
         rowCtx.rotate(-Math.PI / 4);
         if (    (heatmap.cols.sorter.field == heatmap.cells.selectedValue) &&
             ($.inArray(heatmap.rows.order[row], heatmap.cols.sorter.indices) > -1)
@@ -250,13 +250,13 @@ jheatmap.components.RowHeaderPanel.prototype.paint = function() {
 
         if ($.inArray(heatmap.rows.order[row], heatmap.rows.selected) > -1) {
             rowCtx.fillStyle = "rgba(0,0,0,0.1)";
-            rowCtx.fillRect(0, ((row - startRow) * rz), 230, rz);
+            rowCtx.fillRect(0, ((row - startRow) * rz), heatmap.rows.labelSize, rz);
             rowCtx.fillStyle = "black";
         }
 
         if (heatmap.search != null && value.toUpperCase().indexOf(heatmap.search.toUpperCase()) != -1) {
             rowCtx.fillStyle = "rgba(255,255,0,0.3)";
-            rowCtx.fillRect(0, ((row - startRow) * rz), 230, rz);
+            rowCtx.fillRect(0, ((row - startRow) * rz), heatmap.rows.labelSize, rz);
             rowCtx.fillStyle = "black";
         }
     }

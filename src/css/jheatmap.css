@@ -131,6 +131,11 @@ table.heatmap th div.col {
 	-moz-transform: rotate(-90deg);
 }
 
+table.heatmap th.topleft > div.selector {
+    width: 230px;
+    float: right;
+}
+
 table.heatmap th.topleft div.filter {
     margin-top: 5px;
     margin-left: 8px;

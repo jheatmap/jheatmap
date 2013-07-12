@@ -3,9 +3,14 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
 
     this.heatmap = heatmap;
 
+    // Calculate label size
+    if (heatmap.cols.labelSize == undefined) {
+
+    }
+
     // Create markup
     this.markup = $("<th>");
-    this.canvas = $("<canvas class='header' id='colCanvas' width='" + heatmap.size.width + "' height='150' tabindex='3'></canvas>");
+    this.canvas = $("<canvas class='header' id='colCanvas' width='" + heatmap.size.width + "' height='"+heatmap.cols.labelSize+"' tabindex='3'></canvas>");
     this.markup.append(this.canvas);
 
     // Event functions
@@ -37,7 +42,7 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
             if (colsSelecting) {
                 if (index == -1) {
                     var y = e.pageY - $(e.target).offset().top;
-                    if (y > 140) {
+                    if (y > (heatmap.cols.labelSize - 10)) {
                         heatmap.rows.sorter = new jheatmap.sorters.ValueSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), heatmap.cols.order[col]);
                         heatmap.rows.sorter.sort(heatmap, "rows");
                     } else {
@@ -46,7 +51,7 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
                 }
             } else {
                 var y = e.pageY - $(e.target).offset().top;
-                if (y > 140) {
+                if (y > (heatmap.cols.labelSize - 10)) {
                     heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), heatmap.cols.selected.slice(0));
                     heatmap.rows.sorter.sort(heatmap, "rows");
                 } else {
@@ -220,14 +225,14 @@ jheatmap.components.ColumnHeaderPanel.prototype.paint = function() {
     for (var c = startCol; c < endCol; c++) {
         var value = heatmap.cols.getValue(c, heatmap.cols.selectedValue);
         colCtx.save();
-        colCtx.translate((c - startCol) * cz + (cz / 2), 145);
+        colCtx.translate((c - startCol) * cz + (cz / 2), heatmap.cols.labelSize - 5);
         colCtx.rotate(Math.PI / 2);
         colCtx.fillText(value, -textSpacing, 0);
         colCtx.restore();
 
         // Order mark
         colCtx.save();
-        colCtx.translate(Math.round(((c - startCol) * cz) + (cz / 2)), 146)
+        colCtx.translate(Math.round(((c - startCol) * cz) + (cz / 2)), heatmap.cols.labelSize - 4)
         colCtx.rotate(Math.PI / 4);
         if (    (heatmap.rows.sorter.field == heatmap.cells.selectedValue) &&
             ($.inArray(heatmap.cols.order[c], heatmap.rows.sorter.indices) > -1)
@@ -245,13 +250,13 @@ jheatmap.components.ColumnHeaderPanel.prototype.paint = function() {
 
         if ($.inArray(heatmap.cols.order[c], heatmap.cols.selected) > -1) {
             colCtx.fillStyle = "rgba(0,0,0,0.1)";
-            colCtx.fillRect((c - startCol) * cz, 0, cz, 150);
+            colCtx.fillRect((c - startCol) * cz, 0, cz, heatmap.cols.labelSize);
             colCtx.fillStyle = "black";
         }
 
         if (heatmap.search != null && value.toUpperCase().indexOf(heatmap.search.toUpperCase()) != -1) {
             colCtx.fillStyle = "rgba(255,255,0,0.3)";
-            colCtx.fillRect((c - startCol) * cz, 0, cz, 150);
+            colCtx.fillRect((c - startCol) * cz, 0, cz, heatmap.cols.labelSize);
             colCtx.fillStyle = "black";
         }
     }

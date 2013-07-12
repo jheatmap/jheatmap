@@ -21,7 +21,6 @@ jheatmap.HeatmapSize = function (heatmap) {
      */
     this.height = 400;
 
-
     this.heatmap = heatmap;
 
 };

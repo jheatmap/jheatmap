@@ -13,6 +13,13 @@ jheatmap.HeatmapDimension = function (heatmap) {
     this.zoom = 20;
 
     /**
+     * Height or width in pixels of the label canvas.
+     *
+     * @type {number}
+     */
+    this.labelSize = 230;
+
+    /**
      * Header of the items values
      * @type {Array}
      */

@@ -1,7 +1,7 @@
 
 jheatmap.components.ShortcutsPanel = function(container) {
 
-    container.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 70px; padding-bottom: 4px;'>" +
+    container.append(
         "<div><a href='#heatmap-modal' data-toggle='modal'>Keyboard shortcuts</a></div>" +
         "<div class='modal hide' id='heatmap-modal' tabindex='-1' role='dialog'>" +
         "<div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button>" +
@@ -19,7 +19,7 @@ jheatmap.components.ShortcutsPanel = function(container) {
         "<div class='modal-footer'>" +
         "<button class='btn' data-dismiss='modal'>Close</button>" +
         "</div>" +
-        "</div>" +
-        "</td>");
+        "</div>"
+        );
 
 };
