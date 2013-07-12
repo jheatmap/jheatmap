@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jHeatmap</title>
+    <link href="../../css/jheatmap-1.0.0-alpha-min.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="../../js/jheatmap-1.0.0-alpha-min.js" type="text/javascript"></script>
+    <script>
+        $(document).ready(function () {
+            $('#heatmap').heatmap(
+                    {
+                        data: {
+                            values: new jheatmap.readers.GctMatrixReader({ url: "aadac_shrna.gct", colAnnotationUrl: 'Achilles_v2.4_SampleInfo_small.txt' })
+                        },
+
+                        init: function (heatmap) {
+
+                            // Column annotations
+                            heatmap.cols.decorators["Type"] = new jheatmap.decorators.CategoricalRandom({unknown: "#FFFFFF"});
+                            heatmap.cols.decorators["Subtype"] = new jheatmap.decorators.CategoricalRandom({unknown: "#FFFFFF"});
+                            heatmap.cols.annotations = ["Type", "Subtype"];
+
+                            // Override default paintCellDetails function
+                            heatmap.paintCellDetails = paintCellDetails;
+
+                            // Hide the keyboard shortcuts link and the cell value selector.
+                            heatmap.controls.shortcuts = false;
+                            heatmap.controls.cellSelector = false;
+
+                            // Set columns label canvas height
+                            heatmap.cols.labelSize = 330;
+
+                            // Initialize toolbar
+                            $('#hideSelectedBtn').click( function(e) {
+                                heatmap.actions.HideSelected.columns();
+                            });
+
+                            $('#showHiddenBtn').click(function (e) {
+                                heatmap.actions.ShowHidden.columns();
+                            });
+
+                            $('#clearSelectionBtn').click(function (e) {
+                                heatmap.actions.ClearSelection.rows();
+                                heatmap.actions.ClearSelection.columns();
+                            });
+                        }
+                    }
+            );
+
+        });
+
+        function paintCellDetails(row, col, heatmap, boxTop, boxLeft, details) {
+
+            var val = heatmap.cells.getValue(row, col, 0);
+
+            if (!isNaN(val) && (val % 1 != 0)) {
+                val = Number(val).toFixed(3);
+            }
+
+            var boxWidth;
+            var boxHeight;
+
+            var boxHtml = "<dl class='dl-horizontal'>";
+            boxHtml += "<dt>Column</dt><dd>" + heatmap.cols.getValue(col, heatmap.cols.selectedValue) + "</dd>";
+            boxHtml += "<dt>Row</dt><dd>" + heatmap.rows.getValue(row, heatmap.rows.selectedValue) + "</dd>";
+            boxHtml += "<dt>Value</dt><dd>" + val + "</dd>";
+            boxHtml += "<hr />";
+            for (var i = 0; i < heatmap.cols.header.length; i++) { // use col headers not cell headers as is default
+                if (heatmap.cols.header[i] == undefined) {
+                    continue;
+                }
+                boxHtml += "<dt title='" + heatmap.cols.header[i] + "'>" + heatmap.cols.header[i] + ":</dt><dd>";
+                val = heatmap.cols.getValue(col, i)
+                //
+                boxHtml += ("&nbsp;" + val);
+                boxHtml += "</dd>";
+            }
+            boxHtml += "</dl>";
+
+            details.html(boxHtml);
+            boxWidth = 390;
+            boxHeight = 70 + (heatmap.cols.header.length * 20);
+
+
+            var wHeight = $(document).height();
+            var wWidth = $(document).width();
+
+            details.css('left', boxLeft);
+            details.css('top', boxTop);
+            details.css('width', boxWidth);
+            details.css('height', boxHeight);
+
+            details.css('display', 'block');
+            details.bind('click', function () {
+                $(this).css('display', 'none');
+            });
+        }
+    </script>
+</head>
+<body>
+<div id="heatmap"></div>
+<br/>
+<input type="button" id="hideSelectedBtn" value="Hide Selected Columns"/>
+<input type="button" id="showHiddenBtn" value="Show Hidden Columns"/>
+<input type="button" id="clearSelectionBtn" value="Clear rows and columns selection"/>
+
+</body>
+</html>
+

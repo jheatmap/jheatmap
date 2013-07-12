@@ -6,6 +6,12 @@
  */
 var jheatmap = {};
 /**
+ * Heatmap actions
+ *
+ * @namespace jheatmap.actions
+ */
+jheatmap.actions = {};
+/**
  * Values aggregators
  * @namespace jheatmap.aggregators
  */
@@ -393,6 +399,118 @@ jheatmap.readers.CdmMatrixReader.prototype.read = function (heatmap, initialize)
     });
 };
 /**
+ * A text separated value GenePattern GCT file matrix reader. The file has to follow this format:
+ *
+ * <pre><code>
+ *    #1.2
+ *   Name  Description      col1    col2
+ *   row1  row1desc		 	0.11    0.12
+ *   row2   row2desc 		0.21    0.22
+ * </code></pre>
+ *
+ * @example
+ * new jheatmap.readers.GctMatrixReader({ url: "filename.gct" });
+ *
+ * @author Ted Liefeld
+ * @class
+ * @param {string}  p.url                 File url
+ *
+ */
+jheatmap.readers.GctMatrixReader = function (p) {
+    p = p || {};
+    this.url = p.url || "";
+    this.separator = p.separator || "\t";
+    this.colAnnotationUrl = p.colAnnotationUrl || null;
+
+};
+
+/**
+ * Asynchronously reads a text separated value file, the result is loaded in the 'heatmap' parameter.
+ *
+ * @param {jheatmap.Heatmap}     heatmap     The destination heatmap.
+ * @param {function}    initialize  A callback function that is called when the file is loaded.
+ *
+ */
+jheatmap.readers.GctMatrixReader.prototype.read = function (heatmap, initialize) {
+
+    var sep = this.separator;
+    var url = this.url;
+    var colAnnotationUrl = this.colAnnotationUrl;
+
+    jQuery.ajax({
+        url: url,
+        dataType: "text",
+        success: function (file) {
+
+            var lines = file.replace('\r', '').split('\n');
+            jQuery.each(lines, function (lineCount, line) {
+                if (line.length > 0 && !line.startsWith("#")) {
+                    if (lineCount < 2) {
+                        // skip lines 1,2 with the gct header
+                    } else if (lineCount == 2) {
+                        var headerLine = line.splitCSV(sep);
+                        headerLine.shift();
+                        headerLine.shift();
+                        heatmap.cells.header = headerLine;
+                    } else {
+                        var valLine = line.splitCSV(sep);
+                        heatmap.cells.values[heatmap.cells.values.length] = valLine;
+                    }
+                }
+            });
+
+            heatmap.cols.header = [ "Samples" ];
+            for (var i = 0; i < heatmap.cells.header.length; i++) {
+                heatmap.cols.values[heatmap.cols.values.length] = [ heatmap.cells.header[i] ];
+            }
+
+            var cellValues = [];
+            heatmap.rows.header = [ "Feature Name", "Description" ];
+            for (var row = 0; row < heatmap.cells.values.length; row++) {
+                heatmap.rows.values[heatmap.rows.values.length] = [ heatmap.cells.values[row][0],  heatmap.cells.values[row][1]];
+                for (var col = 0; col < heatmap.cols.values.length; col++) {
+                    cellValues[cellValues.length] = [ heatmap.cells.values[row][col + 2] ];
+                }
+            }
+
+            delete heatmap.cells.header;
+            delete heatmap.cells.values;
+            heatmap.cells.header = [ "Value" ];
+            heatmap.cells.values = cellValues;
+
+            if (colAnnotationUrl != null){
+                jQuery.ajax({
+                    url: colAnnotationUrl,
+                    dataType: "text",
+                    success: function (file) {
+
+                        var colHash = {};
+                        for (var i = 0; i < heatmap.cols.values.length; i++) {
+                            colHash[(heatmap.cols.values[i][0]).toString()] = i;
+                        }
+
+                        var lines = file.replace('\r', '').split('\n');
+                        heatmap.cols.header = lines[0].split('\t');
+                        for (var i = 1; i < lines.length; i++) {
+                            var values = lines[i].split('\t');
+                            var pos = colHash[values[0]];
+                            if (pos != undefined) {
+                                heatmap.cols.values[pos] = values;
+                            }
+                        }
+                        heatmap.cells.ready = true;
+                        initialize.call(this);
+                    }
+                });
+
+            } else {
+                heatmap.cells.ready = true;
+                initialize.call(this);
+            }
+        }
+    });
+};
+/**
  * A text separated value file matrix reader.
  *
  * @example
@@ -695,6 +813,40 @@ jheatmap.decorators.Categorical.prototype.toColor = function (value) {
         return this.colors[i];
     }
     return this.unknown;
+};
+/**
+ * Random Categorical decorator, randomly generates colors for a category.
+ *
+ * @example
+ * new jheatmap.decorators.CategoricalRandom();
+ *
+ * @author Ted Liefeld
+ * @class
+ * @param {string} [p.unknown="#FFFFFF"]    Color for null or undefined values
+ *
+ */
+jheatmap.decorators.CategoricalRandom = function (p) {
+    this.colors = new Object();
+    this.unknown = p.unknown || "#FFFFFF";
+};
+
+/**
+ * Convert a value to a color
+ * @param {string} value    The cell value
+ * @return {string} The corresponding color string definition.
+ */
+jheatmap.decorators.CategoricalRandom.prototype.toColor = function (value) {
+    if (value == null) return this.unknown;
+    if (value == 'undefined') return this.unknown;
+    if (value == undefined) return this.unknown;
+    if (value.trim().length == 0) return this.unknown;
+
+    if (this.colors[value] == null){
+        // assign a random color
+        this.colors[value] = '#'+Math.floor(Math.random()*16777215).toString(16);
+
+    }
+    return this.colors[value];
 };
 /**
  * Constant decorator. This decorator returns always the same color
@@ -1128,6 +1280,180 @@ jheatmap.aggregators.PValue.prototype.accumulate = function (values) {
     return sum;
 };
 /**
+ * Set aggregation sorter as default
+ *
+ * @example
+ * new jheatmap.actions.AggregationSort(heatmap);
+ *
+ * @param heatmap   The target heatmap
+ * @class
+ */
+jheatmap.actions.AggregationSort = function (heatmap) {
+    this.heatmap = heatmap;
+    this.shortCut = "A";
+    this.keyCodes = [97, 65];
+    this.title = "Use aggregation sort at rows/columns";
+};
+
+jheatmap.actions.AggregationSort.prototype.rows = function() {
+    var heatmap = this.heatmap;
+    heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
+    heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.cols.sorter.asc, heatmap.rows.selected.slice(0));
+    heatmap.cols.sorter.sort(heatmap, "columns");
+    heatmap.drawer.paint();
+};
+
+jheatmap.actions.AggregationSort.prototype.columns = function() {
+    var heatmap = this.heatmap;
+    heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
+    heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.rows.sorter.asc, heatmap.cols.selected.slice(0));
+    heatmap.rows.sorter.sort(heatmap, "rows");
+    heatmap.drawer.paint();
+};
+
+/**
+ * Show hidden rows or columns action.
+ *
+ * @example
+ * new jheatmap.actions.ClearSelection(heatmap);
+ *
+ * @param heatmap   The target heatmap
+ * @class
+ */
+jheatmap.actions.ClearSelection = function (heatmap) {
+    this.heatmap = heatmap;
+    this.shortCut = "C";
+    this.keyCodes = [99, 67];
+    this.title = "Clear selection from rows/columns";
+};
+
+/**
+ * Execute the action.
+ * @private
+ */
+jheatmap.actions.ClearSelection.prototype.run = function (dimension) {
+    dimension.selected = [];
+    this.heatmap.drawer.paint();
+};
+
+jheatmap.actions.ClearSelection.prototype.rows = function() {
+    this.run(this.heatmap.rows);
+};
+
+jheatmap.actions.ClearSelection.prototype.columns = function() {
+    this.run(this.heatmap.cols);
+};
+
+/**
+ * Hide selected action.
+ *
+ * @example
+ * new jheatmap.actions.HideSelected(heatmap);
+ *
+ * @param heatmap   The target heatmap
+ * @class
+ */
+jheatmap.actions.HideSelected = function (heatmap) {
+    this.heatmap = heatmap;
+    this.shortCut = "H";
+    this.keyCodes = [72, 104];
+    this.title = "Hide selected rows/columns";
+};
+
+/**
+ * Execute the action. *
+ * @private
+ */
+jheatmap.actions.HideSelected.prototype.run = function (dimension) {
+    if (dimension.selected.length > 0) {
+        dimension.order = $.grep(dimension.order, function (value) {
+                return dimension.selected.indexOf(value) == -1;
+        });
+        this.heatmap.drawer.paint();
+    }
+};
+
+jheatmap.actions.HideSelected.prototype.rows = function() {
+    this.run(this.heatmap.rows);
+};
+
+jheatmap.actions.HideSelected.prototype.columns = function() {
+    this.run(this.heatmap.cols);
+};
+
+/**
+ *
+ * Set mutual exclusive sorter as default
+ *
+ * @example
+ * new jheatmap.actions.MutualExclusiveSort(heatmap);
+ *
+ * @param heatmap   The target heatmap
+ * @class
+ */
+jheatmap.actions.MutualExclusiveSort = function (heatmap) {
+    this.heatmap = heatmap;
+    this.shortCut = "M";
+    this.keyCodes = [109, 77];
+    this.title = "Use aggregation sort at rows/columns";
+};
+
+jheatmap.actions.MutualExclusiveSort.prototype.rows = function() {
+    var heatmap = this.heatmap;
+    heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
+    heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.cols.sorter.asc, heatmap.rows.selected.slice(0));
+    heatmap.cols.sorter.sort(heatmap, "columns");
+    heatmap.drawer.paint();
+};
+
+jheatmap.actions.MutualExclusiveSort.prototype.columns = function() {
+    var heatmap = this.heatmap;
+    heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
+    heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.rows.sorter.asc, heatmap.cols.selected.slice(0));
+    heatmap.rows.sorter.sort(heatmap, "rows");
+    heatmap.drawer.paint();
+};
+
+/**
+ * Show hidden rows or columns action.
+ *
+ * @example
+ * new jheatmap.actions.ShowHidden(heatmap);
+ *
+ * @param heatmap   The target heatmap
+ * @class
+ */
+jheatmap.actions.ShowHidden = function (heatmap) {
+    this.heatmap = heatmap;
+    this.shortCut = "S";
+    this.keyCodes = [83, 115];
+    this.title = "Show hidden rows/columns";
+};
+
+/**
+ * Execute the action. *
+ * @private
+ */
+jheatmap.actions.ShowHidden.prototype.run = function (dimension) {
+    dimension.order = [];
+    for (var c = 0; c < dimension.values.length; c++) {
+        dimension.order[dimension.order.length] = c;
+    }
+};
+
+jheatmap.actions.ShowHidden.prototype.rows = function() {
+    this.run(this.heatmap.rows);
+    this.heatmap.rows.sorter.sort(this.heatmap, "rows");
+    this.heatmap.drawer.paint();
+};
+
+jheatmap.actions.ShowHidden.prototype.columns = function() {
+    this.run(this.heatmap.cols);
+    this.heatmap.cols.sorter.sort(this.heatmap, "columns");
+    this.heatmap.drawer.paint();
+};
+
+/**
  * Filter out rows or columns that all the values are outside [-maxValue, maxValue] range.
  *
  * @example
@@ -1476,64 +1802,11 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
             var col = Math.floor((e.originalEvent.pageX - position.left) / heatmap.cols.zoom) + heatmap.offset.left;
             var row = Math.floor((e.originalEvent.pageY - position.top) / heatmap.rows.zoom) + heatmap.offset.top;
 
-            var cl = heatmap.cols.values.length;
-            var pos = heatmap.rows.order[row] * cl + heatmap.cols.order[col];
-            var value = heatmap.cells.values[pos];
-
             var details = $('table.heatmap div.detailsbox');
-            if (value != null) {
+            var boxTop = e.pageY - $(heatmap.options.container).offset().top;
+            var boxLeft = e.pageX - $(heatmap.options.container).offset().left;
 
-                var boxTop = e.pageY - $(heatmap.options.container).offset().top;
-                var boxLeft = e.pageX - $(heatmap.options.container).offset().left;
-                var boxWidth;
-                var boxHeight;
-
-                var boxHtml = "<dl class='dl-horizontal'>";
-                boxHtml += "<dt>Column</dt><dd>" + heatmap.cols.getValue(col, heatmap.cols.selectedValue) + "</dd>";
-                boxHtml += "<dt>Row</dt><dd>" + heatmap.rows.getValue(row, heatmap.rows.selectedValue) + "</dd>";
-                boxHtml += "<hr />";
-                for (var i = 0; i < heatmap.cells.header.length; i++) {
-                    if (heatmap.cells.header[i] == undefined) {
-                        continue;
-                    }
-                    boxHtml += "<dt>" + heatmap.cells.header[i] + ":</dt><dd>";
-                    var val = value[i];
-                    if (!isNaN(val) && (val % 1 != 0)) {
-                        val = Number(val).toFixed(3);
-                    }
-                    boxHtml += val;
-                    boxHtml += "</dd>";
-                }
-                boxHtml += "</dl>";
-
-                details.html(boxHtml);
-                boxWidth = 300;
-                boxHeight = 70 + (heatmap.cells.header.length * 25);
-
-
-                var wHeight = $(document).height();
-                var wWidth = $(document).width();
-
-                if (boxTop + boxHeight > wHeight) {
-                    boxTop -= boxHeight;
-                }
-
-                if (boxLeft + boxWidth > wWidth) {
-                    boxLeft -= boxWidth;
-                }
-
-                details.css('left', boxLeft);
-                details.css('top', boxTop);
-                details.css('width', boxWidth);
-                details.css('height', boxHeight);
-
-                details.css('display', 'block');
-                details.bind('click', function () {
-                    $(this).css('display', 'none');
-                });
-            } else {
-                details.css('display', 'none');
-            }
+            heatmap.paintCellDetails(row, col, heatmap, boxTop, boxLeft, details);
 
         }
         drawer.paint();
@@ -1706,15 +1979,16 @@ jheatmap.components.CellBodyPanel.prototype.paint = function() {
 
 jheatmap.components.CellSelector = function(drawer, heatmap, container) {
 
+    var div = $("<div class='selector'></div>");
     var selectCell = $("<select>").change(function () {
         heatmap.cells.selectedValue = $(this)[0].value;
         drawer.loading(function () {
             drawer.paint();
         });
     });
-    container.append($("<span>Cells</span>"));
-    container.append(selectCell);
-    container.append($("<br>"));
+    div.append($("<span>Cells</span>"));
+    div.append(selectCell);
+    container.append(div);
 
     for (o = 0; o < heatmap.cells.header.length; o++) {
         if (heatmap.cells.header[o] == undefined) {
@@ -1861,9 +2135,14 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
 
     this.heatmap = heatmap;
 
+    // Calculate label size
+    if (heatmap.cols.labelSize == undefined) {
+
+    }
+
     // Create markup
     this.markup = $("<th>");
-    this.canvas = $("<canvas class='header' id='colCanvas' width='" + heatmap.size.width + "' height='150' tabindex='3'></canvas>");
+    this.canvas = $("<canvas class='header' id='colCanvas' width='" + heatmap.size.width + "' height='"+heatmap.cols.labelSize+"' tabindex='3'></canvas>");
     this.markup.append(this.canvas);
 
     // Event functions
@@ -1895,7 +2174,7 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
             if (colsSelecting) {
                 if (index == -1) {
                     var y = e.pageY - $(e.target).offset().top;
-                    if (y > 140) {
+                    if (y > (heatmap.cols.labelSize - 10)) {
                         heatmap.rows.sorter = new jheatmap.sorters.ValueSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), heatmap.cols.order[col]);
                         heatmap.rows.sorter.sort(heatmap, "rows");
                     } else {
@@ -1904,7 +2183,7 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
                 }
             } else {
                 var y = e.pageY - $(e.target).offset().top;
-                if (y > 140) {
+                if (y > (heatmap.cols.labelSize - 10)) {
                     heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), heatmap.cols.selected.slice(0));
                     heatmap.rows.sorter.sort(heatmap, "rows");
                 } else {
@@ -1995,49 +2274,14 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
 
     var onKeyPress = function (e) {
 
-        // 'H' or 'h'
-        if (e.charCode == 72 || e.charCode == 104) {
+        for (var key in heatmap.actions) {
+            var action = heatmap.actions[key];
 
-            if (heatmap.cols.selected.length > 0) {
-                heatmap.cols.order = $.grep(heatmap.cols.order, function (value) {
-                    return heatmap.cols.selected.indexOf(value) == -1;
-                });
-                drawer.paint();
+            if (action.columns != undefined && action.shortCut != undefined && action.keyCodes.indexOf(e.keyCode) != -1) {
+                action.columns();
             }
         }
 
-        // 'S' or 's'
-        if (e.keyCode == 83 || e.charCode == 115) {
-
-            heatmap.cols.order = [];
-            for (var c = 0; c < heatmap.cols.values.length; c++) {
-                heatmap.cols.order[heatmap.cols.order.length] = c;
-            }
-            heatmap.cols.sorter.sort(heatmap, "columns");
-            drawer.paint();
-        }
-
-        // 'R' or 'r'
-        if (e.keyCode == 82 || e.charCode == 114) {
-            heatmap.cols.selected = [];
-            drawer.paint();
-        }
-
-        // 'A' or 'a'
-        if (e.keyCode == 97 || e.charCode == 65) {
-            heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
-            heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.rows.sorter.asc, heatmap.cols.selected.slice(0));
-            heatmap.rows.sorter.sort(heatmap, "rows");
-            drawer.paint();
-        }
-
-        // 'M' or 'm'
-        if (e.keyCode == 109 || e.charCode == 77) {
-            heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
-            heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.rows.sorter.asc, heatmap.cols.selected.slice(0));
-            heatmap.rows.sorter.sort(heatmap, "rows");
-            drawer.paint();
-        }
     };
 
     // Bind events
@@ -2078,14 +2322,14 @@ jheatmap.components.ColumnHeaderPanel.prototype.paint = function() {
     for (var c = startCol; c < endCol; c++) {
         var value = heatmap.cols.getValue(c, heatmap.cols.selectedValue);
         colCtx.save();
-        colCtx.translate((c - startCol) * cz + (cz / 2), 145);
+        colCtx.translate((c - startCol) * cz + (cz / 2), heatmap.cols.labelSize - 5);
         colCtx.rotate(Math.PI / 2);
         colCtx.fillText(value, -textSpacing, 0);
         colCtx.restore();
 
         // Order mark
         colCtx.save();
-        colCtx.translate(Math.round(((c - startCol) * cz) + (cz / 2)), 146)
+        colCtx.translate(Math.round(((c - startCol) * cz) + (cz / 2)), heatmap.cols.labelSize - 4)
         colCtx.rotate(Math.PI / 4);
         if (    (heatmap.rows.sorter.field == heatmap.cells.selectedValue) &&
             ($.inArray(heatmap.cols.order[c], heatmap.rows.sorter.indices) > -1)
@@ -2103,13 +2347,13 @@ jheatmap.components.ColumnHeaderPanel.prototype.paint = function() {
 
         if ($.inArray(heatmap.cols.order[c], heatmap.cols.selected) > -1) {
             colCtx.fillStyle = "rgba(0,0,0,0.1)";
-            colCtx.fillRect((c - startCol) * cz, 0, cz, 150);
+            colCtx.fillRect((c - startCol) * cz, 0, cz, heatmap.cols.labelSize);
             colCtx.fillStyle = "black";
         }
 
         if (heatmap.search != null && value.toUpperCase().indexOf(heatmap.search.toUpperCase()) != -1) {
             colCtx.fillStyle = "rgba(255,255,0,0.3)";
-            colCtx.fillRect((c - startCol) * cz, 0, cz, 150);
+            colCtx.fillRect((c - startCol) * cz, 0, cz, heatmap.cols.labelSize);
             colCtx.fillStyle = "black";
         }
     }
@@ -2118,19 +2362,20 @@ jheatmap.components.ColumnHeaderPanel.prototype.paint = function() {
 
 jheatmap.components.ColumnSelector = function(drawer, heatmap, container) {
 
+    var div = $("<div class='selector'></div>");
     var selectCol = $("<select>").change(function () {
         heatmap.cols.selectedValue = $(this)[0].value;
         drawer.loading(function () {
             drawer.paint();
         });
     });
-    container.append($("<span>Columns</span>"));
-    container.append(selectCol);
+    div.append($("<span>Columns</span>"));
+    div.append(selectCol);
     for (var o = 0; o < heatmap.cols.header.length; o++) {
         selectCol.append(new Option(heatmap.cols.header[o], o, o == heatmap.cols.selectedValue));
     }
     selectCol.val(heatmap.cols.selectedValue);
-    container.append($("<br>"));
+    container.append(div);
 
 };
 
@@ -2141,11 +2386,26 @@ jheatmap.components.ControlsPanel = function(drawer, heatmap) {
     });
 
     jheatmap.components.DetailsPanel(this.markup);
-    jheatmap.components.ShortcutsPanel(this.markup);
-    jheatmap.components.FilterCheckBoxes(drawer, heatmap, this.markup);
-    jheatmap.components.ColumnSelector(drawer, heatmap, this.markup);
-    jheatmap.components.RowSelector(drawer, heatmap, this.markup);
-    jheatmap.components.CellSelector(drawer, heatmap, this.markup);
+
+    if (heatmap.controls.shortcuts) {
+        jheatmap.components.ShortcutsPanel(heatmap, this.markup);
+    }
+
+    if (heatmap.controls.filters) {
+        jheatmap.components.FilterCheckBoxes(drawer, heatmap, this.markup);
+    }
+
+    if (heatmap.controls.columnSelector) {
+        jheatmap.components.ColumnSelector(drawer, heatmap, this.markup);
+    }
+
+    if (heatmap.controls.rowSelector) {
+        jheatmap.components.RowSelector(drawer, heatmap, this.markup);
+    }
+
+    if (heatmap.controls.cellSelector) {
+        jheatmap.components.CellSelector(drawer, heatmap, this.markup);
+    }
 };
 
 jheatmap.components.ControlsPanel.paint = function() {
@@ -2442,7 +2702,7 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
 
     // Create markup
     this.markup = $("<td>", {"class": "row" });
-    this.canvas = $("<canvas class='header' width='230' height='" + heatmap.size.height + "' tabindex='1'></canvas>");
+    this.canvas = $("<canvas class='header' width='" + heatmap.rows.labelSize + "' height='" + heatmap.size.height + "' tabindex='1'></canvas>");
     this.markup.append(this.canvas);
 
     // Event functions
@@ -2487,7 +2747,7 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
             } else {
 
                 var x = e.pageX - $(e.target).offset().left;
-                if (x > 220) {
+                if (x > (heatmap.rows.labelSize - 10)) {
                     heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, !(heatmap.cols.sorter.asc), heatmap.rows.selected.slice(0));
                     heatmap.cols.sorter.sort(heatmap, "columns");
                 } else {
@@ -2581,50 +2841,15 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
 
     var onKeyPress = function (e) {
 
-        // 'H' or 'h'
-        if (e.keyCode == 72 || e.charCode == 104) {
+        for (var key in heatmap.actions) {
+            var action = heatmap.actions[key];
 
-            if (heatmap.rows.selected.length > 0) {
-                heatmap.rows.order = $.grep(heatmap.rows.order, function (value) {
-                    return heatmap.rows.selected.indexOf(value) == -1;
-                });
-                drawer.paint();
+            if (action.rows != undefined && action.shortCut != undefined && action.keyCodes.indexOf(e.keyCode) != -1) {
+                action.rows();
             }
         }
 
-        // 'S' or 's'
-        if (e.keyCode == 83 || e.charCode == 115) {
 
-            heatmap.rows.order = [];
-            for (var c = 0; c < heatmap.rows.values.length; c++) {
-                heatmap.rows.order[heatmap.rows.order.length] = c;
-            }
-            heatmap.rows.sorter.sort(heatmap, "rows");
-            drawer.paint();
-        }
-
-        // 'R' or 'r'
-        if (e.keyCode == 82 || e.charCode == 114) {
-
-            heatmap.rows.selected = [];
-            drawer.paint();
-        }
-
-        // 'A' or 'a'
-        if (e.keyCode == 97 || e.charCode == 65) {
-            heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
-            heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.cols.sorter.asc, heatmap.rows.selected.slice(0));
-            heatmap.cols.sorter.sort(heatmap, "columns");
-            drawer.paint();
-        }
-
-        // 'M' or 'm'
-        if (e.keyCode == 109 || e.charCode == 77) {
-            heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
-            heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.cols.sorter.asc, heatmap.rows.selected.slice(0));
-            heatmap.cols.sorter.sort(heatmap, "columns");
-            drawer.paint();
-        }
 
     };
 
@@ -2664,11 +2889,11 @@ jheatmap.components.RowHeaderPanel.prototype.paint = function() {
 
     for (var row = startRow; row < endRow; row++) {
         var value = heatmap.rows.getValue(row, heatmap.rows.selectedValue);
-        rowCtx.fillText(value, 225 - textSpacing, ((row - startRow) * rz) + (rz / 2));
+        rowCtx.fillText(value, (heatmap.rows.labelSize - 5) - textSpacing, ((row - startRow) * rz) + (rz / 2));
 
         // Order mark
         rowCtx.save();
-        rowCtx.translate(226, ((row - startRow) * rz) + (rz / 2));
+        rowCtx.translate((heatmap.rows.labelSize - 4), ((row - startRow) * rz) + (rz / 2));
         rowCtx.rotate(-Math.PI / 4);
         if (    (heatmap.cols.sorter.field == heatmap.cells.selectedValue) &&
             ($.inArray(heatmap.rows.order[row], heatmap.cols.sorter.indices) > -1)
@@ -2687,13 +2912,13 @@ jheatmap.components.RowHeaderPanel.prototype.paint = function() {
 
         if ($.inArray(heatmap.rows.order[row], heatmap.rows.selected) > -1) {
             rowCtx.fillStyle = "rgba(0,0,0,0.1)";
-            rowCtx.fillRect(0, ((row - startRow) * rz), 230, rz);
+            rowCtx.fillRect(0, ((row - startRow) * rz), heatmap.rows.labelSize, rz);
             rowCtx.fillStyle = "black";
         }
 
         if (heatmap.search != null && value.toUpperCase().indexOf(heatmap.search.toUpperCase()) != -1) {
             rowCtx.fillStyle = "rgba(255,255,0,0.3)";
-            rowCtx.fillRect(0, ((row - startRow) * rz), 230, rz);
+            rowCtx.fillRect(0, ((row - startRow) * rz), heatmap.rows.labelSize, rz);
             rowCtx.fillStyle = "black";
         }
     }
@@ -2702,15 +2927,16 @@ jheatmap.components.RowHeaderPanel.prototype.paint = function() {
 
 jheatmap.components.RowSelector = function(drawer, heatmap, container) {
 
+    var div = $("<div class='selector'></div>");
     var selectRow = $("<select>").change(function () {
         heatmap.rows.selectedValue = $(this)[0].value;
         drawer.loading(function () {
             drawer.paint();
         });
     });
-    container.append($("<span>Rows</span>"));
-    container.append(selectRow);
-    container.append($("<br>"));
+    div.append($("<span>Rows</span>"));
+    div.append(selectRow);
+    container.append(div);
 
     var o;
     for (o = 0; o < heatmap.rows.header.length; o++) {
@@ -2720,9 +2946,18 @@ jheatmap.components.RowSelector = function(drawer, heatmap, container) {
 
 };
 
-jheatmap.components.ShortcutsPanel = function(container) {
+jheatmap.components.ShortcutsPanel = function(heatmap, container) {
 
-    container.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 70px; padding-bottom: 4px;'>" +
+    var actionTips = "";
+    for (var key in heatmap.actions) {
+        var action = heatmap.actions[key];
+
+        if (action.shortCut != undefined) {
+            actionTips += "<dt>"+action.shortCut+"</dt><dd>"+action.title+"</dd>";
+        }
+    }
+
+    container.append(
         "<div><a href='#heatmap-modal' data-toggle='modal'>Keyboard shortcuts</a></div>" +
         "<div class='modal hide' id='heatmap-modal' tabindex='-1' role='dialog'>" +
         "<div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button>" +
@@ -2730,18 +2965,14 @@ jheatmap.components.ShortcutsPanel = function(container) {
         "<div class='modal-body'>" +
         "<dl class='dl-horizontal'>" +
         "<dd><strong>Place the mouse over rows or columns and press the key:</strong></dd>" +
-        "<dt>H</dt><dd>Hide selected rows/columns</dd>" +
-        "<dt>S</dt><dd>Show hidden rows/columns</dd>" +
-        "<dt>R</dt><dd>Remove selection from rows/columns</dd>" +
-        "<dt>A</dt><dd>Use aggregation sort at rows/columns</dd>" +
-        "<dt>M</dt><dd>Use mutual exclusive sort at rows/columns</dd>" +
+        actionTips +
         "</dl>" +
         "</div>" +
         "<div class='modal-footer'>" +
         "<button class='btn' data-dismiss='modal'>Close</button>" +
         "</div>" +
-        "</div>" +
-        "</td>");
+        "</div>"
+        );
 
 };
 
@@ -2843,6 +3074,27 @@ jheatmap.Heatmap = function (options) {
     this.options = options || {};
 
     /**
+     * Sets the controls visibility.
+     *
+     * @type {{shortcuts: boolean, filters: boolean, columnSelector: boolean, rowSelector: boolean, cellSelector: boolean}}
+     */
+    this.controls = {
+        "shortcuts" : true,
+        "filters": true,
+        "columnSelector": true,
+        "rowSelector": true,
+        "cellSelector": true
+    };
+
+    this.actions = {
+        HideSelected: new jheatmap.actions.HideSelected(this),
+        ShowHidden: new jheatmap.actions.ShowHidden(this),
+        ClearSelection: new jheatmap.actions.ClearSelection(this),
+        AggregationSort: new jheatmap.actions.AggregationSort(this),
+        MutualExclusiveSort: new jheatmap.actions.MutualExclusiveSort(this)
+    };
+
+    /**
      * Size of the cells panel
      *
      * @type {jheatmap.HeatmapSize}
@@ -2916,10 +3168,77 @@ jheatmap.Heatmap = function (options) {
         this.cols.sorter.sort(this, "columns");
 
         // Build & paint
-        var drawer = new jheatmap.HeatmapDrawer(this);
-        drawer.build();
-        drawer.paint();
+        this.drawer = new jheatmap.HeatmapDrawer(this);
+        this.drawer.build();
+        this.drawer.paint();
 
+    };
+
+    /**
+     * Paint the cell popup on click.
+     *
+     * @param row       selected row
+     * @param col       selected col
+     * @param heatmap   the heatmap object
+     * @param boxTop    top position of the details div
+     * @param boxLeft   left position of the details div
+     * @param details   default details div
+     */
+    this.paintCellDetails = function(row, col, heatmap, boxTop, boxLeft, details) {
+
+        var value = heatmap.cells.getValues(row, col);
+
+        if (value != null) {
+
+            var boxWidth;
+            var boxHeight;
+
+            var boxHtml = "<dl class='dl-horizontal'>";
+            boxHtml += "<dt>Column</dt><dd>" + heatmap.cols.getValue(col, heatmap.cols.selectedValue) + "</dd>";
+            boxHtml += "<dt>Row</dt><dd>" + heatmap.rows.getValue(row, heatmap.rows.selectedValue) + "</dd>";
+            boxHtml += "<hr />";
+            for (var i = 0; i < heatmap.cells.header.length; i++) {
+                if (heatmap.cells.header[i] == undefined) {
+                    continue;
+                }
+                boxHtml += "<dt>" + heatmap.cells.header[i] + ":</dt><dd>";
+                var val = value[i];
+                if (!isNaN(val) && (val % 1 != 0)) {
+                    val = Number(val).toFixed(3);
+                }
+                boxHtml += val;
+                boxHtml += "</dd>";
+            }
+            boxHtml += "</dl>";
+
+            details.html(boxHtml);
+            boxWidth = 300;
+            boxHeight = 70 + (heatmap.cells.header.length * 25);
+
+
+            var wHeight = $(document).height();
+            var wWidth = $(document).width();
+
+            if (boxTop + boxHeight > wHeight) {
+                boxTop -= boxHeight;
+            }
+
+            if (boxLeft + boxWidth > wWidth) {
+                boxLeft -= boxWidth;
+            }
+
+            details.css('left', boxLeft);
+            details.css('top', boxTop);
+            details.css('width', boxWidth);
+            details.css('height', boxHeight);
+
+            details.css('display', 'block');
+            details.bind('click', function () {
+                $(this).css('display', 'none');
+            });
+        } else {
+            details.css('display', 'none');
+        }
     };
 
 };
@@ -3006,16 +3325,30 @@ jheatmap.HeatmapCells.prototype.reindex = function () {
  */
 jheatmap.HeatmapCells.prototype.getValue = function (row, col, field) {
 
-    var cl = this.heatmap.cols.values.length;
-    var pos = this.heatmap.rows.order[row] * cl + this.heatmap.cols.order[col];
-
-    var value = this.values[pos];
+    var value = this.getValues(row, col);
 
     if (value == null) {
         return null;
     }
 
     return value[field];
+};
+
+/**
+ * Get cell values
+ *
+ * @param row   Row position
+ * @param col   Column position
+ * @return The cell values array
+ */
+jheatmap.HeatmapCells.prototype.getValues = function(row, col) {
+
+    var cl = this.heatmap.cols.values.length;
+    var pos = this.heatmap.rows.order[row] * cl + this.heatmap.cols.order[col];
+
+    var value = this.values[pos];
+
+    return value;
 };
 /**
  *
@@ -3030,6 +3363,13 @@ jheatmap.HeatmapDimension = function (heatmap) {
      * @type {number}
      */
     this.zoom = 20;
+
+    /**
+     * Height or width in pixels of the label canvas.
+     *
+     * @type {number}
+     */
+    this.labelSize = 230;
 
     /**
      * Header of the items values
@@ -3195,8 +3535,8 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         table.append(tableRow);
 
         var scrollRow = $("<tr class='horizontalScroll'>");
-        scrollRow.append("<td class='border' style='font-size: 11px; vertical-align: right; padding-left: 10px; padding-top: 7px;'>" +
-            "<span>visualized with <a href='http://jheatmap.github.io/jheatmap' target='_blank'>jHeatmap</a></span>" +
+        scrollRow.append("<td class='border' style='font-size: 9px; vertical-align: right; padding-left: 10px; padding-top: 6px;'>" +
+            "<span>powered by <a href='http://jheatmap.github.io/jheatmap' target='_blank'>jHeatmap</a></span>" +
             "</td>");
 
         scrollRow.append(horizontalScrollBar.markup);
@@ -3417,7 +3757,6 @@ jheatmap.HeatmapSize = function (heatmap) {
      * @type {number}
      */
     this.height = 400;
-
 
     this.heatmap = heatmap;
 
@@ -3854,7 +4193,7 @@ var console = console || {"log":function () {
                 // Initialize heatmap
                 heatmap.init();
 
-            }
+            };
 
             if (options.data.rows != undefined) {
                 options.data.rows.read(heatmap.rows, initialize);

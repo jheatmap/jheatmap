@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>JSDoc: Class: Heat</title>
+	<title>JSDoc: Class: GctMatrixReader</title>
 	
 	<script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -15,21 +15,21 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Heat</h1>
+    <h1 class="page-title">Class: GctMatrixReader</h1>
     
     
     
     <section>
      
     <header>
-        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.decorators.html">.decorators</a>.</span>Heat</h2>
+        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.readers.html">.readers</a>.</span>GctMatrixReader</h2>
         
     </header>  
     
     <article>
         <div class="container-overview">
         <dt>
-    <h4 class="name" id="Heat"><span class="type-signature"></span>new Heat</h4>
+    <h4 class="name" id="GctMatrixReader"><span class="type-signature"></span>new GctMatrixReader</h4>
     
     
 </dt>
@@ -37,7 +37,14 @@
     
     
     <p class="description">
-        Heat decorator
+        A text separated value GenePattern GCT file matrix reader. The file has to follow this format:
+
+<pre><code>
+   #1.2
+  Name  Description      col1    col2
+  row1  row1desc		 	0.11    0.12
+  row2   row2desc 		0.21    0.22
+</code></pre>
     </p>
     
     
@@ -55,11 +62,7 @@
 		<th>Type</th>
 		
 		
-		<th>Argument</th>
 		
-		
-		
-		<th>Default</th>
 		
 		
 		<th class="last">Description</th>
@@ -71,182 +74,18 @@
 	
         <tr>
             
-                <td class="name"><code>p.minColor</code></td>
+                <td class="name"><code>p.url</code></td>
             
             
             <td class="type">
-            Array
+            string
             </td>
             
             
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
             
             
             
-                <td class="default">
-                [0,0,255]
-                </td>
-            
-            
-            <td class="description last">Minimum color [r,g,b]</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.minValue</code></td>
-            
-            
-            <td class="type">
-            number
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                -1
-                </td>
-            
-            
-            <td class="description last">Minimum value</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.midColor</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [255,255,0]
-                </td>
-            
-            
-            <td class="description last">Maximum color [r,g,b]</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.midValue</code></td>
-            
-            
-            <td class="type">
-            number
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                0
-                </td>
-            
-            
-            <td class="description last">Maximum value</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.maxColor</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [255,0,0]
-                </td>
-            
-            
-            <td class="description last">Maximum color [r,g,b]</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.maxValue</code></td>
-            
-            
-            <td class="type">
-            number
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                1
-                </td>
-            
-            
-            <td class="description last">Maximum value</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.nullColor</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [187,187,187]
-                </td>
-            
-            
-            <td class="description last">NaN values color [r,g,b]</td>
+            <td class="description last">File url</td>
         </tr>
 	
 	
@@ -263,6 +102,11 @@
 	
 	
 	
+	<dt class="tag-author">Author:</dt>
+	<dd class="tag-author">
+        <ul><li>Ted Liefeld</li></ul>
+	</dd>
+	
 	
 	
 	
@@ -272,7 +116,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 888</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 419</li></ul></dd>
 	
     
     
@@ -290,7 +134,7 @@
     
     
     <h5>Example</h5>
-    <pre class="sh_javascript"><code>new jheatmap.decorators.Heat({ minValue: -5, midValue: 0, maxValue: 5 });</code></pre>
+    <pre class="sh_javascript"><code>new jheatmap.readers.GctMatrixReader({ url: "filename.gct" });</code></pre>
 
 
 </dd>
@@ -314,7 +158,7 @@
             <h3 class="subsection-title">Methods</h3>
             
             <dl><dt>
-    <h4 class="name" id="toColor"><span class="type-signature"></span>toColor</h4>
+    <h4 class="name" id="read"><span class="type-signature"></span>read</h4>
     
     
 </dt>
@@ -322,7 +166,7 @@
     
     
     <p class="description">
-        Convert a value to a color
+        Asynchronously reads a text separated value file, the result is loaded in the 'heatmap' parameter.
     </p>
     
     
@@ -352,18 +196,36 @@
 	
         <tr>
             
-                <td class="name"><code>value</code></td>
+                <td class="name"><code>heatmap</code></td>
             
             
             <td class="type">
-            
+            <a href="jheatmap.Heatmap.html">jheatmap.Heatmap</a>
             </td>
             
             
             
             
             
-            <td class="description last">The cell value</td>
+            <td class="description last">The destination heatmap.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>initialize</code></td>
+            
+            
+            <td class="type">
+            function
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A callback function that is called when the file is loaded.</td>
         </tr>
 	
 	
@@ -389,7 +251,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 904</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 434</li></ul></dd>
 	
     
     
@@ -405,14 +267,6 @@
     
     
     
-    <h5>Returns:</h5>
-    
-<div class="param-desc">
-    The corresponding color string definition.
-</div>
-
-
-
     
     
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>JSDoc: Class: AggregationValueSorter</title>
+	<title>JSDoc: Class: AggregationSort</title>
 	
 	<script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -15,21 +15,21 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: AggregationValueSorter</h1>
+    <h1 class="page-title">Class: AggregationSort</h1>
     
     
     
     <section>
      
     <header>
-        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.sorters.html">.sorters</a>.</span>AggregationValueSorter</h2>
+        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.actions.html">.actions</a>.</span>AggregationSort</h2>
         
     </header>  
     
     <article>
         <div class="container-overview">
         <dt>
-    <h4 class="name" id="AggregationValueSorter"><span class="type-signature"></span>new AggregationValueSorter</h4>
+    <h4 class="name" id="AggregationSort"><span class="type-signature"></span>new AggregationSort</h4>
     
     
 </dt>
@@ -37,160 +37,7 @@
     
     
     <p class="description">
-        Numeric sorter by value of multiple aggregated rows or columns.
-    </p>
-    
-    
-    
-    
-    <h5>Parameters:</h5>
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>field</code></td>
-            
-            
-            <td class="type">
-            int
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Value field to aggregate</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>asc</code></td>
-            
-            
-            <td class="type">
-            boolean
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">True to sort ascending, false to sort descending</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>indices</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Integer positions of the selected rows/columns to aggregate.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    <dl class="details">
-    
-        
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1519</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    <h5>Example</h5>
-    <pre class="sh_javascript"><code>new jheatmap.sorters.AggregationValueSorter(heatmap, "rows", 3, true, [23, 24, 32, 45, 50] );</code></pre>
-
-
-</dd>
-
-        </div>
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            
-            <h3 class="subsection-title">Methods</h3>
-            
-            <dl><dt>
-    <h4 class="name" id="sort"><span class="type-signature"></span>sort</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <p class="description">
-        Sort the heatmap
+        Set aggregation sorter as default
     </p>
     
     
@@ -224,32 +71,14 @@
             
             
             <td class="type">
-            <a href="jheatmap.Heatmap.html">jheatmap.Heatmap</a>
+            
             </td>
             
             
             
             
             
-            <td class="description last">The heatmap to sort</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>sortType</code></td>
-            
-            
-            <td class="type">
-            string
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">"rows" or "columns"</td>
+            <td class="description last">The target heatmap</td>
         </tr>
 	
 	
@@ -275,7 +104,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1531</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 1291</li></ul></dd>
 	
     
     
@@ -292,11 +121,26 @@
     
     
     
-    
+    <h5>Example</h5>
+    <pre class="sh_javascript"><code>new jheatmap.actions.AggregationSort(heatmap);</code></pre>
+
 
 </dd>
-</dl>
-            
+
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         

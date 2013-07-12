@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>JSDoc: Class: Heat</title>
+	<title>JSDoc: Class: CategoricalRandom</title>
 	
 	<script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -15,21 +15,21 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Heat</h1>
+    <h1 class="page-title">Class: CategoricalRandom</h1>
     
     
     
     <section>
      
     <header>
-        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.decorators.html">.decorators</a>.</span>Heat</h2>
+        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.decorators.html">.decorators</a>.</span>CategoricalRandom</h2>
         
     </header>  
     
     <article>
         <div class="container-overview">
         <dt>
-    <h4 class="name" id="Heat"><span class="type-signature"></span>new Heat</h4>
+    <h4 class="name" id="CategoricalRandom"><span class="type-signature"></span>new CategoricalRandom</h4>
     
     
 </dt>
@@ -37,7 +37,7 @@
     
     
     <p class="description">
-        Heat decorator
+        Random Categorical decorator, randomly generates colors for a category.
     </p>
     
     
@@ -71,11 +71,11 @@
 	
         <tr>
             
-                <td class="name"><code>p.minColor</code></td>
+                <td class="name"><code>p.unknown</code></td>
             
             
             <td class="type">
-            Array
+            string
             </td>
             
             
@@ -86,167 +86,11 @@
             
             
                 <td class="default">
-                [0,0,255]
+                "#FFFFFF"
                 </td>
             
             
-            <td class="description last">Minimum color [r,g,b]</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.minValue</code></td>
-            
-            
-            <td class="type">
-            number
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                -1
-                </td>
-            
-            
-            <td class="description last">Minimum value</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.midColor</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [255,255,0]
-                </td>
-            
-            
-            <td class="description last">Maximum color [r,g,b]</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.midValue</code></td>
-            
-            
-            <td class="type">
-            number
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                0
-                </td>
-            
-            
-            <td class="description last">Maximum value</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.maxColor</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [255,0,0]
-                </td>
-            
-            
-            <td class="description last">Maximum color [r,g,b]</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.maxValue</code></td>
-            
-            
-            <td class="type">
-            number
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                1
-                </td>
-            
-            
-            <td class="description last">Maximum value</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>p.nullColor</code></td>
-            
-            
-            <td class="type">
-            Array
-            </td>
-            
-            
-                <td class="attributes">
-                &lt;optional><br>
-                </td>
-            
-            
-            
-                <td class="default">
-                [187,187,187]
-                </td>
-            
-            
-            <td class="description last">NaN values color [r,g,b]</td>
+            <td class="description last">Color for null or undefined values</td>
         </tr>
 	
 	
@@ -263,6 +107,11 @@
 	
 	
 	
+	<dt class="tag-author">Author:</dt>
+	<dd class="tag-author">
+        <ul><li>Ted Liefeld</li></ul>
+	</dd>
+	
 	
 	
 	
@@ -272,7 +121,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 888</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 828</li></ul></dd>
 	
     
     
@@ -290,7 +139,7 @@
     
     
     <h5>Example</h5>
-    <pre class="sh_javascript"><code>new jheatmap.decorators.Heat({ minValue: -5, midValue: 0, maxValue: 5 });</code></pre>
+    <pre class="sh_javascript"><code>new jheatmap.decorators.CategoricalRandom();</code></pre>
 
 
 </dd>
@@ -356,7 +205,7 @@
             
             
             <td class="type">
-            
+            string
             </td>
             
             
@@ -389,7 +238,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 904</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0-alpha.js, line 838</li></ul></dd>
 	
     
     
@@ -412,6 +261,18 @@
 </div>
 
 
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+		<span class="param-type">string</span> 
+		
+	</dd>
+</dl>
 
     
     
