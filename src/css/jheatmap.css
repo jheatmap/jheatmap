@@ -165,7 +165,7 @@ table.heatmap td {
 	font-size: 1px;
 }
 
-table.heatmap div.col, table.heatmap td.row, table.heatmap th.title {
+table.heatmap canvas {
      cursor: pointer;   
 }
 
