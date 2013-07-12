@@ -142,49 +142,14 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
 
     var onKeyPress = function (e) {
 
-        // 'H' or 'h'
-        if (e.charCode == 72 || e.charCode == 104) {
+        for (var key in heatmap.actions) {
+            var action = heatmap.actions[key];
 
-            if (heatmap.cols.selected.length > 0) {
-                heatmap.cols.order = $.grep(heatmap.cols.order, function (value) {
-                    return heatmap.cols.selected.indexOf(value) == -1;
-                });
-                drawer.paint();
+            if (action.columns != undefined && action.shortCut != undefined && action.keyCodes.indexOf(e.keyCode) != -1) {
+                action.columns();
             }
         }
 
-        // 'S' or 's'
-        if (e.keyCode == 83 || e.charCode == 115) {
-
-            heatmap.cols.order = [];
-            for (var c = 0; c < heatmap.cols.values.length; c++) {
-                heatmap.cols.order[heatmap.cols.order.length] = c;
-            }
-            heatmap.cols.sorter.sort(heatmap, "columns");
-            drawer.paint();
-        }
-
-        // 'R' or 'r'
-        if (e.keyCode == 82 || e.charCode == 114) {
-            heatmap.cols.selected = [];
-            drawer.paint();
-        }
-
-        // 'A' or 'a'
-        if (e.keyCode == 97 || e.charCode == 65) {
-            heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
-            heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.rows.sorter.asc, heatmap.cols.selected.slice(0));
-            heatmap.rows.sorter.sort(heatmap, "rows");
-            drawer.paint();
-        }
-
-        // 'M' or 'm'
-        if (e.keyCode == 109 || e.charCode == 77) {
-            heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
-            heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.rows.sorter.asc, heatmap.cols.selected.slice(0));
-            heatmap.rows.sorter.sort(heatmap, "rows");
-            drawer.paint();
-        }
     };
 
     // Bind events

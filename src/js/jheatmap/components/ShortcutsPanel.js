@@ -1,5 +1,14 @@
 
-jheatmap.components.ShortcutsPanel = function(container) {
+jheatmap.components.ShortcutsPanel = function(heatmap, container) {
+
+    var actionTips = "";
+    for (var key in heatmap.actions) {
+        var action = heatmap.actions[key];
+
+        if (action.shortCut != undefined) {
+            actionTips += "<dt>"+action.shortCut+"</dt><dd>"+action.title+"</dd>";
+        }
+    }
 
     container.append(
         "<div><a href='#heatmap-modal' data-toggle='modal'>Keyboard shortcuts</a></div>" +
@@ -9,11 +18,7 @@ jheatmap.components.ShortcutsPanel = function(container) {
         "<div class='modal-body'>" +
         "<dl class='dl-horizontal'>" +
         "<dd><strong>Place the mouse over rows or columns and press the key:</strong></dd>" +
-        "<dt>H</dt><dd>Hide selected rows/columns</dd>" +
-        "<dt>S</dt><dd>Show hidden rows/columns</dd>" +
-        "<dt>R</dt><dd>Remove selection from rows/columns</dd>" +
-        "<dt>A</dt><dd>Use aggregation sort at rows/columns</dd>" +
-        "<dt>M</dt><dd>Use mutual exclusive sort at rows/columns</dd>" +
+        actionTips +
         "</dl>" +
         "</div>" +
         "<div class='modal-footer'>" +

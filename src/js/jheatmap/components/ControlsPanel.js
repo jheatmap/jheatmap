@@ -8,7 +8,7 @@ jheatmap.components.ControlsPanel = function(drawer, heatmap) {
     jheatmap.components.DetailsPanel(this.markup);
 
     if (heatmap.controls.shortcuts) {
-        jheatmap.components.ShortcutsPanel(this.markup);
+        jheatmap.components.ShortcutsPanel(heatmap, this.markup);
     }
 
     if (heatmap.controls.filters) {

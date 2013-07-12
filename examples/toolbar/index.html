@@ -29,53 +29,25 @@
 
                             // Set columns label canvas height
                             heatmap.cols.labelSize = 330;
+
+                            // Initialize toolbar
+                            $('#hideSelectedBtn').click( function(e) {
+                                heatmap.actions.HideSelected.columns();
+                            });
+
+                            $('#showHiddenBtn').click(function (e) {
+                                heatmap.actions.ShowHidden.columns();
+                            });
+
+                            $('#clearSelectionBtn').click(function (e) {
+                                heatmap.actions.ClearSelection.rows();
+                                heatmap.actions.ClearSelection.columns();
+                            });
                         }
                     }
             );
 
-            $('#hideSelectedBtn').click(function (e) {
-                var header = $('#heatmap canvas#colCanvas')[0];
-
-                var press = jQuery.Event("keypress");
-                press.bubbles = true;
-                press.cancelable = true;
-                press.charCode = 72;
-                press.currentTarget = header;
-                press.eventPhase = 2;
-                press.keyCode = 72;
-                press.returnValue = true;
-                press.srcElement = header;
-                press.target = header;
-                press.type = "keypress";
-                press.view = Window;
-                press.which = 72; //h
-
-                $(header).trigger(press);
-            });
-
-            $('#showHiddenBtn').click(function (e) {
-                var header = $('#heatmap canvas#colCanvas')[0];
-
-                var press = jQuery.Event("keypress");
-                press.bubbles = true;
-                press.cancelable = true;
-                press.charCode = 83; //s
-                press.currentTarget = header;
-                press.eventPhase = 2;
-                press.keyCode = 83;
-                press.returnValue = true;
-                press.srcElement = header;
-                press.target = header;
-                press.type = "keypress";
-                press.view = Window;
-                press.which = 83;
-
-                $(header).trigger(press);
-            });
-
-
         });
-
 
         function paintCellDetails(row, col, heatmap, boxTop, boxLeft, details) {
 
@@ -130,6 +102,8 @@
 <br/>
 <input type="button" id="hideSelectedBtn" value="Hide Selected Columns"/>
 <input type="button" id="showHiddenBtn" value="Show Hidden Columns"/>
+<input type="button" id="clearSelectionBtn" value="Clear rows and columns selection"/>
+
 </body>
 </html>
 

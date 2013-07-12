@@ -27,6 +27,14 @@ jheatmap.Heatmap = function (options) {
         "cellSelector": true
     };
 
+    this.actions = {
+        HideSelected: new jheatmap.actions.HideSelected(this),
+        ShowHidden: new jheatmap.actions.ShowHidden(this),
+        ClearSelection: new jheatmap.actions.ClearSelection(this),
+        AggregationSort: new jheatmap.actions.AggregationSort(this),
+        MutualExclusiveSort: new jheatmap.actions.MutualExclusiveSort(this)
+    };
+
     /**
      * Size of the cells panel
      *
@@ -101,9 +109,9 @@ jheatmap.Heatmap = function (options) {
         this.cols.sorter.sort(this, "columns");
 
         // Build & paint
-        var drawer = new jheatmap.HeatmapDrawer(this);
-        drawer.build();
-        drawer.paint();
+        this.drawer = new jheatmap.HeatmapDrawer(this);
+        this.drawer.build();
+        this.drawer.paint();
 
     };
 
