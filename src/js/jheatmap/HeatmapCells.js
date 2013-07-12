@@ -81,14 +81,28 @@ jheatmap.HeatmapCells.prototype.reindex = function () {
  */
 jheatmap.HeatmapCells.prototype.getValue = function (row, col, field) {
 
-    var cl = this.heatmap.cols.values.length;
-    var pos = this.heatmap.rows.order[row] * cl + this.heatmap.cols.order[col];
-
-    var value = this.values[pos];
+    var value = this.getValues(row, col);
 
     if (value == null) {
         return null;
     }
 
     return value[field];
+};
+
+/**
+ * Get cell values
+ *
+ * @param row   Row position
+ * @param col   Column position
+ * @return The cell values array
+ */
+jheatmap.HeatmapCells.prototype.getValues = function(row, col) {
+
+    var cl = this.heatmap.cols.values.length;
+    var pos = this.heatmap.rows.order[row] * cl + this.heatmap.cols.order[col];
+
+    var value = this.values[pos];
+
+    return value;
 };

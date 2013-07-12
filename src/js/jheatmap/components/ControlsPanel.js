@@ -6,11 +6,26 @@ jheatmap.components.ControlsPanel = function(drawer, heatmap) {
     });
 
     jheatmap.components.DetailsPanel(this.markup);
-    jheatmap.components.ShortcutsPanel(this.markup);
-    jheatmap.components.FilterCheckBoxes(drawer, heatmap, this.markup);
-    jheatmap.components.ColumnSelector(drawer, heatmap, this.markup);
-    jheatmap.components.RowSelector(drawer, heatmap, this.markup);
-    jheatmap.components.CellSelector(drawer, heatmap, this.markup);
+
+    if (heatmap.controls.shortcuts) {
+        jheatmap.components.ShortcutsPanel(this.markup);
+    }
+
+    if (heatmap.controls.filters) {
+        jheatmap.components.FilterCheckBoxes(drawer, heatmap, this.markup);
+    }
+
+    if (heatmap.controls.columnSelector) {
+        jheatmap.components.ColumnSelector(drawer, heatmap, this.markup);
+    }
+
+    if (heatmap.controls.rowSelector) {
+        jheatmap.components.RowSelector(drawer, heatmap, this.markup);
+    }
+
+    if (heatmap.controls.cellSelector) {
+        jheatmap.components.CellSelector(drawer, heatmap, this.markup);
+    }
 };
 
 jheatmap.components.ControlsPanel.paint = function() {

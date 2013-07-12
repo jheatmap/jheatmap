@@ -15,6 +15,19 @@ jheatmap.Heatmap = function (options) {
     this.options = options || {};
 
     /**
+     * Sets the controls visibility.
+     *
+     * @type {{shortcuts: boolean, filters: boolean, columnSelector: boolean, rowSelector: boolean, cellSelector: boolean}}
+     */
+    this.controls = {
+        "shortcuts" : true,
+        "filters": true,
+        "columnSelector": true,
+        "rowSelector": true,
+        "cellSelector": true
+    };
+
+    /**
      * Size of the cells panel
      *
      * @type {jheatmap.HeatmapSize}
@@ -92,6 +105,73 @@ jheatmap.Heatmap = function (options) {
         drawer.build();
         drawer.paint();
 
+    };
+
+    /**
+     * Paint the cell popup on click.
+     *
+     * @param row       selected row
+     * @param col       selected col
+     * @param heatmap   the heatmap object
+     * @param boxTop    top position of the details div
+     * @param boxLeft   left position of the details div
+     * @param details   default details div
+     */
+    this.paintCellDetails = function(row, col, heatmap, boxTop, boxLeft, details) {
+
+        var value = heatmap.cells.getValues(row, col);
+
+        if (value != null) {
+
+            var boxWidth;
+            var boxHeight;
+
+            var boxHtml = "<dl class='dl-horizontal'>";
+            boxHtml += "<dt>Column</dt><dd>" + heatmap.cols.getValue(col, heatmap.cols.selectedValue) + "</dd>";
+            boxHtml += "<dt>Row</dt><dd>" + heatmap.rows.getValue(row, heatmap.rows.selectedValue) + "</dd>";
+            boxHtml += "<hr />";
+            for (var i = 0; i < heatmap.cells.header.length; i++) {
+                if (heatmap.cells.header[i] == undefined) {
+                    continue;
+                }
+                boxHtml += "<dt>" + heatmap.cells.header[i] + ":</dt><dd>";
+                var val = value[i];
+                if (!isNaN(val) && (val % 1 != 0)) {
+                    val = Number(val).toFixed(3);
+                }
+                boxHtml += val;
+                boxHtml += "</dd>";
+            }
+            boxHtml += "</dl>";
+
+            details.html(boxHtml);
+            boxWidth = 300;
+            boxHeight = 70 + (heatmap.cells.header.length * 25);
+
+
+            var wHeight = $(document).height();
+            var wWidth = $(document).width();
+
+            if (boxTop + boxHeight > wHeight) {
+                boxTop -= boxHeight;
+            }
+
+            if (boxLeft + boxWidth > wWidth) {
+                boxLeft -= boxWidth;
+            }
+
+            details.css('left', boxLeft);
+            details.css('top', boxTop);
+            details.css('width', boxWidth);
+            details.css('height', boxHeight);
+
+            details.css('display', 'block');
+            details.bind('click', function () {
+                $(this).css('display', 'none');
+            });
+        } else {
+            details.css('display', 'none');
+        }
     };
 
 };

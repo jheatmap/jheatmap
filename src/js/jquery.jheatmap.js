@@ -31,7 +31,7 @@ var console = console || {"log":function () {
                 // Initialize heatmap
                 heatmap.init();
 
-            }
+            };
 
             if (options.data.rows != undefined) {
                 options.data.rows.read(heatmap.rows, initialize);

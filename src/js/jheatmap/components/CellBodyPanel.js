@@ -35,64 +35,11 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
             var col = Math.floor((e.originalEvent.pageX - position.left) / heatmap.cols.zoom) + heatmap.offset.left;
             var row = Math.floor((e.originalEvent.pageY - position.top) / heatmap.rows.zoom) + heatmap.offset.top;
 
-            var cl = heatmap.cols.values.length;
-            var pos = heatmap.rows.order[row] * cl + heatmap.cols.order[col];
-            var value = heatmap.cells.values[pos];
-
             var details = $('table.heatmap div.detailsbox');
-            if (value != null) {
+            var boxTop = e.pageY - $(heatmap.options.container).offset().top;
+            var boxLeft = e.pageX - $(heatmap.options.container).offset().left;
 
-                var boxTop = e.pageY - $(heatmap.options.container).offset().top;
-                var boxLeft = e.pageX - $(heatmap.options.container).offset().left;
-                var boxWidth;
-                var boxHeight;
-
-                var boxHtml = "<dl class='dl-horizontal'>";
-                boxHtml += "<dt>Column</dt><dd>" + heatmap.cols.getValue(col, heatmap.cols.selectedValue) + "</dd>";
-                boxHtml += "<dt>Row</dt><dd>" + heatmap.rows.getValue(row, heatmap.rows.selectedValue) + "</dd>";
-                boxHtml += "<hr />";
-                for (var i = 0; i < heatmap.cells.header.length; i++) {
-                    if (heatmap.cells.header[i] == undefined) {
-                        continue;
-                    }
-                    boxHtml += "<dt>" + heatmap.cells.header[i] + ":</dt><dd>";
-                    var val = value[i];
-                    if (!isNaN(val) && (val % 1 != 0)) {
-                        val = Number(val).toFixed(3);
-                    }
-                    boxHtml += val;
-                    boxHtml += "</dd>";
-                }
-                boxHtml += "</dl>";
-
-                details.html(boxHtml);
-                boxWidth = 300;
-                boxHeight = 70 + (heatmap.cells.header.length * 25);
-
-
-                var wHeight = $(document).height();
-                var wWidth = $(document).width();
-
-                if (boxTop + boxHeight > wHeight) {
-                    boxTop -= boxHeight;
-                }
-
-                if (boxLeft + boxWidth > wWidth) {
-                    boxLeft -= boxWidth;
-                }
-
-                details.css('left', boxLeft);
-                details.css('top', boxTop);
-                details.css('width', boxWidth);
-                details.css('height', boxHeight);
-
-                details.css('display', 'block');
-                details.bind('click', function () {
-                    $(this).css('display', 'none');
-                });
-            } else {
-                details.css('display', 'none');
-            }
+            heatmap.paintCellDetails(row, col, heatmap, boxTop, boxLeft, details);
 
         }
         drawer.paint();
