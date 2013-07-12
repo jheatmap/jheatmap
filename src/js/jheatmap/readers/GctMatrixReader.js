@@ -49,13 +49,11 @@ jheatmap.readers.GctMatrixReader.prototype.read = function (heatmap, initialize)
                         // skip lines 1,2 with the gct header
                     } else if (lineCount == 2) {
                         var headerLine = line.splitCSV(sep);
-                        // pull off the name/descrip labels which JHeatMap does not need
                         headerLine.shift();
                         headerLine.shift();
                         heatmap.cells.header = headerLine;
                     } else {
                         var valLine = line.splitCSV(sep);
-                        //valLine.splice(1,1); // remove the description
                         heatmap.cells.values[heatmap.cells.values.length] = valLine;
                     }
                 }
@@ -86,10 +84,19 @@ jheatmap.readers.GctMatrixReader.prototype.read = function (heatmap, initialize)
                     dataType: "text",
                     success: function (file) {
 
+                        var colHash = {};
+                        for (var i = 0; i < heatmap.cols.values.length; i++) {
+                            colHash[(heatmap.cols.values[i][0]).toString()] = i;
+                        }
+
                         var lines = file.replace('\r', '').split('\n');
                         heatmap.cols.header = lines[0].split('\t');
                         for (var i = 1; i < lines.length; i++) {
-                            heatmap.cols.values[i] = lines[i].split('\t');;
+                            var values = lines[i].split('\t');
+                            var pos = colHash[values[0]];
+                            if (pos != undefined) {
+                                heatmap.cols.values[pos] = values;
+                            }
                         }
                         heatmap.cells.ready = true;
                         initialize.call(this);
