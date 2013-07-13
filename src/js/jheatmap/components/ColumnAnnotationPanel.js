@@ -12,11 +12,17 @@ jheatmap.components.ColumnAnnotationPanel = function(drawer, heatmap) {
     this.canvasHeader = $("<canvas class='header' style='float:right;' width='200' height='" + 10 * heatmap.cols.annotations.length + "'></canvas>");
     colAnnHeaderCell.append(this.canvasHeader);
     this.markup.append(colAnnHeaderCell);
+    this.canvasHeader.bind('contextmenu', function(e){
+        return false;
+    });
 
     var colAnnValuesCell = $("<th>");
     this.canvasBody = $("<canvas width='" + heatmap.size.width + "' height='" + 10 * heatmap.cols.annotations.length + "'></canvas>");
     colAnnValuesCell.append(this.canvasBody);
     this.markup.append(colAnnValuesCell);
+    this.canvasBody.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Events
     this.canvasBody.click(function (e) {

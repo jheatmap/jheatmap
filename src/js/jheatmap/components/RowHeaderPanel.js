@@ -7,6 +7,9 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
     this.markup = $("<td>", {"class": "row" });
     this.canvas = $("<canvas class='header' width='" + heatmap.rows.labelSize + "' height='" + heatmap.size.height + "' tabindex='1'></canvas>");
     this.markup.append(this.canvas);
+    this.canvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Event functions
 

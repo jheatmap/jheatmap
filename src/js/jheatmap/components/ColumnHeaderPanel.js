@@ -12,6 +12,9 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
     this.markup = $("<th>");
     this.canvas = $("<canvas class='header' id='colCanvas' width='" + heatmap.size.width + "' height='"+heatmap.cols.labelSize+"' tabindex='3'></canvas>");
     this.markup.append(this.canvas);
+    this.canvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Event functions
     var colsMouseDown = false;

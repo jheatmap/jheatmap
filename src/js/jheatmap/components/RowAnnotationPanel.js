@@ -9,10 +9,16 @@ jheatmap.components.RowAnnotationPanel = function(drawer, heatmap) {
     this.header = $("<th>", {'class': 'border-rows-ann','rowspan': this.span });
     this.headerCanvas = $("<canvas class='header' width='" + 10 * heatmap.rows.annotations.length + "' height='150'></canvas>");
     this.header.append(this.headerCanvas);
+    this.headerCanvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     this.body = $("<td class='borderL'>");
     this.bodyCanvas = $("<canvas width='" + heatmap.rows.annotations.length * 10 + "' height='" + heatmap.size.height + "'></canvas>");
     this.body.append(this.bodyCanvas);
+    this.bodyCanvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Bind events
     this.bodyCanvas.click(function (e) {

@@ -6,6 +6,9 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
     this.markup = $('<td>');
     this.canvas = $("<canvas width='" + heatmap.size.width + "' height='" + heatmap.size.height + "' tabindex='2'></canvas>");
     this.markup.append(this.canvas);
+    this.canvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Events
     var downX = null;

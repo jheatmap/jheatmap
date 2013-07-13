@@ -7,6 +7,9 @@ jheatmap.components.VerticalScrollBar = function(drawer, heatmap) {
     this.markup = $("<td class='borderL'>");
     this.canvas = $("<canvas class='header' width='10' height='" + heatmap.size.height + "'></canvas>");
     this.markup.append(this.canvas);
+    this.canvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Events
     var vScrollMouseDown = false;
