@@ -1773,6 +1773,9 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
     this.markup = $('<td>');
     this.canvas = $("<canvas width='" + heatmap.size.width + "' height='" + heatmap.size.height + "' tabindex='2'></canvas>");
     this.markup.append(this.canvas);
+    this.canvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Events
     var downX = null;
@@ -2013,11 +2016,17 @@ jheatmap.components.ColumnAnnotationPanel = function(drawer, heatmap) {
     this.canvasHeader = $("<canvas class='header' style='float:right;' width='200' height='" + 10 * heatmap.cols.annotations.length + "'></canvas>");
     colAnnHeaderCell.append(this.canvasHeader);
     this.markup.append(colAnnHeaderCell);
+    this.canvasHeader.bind('contextmenu', function(e){
+        return false;
+    });
 
     var colAnnValuesCell = $("<th>");
     this.canvasBody = $("<canvas width='" + heatmap.size.width + "' height='" + 10 * heatmap.cols.annotations.length + "'></canvas>");
     colAnnValuesCell.append(this.canvasBody);
     this.markup.append(colAnnValuesCell);
+    this.canvasBody.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Events
     this.canvasBody.click(function (e) {
@@ -2144,6 +2153,9 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
     this.markup = $("<th>");
     this.canvas = $("<canvas class='header' id='colCanvas' width='" + heatmap.size.width + "' height='"+heatmap.cols.labelSize+"' tabindex='3'></canvas>");
     this.markup.append(this.canvas);
+    this.canvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Event functions
     var colsMouseDown = false;
@@ -2294,8 +2306,12 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
     this.canvas.bind('mouseup', function (e) {
         onMouseUp(e);
     });
-    this.canvas.bind('mouseover', drawer.handleFocus);
-    this.canvas.bind('mouseout', drawer.handleFocus);
+    this.canvas.bind('mouseover', function (e) {
+        drawer.handleFocus(e);
+    });
+    this.canvas.bind('mouseout', function (e) {
+        drawer.handleFocus(e);
+    });
     this.canvas.bind('keypress', function (e) {
         onKeyPress(e);
     });
@@ -2466,6 +2482,9 @@ jheatmap.components.HorizontalScrollBar = function(drawer, heatmap) {
     this.markup = $("<td class='borderT'>");
     this.canvas = $("<canvas class='header' width='" + heatmap.size.width + "' height='10'></canvas>");
     this.markup.append(this.canvas);
+    this.canvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Events
     var hScrollMouseDown = false;
@@ -2572,10 +2591,16 @@ jheatmap.components.RowAnnotationPanel = function(drawer, heatmap) {
     this.header = $("<th>", {'class': 'border-rows-ann','rowspan': this.span });
     this.headerCanvas = $("<canvas class='header' width='" + 10 * heatmap.rows.annotations.length + "' height='150'></canvas>");
     this.header.append(this.headerCanvas);
+    this.headerCanvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     this.body = $("<td class='borderL'>");
     this.bodyCanvas = $("<canvas width='" + heatmap.rows.annotations.length * 10 + "' height='" + heatmap.size.height + "'></canvas>");
     this.body.append(this.bodyCanvas);
+    this.bodyCanvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Bind events
     this.bodyCanvas.click(function (e) {
@@ -2704,6 +2729,9 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
     this.markup = $("<td>", {"class": "row" });
     this.canvas = $("<canvas class='header' width='" + heatmap.rows.labelSize + "' height='" + heatmap.size.height + "' tabindex='1'></canvas>");
     this.markup.append(this.canvas);
+    this.canvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Event functions
 
@@ -2863,8 +2891,12 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
     this.canvas.bind('mouseup', function (e) {
         onMouseUp(e);
     });
-    this.canvas.bind('mouseover', drawer.handleFocus);
-    this.canvas.bind('mouseout', drawer.handleFocus);
+    this.canvas.bind('mouseover', function(e) {
+        drawer.handleFocus(e);
+    });
+    this.canvas.bind('mouseout', function(e) {
+        drawer.handleFocus(e);
+    });
     this.canvas.bind('keypress', function (e) {
         onKeyPress(e);
     });
@@ -2984,6 +3016,9 @@ jheatmap.components.VerticalScrollBar = function(drawer, heatmap) {
     this.markup = $("<td class='borderL'>");
     this.canvas = $("<canvas class='header' width='10' height='" + heatmap.size.height + "'></canvas>");
     this.markup.append(this.canvas);
+    this.canvas.bind('contextmenu', function(e){
+        return false;
+    });
 
     // Events
     var vScrollMouseDown = false;
