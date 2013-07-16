@@ -147,10 +147,12 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
 
     var onKeyPress = function (e) {
 
+        var charCode = e.which || e.keyCode;
+
         for (var key in heatmap.actions) {
             var action = heatmap.actions[key];
 
-            if (action.rows != undefined && action.shortCut != undefined && action.keyCodes.indexOf(e.keyCode) != -1) {
+            if (action.rows != undefined && action.shortCut != undefined && action.keyCodes.indexOf(charCode) != -1) {
                 action.rows();
             }
         }
