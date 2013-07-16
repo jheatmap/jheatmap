@@ -165,8 +165,12 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
     this.canvas.bind('mouseup', function (e) {
         onMouseUp(e);
     });
-    this.canvas.bind('mouseover', drawer.handleFocus);
-    this.canvas.bind('mouseout', drawer.handleFocus);
+    this.canvas.bind('mouseover', function (e) {
+        drawer.handleFocus(e);
+    });
+    this.canvas.bind('mouseout', function (e) {
+        drawer.handleFocus(e);
+    });
     this.canvas.bind('keypress', function (e) {
         onKeyPress(e);
     });
