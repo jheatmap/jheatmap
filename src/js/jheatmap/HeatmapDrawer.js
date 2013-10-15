@@ -86,7 +86,7 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         table.append(lastRow);
         container.append(table);
         $('#heatmap-loader').hide();
-        $('#heatmap-modal').modal({ show: false });
+        $('#heatmap-details').details({ show: false });
 
     };
 
