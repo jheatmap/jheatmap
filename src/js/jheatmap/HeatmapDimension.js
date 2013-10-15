@@ -7,10 +7,10 @@
 jheatmap.HeatmapDimension = function (heatmap) {
 
     /**
-     * Height in pixels of one cell (default 20)
+     * Height in pixels of one cell (default 12)
      * @type {number}
      */
-    this.zoom = 20;
+    this.zoom = 12;
 
     /**
      * Height or width in pixels of the label canvas.
