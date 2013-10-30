@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Median</title>
+    <title>JSDoc: Class: TableHeatmapReader</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Median</h1>
+    <h1 class="page-title">Class: TableHeatmapReader</h1>
     
     
 
@@ -27,9 +27,9 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.decorators.html">.decorators</a>.</span>
+        <span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.readers.html">.readers</a>.</span>
     
-    Median
+    TableHeatmapReader
     </h2>
     
 </header>  
@@ -41,7 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="Median"><span class="type-signature"></span>new Median<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="TableHeatmapReader"><span class="type-signature"></span>new TableHeatmapReader<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -49,7 +49,13 @@
     
     
     <div class="description">
-        Median decorator
+        A text separated value file matrix reader.
+
+<pre><code>
+  columns  rows   value1   value2
+  col1     row1   0.11     0.12
+  col2     row2   0.21     0.22
+</code></pre>
     </div>
     
 
@@ -87,13 +93,13 @@
 	
         <tr>
             
-                <td class="name"><code>p.maxValue</code></td>
+                <td class="name"><code>p.url</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">string</span>
 
 
             
@@ -101,8 +107,6 @@
             
             
                 <td class="attributes">
-                
-                    &lt;optional><br>
                 
                     
                 
@@ -112,25 +116,23 @@
             
                 <td class="default">
                 
-                    3
-                
                 </td>
             
             
-            <td class="description last">Absolute maximum and minimum of the median</td>
+            <td class="description last">File url</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>p.nullColor</code></td>
+                <td class="name"><code>p.separator</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">string</span>
 
 
             
@@ -149,12 +151,49 @@
             
                 <td class="default">
                 
-                    [255,255,255]
+                    "tab"
                 
                 </td>
             
             
-            <td class="description last">NaN values color [r,g,b]</td>
+            <td class="description last">Value separator character</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>p.orderedValues</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    "false"
+                
+                </td>
+            
+            
+            <td class="description last">The values follow exactly the columns and rows order and there is no need to reorder them.</td>
         </tr>
 	
 	
@@ -185,7 +224,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jheatmap-1.0.0-alpha.js.html">jheatmap-1.0.0-alpha.js</a>, line 1049
+        <a href="jheatmap-1.0.0-alpha.js.html">jheatmap-1.0.0-alpha.js</a>, line 586
     </li></ul></dd>
     
     
@@ -206,7 +245,7 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>new jheatmap.decorators.Median({ maxValue: 4 });</code></pre>
+    <pre class="prettyprint"><code>new jheatmap.readers.TableHeatmapReader({ url: "filename.tsv" });</code></pre>
 
     
 </dd>
@@ -232,7 +271,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="toColor"><span class="type-signature"></span>toColor<span class="signature">(value)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="read"><span class="type-signature"></span>read<span class="signature">(heatmap, initialize)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -240,7 +279,7 @@
     
     
     <div class="description">
-        Convert a value to a color
+        Asynchronously reads a text separated value file, the result is loaded in the 'heatmap' parameter.
     </div>
     
 
@@ -274,10 +313,15 @@
 	
         <tr>
             
-                <td class="name"><code>value</code></td>
+                <td class="name"><code>heatmap</code></td>
             
             
             <td class="type">
+            
+                
+<span class="param-type"><a href="jheatmap.Heatmap.html">jheatmap.Heatmap</a></span>
+
+
             
             </td>
             
@@ -285,7 +329,30 @@
             
             
             
-            <td class="description last">The cell value</td>
+            <td class="description last">The destination heatmap.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>initialize</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A callback function that is called when the file is loaded.</td>
         </tr>
 	
 	
@@ -316,7 +383,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jheatmap-1.0.0-alpha.js.html">jheatmap-1.0.0-alpha.js</a>, line 1061
+        <a href="jheatmap-1.0.0-alpha.js.html">jheatmap-1.0.0-alpha.js</a>, line 600
     </li></ul></dd>
     
     
@@ -333,16 +400,6 @@
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    The corresponding color string definition.
-</div>
-
-
-
-        
     
     
 </dd>
@@ -369,7 +426,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Wed Oct 30 2013 17:30:00 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Wed Oct 30 2013 17:30:01 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

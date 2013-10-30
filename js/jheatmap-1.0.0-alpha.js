@@ -318,35 +318,30 @@ jheatmap.utils.reindexField = function(value, headers) {
     return value;
 };
 /**
- * A text separated value file matrix reader. The file has to follow this format:
- *
- * <pre><code>
- *          col1    col2
- *   row1   0.11    0.12
- *   row2   0.21    0.22
- * </code></pre>
+ * A text separated value file table reader
  *
  * @example
- * new jheatmap.readers.CdmMatrixReader({ url: "filename.cdm" });
+ * new jheatmap.readers.AnnotationReader({ url: "filename.tsv" });
  *
  * @class
  * @param {string}  p.url                 File url
  * @param {string} [p.separator="tab"]    Value separator character
  */
-jheatmap.readers.CdmMatrixReader = function (p) {
+jheatmap.readers.AnnotationReader = function (p) {
     p = p || {};
     this.url = p.url || "";
     this.separator = p.separator || "\t";
 };
 
 /**
- * Asynchronously reads a text separated value file, the result is loaded in the 'heatmap' parameter.
+ * Asynchronously reads a text separated value file, the result is returned in the 'result' parameter.
  *
- * @param {jheatmap.Heatmap}     heatmap     The destination heatmap.
+ * @param {Array} result.header Returns the file header as a string array.
+ * @param {Array} result.values Returns the file values as an array of arrays.
  * @param {function}    initialize  A callback function that is called when the file is loaded.
  *
  */
-jheatmap.readers.CdmMatrixReader.prototype.read = function (heatmap, initialize) {
+jheatmap.readers.AnnotationReader.prototype.read = function (result, initialize) {
 
     var sep = this.separator;
     var url = this.url;
@@ -363,38 +358,18 @@ jheatmap.readers.CdmMatrixReader.prototype.read = function (heatmap, initialize)
             jQuery.each(lines, function (lineCount, line) {
                 if (line.length > 0 && !line.startsWith("#")) {
                     if (lineCount == 0) {
-                        heatmap.cells.header = line.splitCSV(sep);
+                        result.header = line.splitCSV(sep);
                     } else {
-                        heatmap.cells.values[heatmap.cells.values.length] = line.splitCSV(sep);
+                        result.values[result.values.length] = line.splitCSV(sep);
                     }
                 }
             });
 
-            heatmap.cols.header = [ "Column" ];
-            for (var i = 0; i < heatmap.cells.header.length; i++) {
-                heatmap.cols.values[heatmap.cols.values.length] = [ heatmap.cells.header[i] ];
-            }
-
-            var cellValues = [];
-            heatmap.rows.header = [ "Row" ];
-            for (var row = 0; row < heatmap.cells.values.length; row++) {
-                heatmap.rows.values[heatmap.rows.values.length] = [ heatmap.cells.values[row][0] ];
-                for (var col = 0; col < heatmap.cols.values.length; col++) {
-                    cellValues[cellValues.length] = [ heatmap.cells.values[row][col + 1] ];
-                }
-            }
-
-            delete heatmap.cells.header;
-            delete heatmap.cells.values;
-            heatmap.cells.header = [ "Value" ];
-            heatmap.cells.values = cellValues;
-
-            heatmap.cells.ready = true;
+            result.ready = true;
 
             initialize.call(this);
 
         }
-
 
     });
 };
@@ -409,14 +384,14 @@ jheatmap.readers.CdmMatrixReader.prototype.read = function (heatmap, initialize)
  * </code></pre>
  *
  * @example
- * new jheatmap.readers.GctMatrixReader({ url: "filename.gct" });
+ * new jheatmap.readers.GctHeatmapReader({ url: "filename.gct" });
  *
  * @author Ted Liefeld
  * @class
  * @param {string}  p.url                 File url
  *
  */
-jheatmap.readers.GctMatrixReader = function (p) {
+jheatmap.readers.GctHeatmapReader = function (p) {
     p = p || {};
     this.url = p.url || "";
     this.separator = p.separator || "\t";
@@ -431,7 +406,7 @@ jheatmap.readers.GctMatrixReader = function (p) {
  * @param {function}    initialize  A callback function that is called when the file is loaded.
  *
  */
-jheatmap.readers.GctMatrixReader.prototype.read = function (heatmap, initialize) {
+jheatmap.readers.GctHeatmapReader.prototype.read = function (heatmap, initialize) {
 
     var sep = this.separator;
     var url = this.url;
@@ -511,17 +486,104 @@ jheatmap.readers.GctMatrixReader.prototype.read = function (heatmap, initialize)
     });
 };
 /**
- * A text separated value file matrix reader.
+ * A text separated value file matrix reader. The file has to follow this format:
+ *
+ * <pre><code>
+ *          col1    col2
+ *   row1   0.11    0.12
+ *   row2   0.21    0.22
+ * </code></pre>
  *
  * @example
- * new jheatmap.readers.TsvMatrixReader({ url: "filename.tsv" });
+ * new jheatmap.readers.MatrixHeatmapReader({ url: "filename.cdm" });
+ *
+ * @class
+ * @param {string}  p.url                 File url
+ * @param {string} [p.separator="tab"]    Value separator character
+ */
+jheatmap.readers.MatrixHeatmapReader = function (p) {
+    p = p || {};
+    this.url = p.url || "";
+    this.separator = p.separator || "\t";
+};
+
+/**
+ * Asynchronously reads a text separated value file, the result is loaded in the 'heatmap' parameter.
+ *
+ * @param {jheatmap.Heatmap}     heatmap     The destination heatmap.
+ * @param {function}    initialize  A callback function that is called when the file is loaded.
+ *
+ */
+jheatmap.readers.MatrixHeatmapReader.prototype.read = function (heatmap, initialize) {
+
+    var sep = this.separator;
+    var url = this.url;
+
+    jQuery.ajax({
+
+        url: url,
+
+        dataType: "text",
+
+        success: function (file) {
+
+            var lines = file.replace('\r', '').split('\n');
+            jQuery.each(lines, function (lineCount, line) {
+                if (line.length > 0 && !line.startsWith("#")) {
+                    if (lineCount == 0) {
+                        heatmap.cells.header = line.splitCSV(sep);
+                    } else {
+                        heatmap.cells.values[heatmap.cells.values.length] = line.splitCSV(sep);
+                    }
+                }
+            });
+
+            heatmap.cols.header = [ "Column" ];
+            for (var i = 0; i < heatmap.cells.header.length; i++) {
+                heatmap.cols.values[heatmap.cols.values.length] = [ heatmap.cells.header[i] ];
+            }
+
+            var cellValues = [];
+            heatmap.rows.header = [ "Row" ];
+            for (var row = 0; row < heatmap.cells.values.length; row++) {
+                heatmap.rows.values[heatmap.rows.values.length] = [ heatmap.cells.values[row][0] ];
+                for (var col = 0; col < heatmap.cols.values.length; col++) {
+                    cellValues[cellValues.length] = [ heatmap.cells.values[row][col + 1] ];
+                }
+            }
+
+            delete heatmap.cells.header;
+            delete heatmap.cells.values;
+            heatmap.cells.header = [ "Value" ];
+            heatmap.cells.values = cellValues;
+
+            heatmap.cells.ready = true;
+
+            initialize.call(this);
+
+        }
+
+
+    });
+};
+/**
+ * A text separated value file matrix reader.
+ *
+ * <pre><code>
+ *   columns  rows   value1   value2
+ *   col1     row1   0.11     0.12
+ *   col2     row2   0.21     0.22
+ * </code></pre>
+ *
+ * @example
+ * new jheatmap.readers.TableHeatmapReader({ url: "filename.tsv" });
  *
  * @class
  * @param {string}  p.url                 File url
  * @param {string} [p.separator="tab"]    Value separator character
  * @param {boolean} [p.orderedValues="false"]   The values follow exactly the columns and rows order and there is no need to reorder them.
  */
-jheatmap.readers.TsvMatrixReader = function (p) {
+jheatmap.readers.TableHeatmapReader = function (p) {
     p = p || {};
     this.url = p.url || "";
     this.separator = p.separator || "\t";
@@ -535,7 +597,7 @@ jheatmap.readers.TsvMatrixReader = function (p) {
  * @param {function}    initialize  A callback function that is called when the file is loaded.
  *
  */
-jheatmap.readers.TsvMatrixReader.prototype.read = function (heatmap, initialize) {
+jheatmap.readers.TableHeatmapReader.prototype.read = function (heatmap, initialize) {
 
     var sep = this.separator;
     var url = this.url;
@@ -717,62 +779,6 @@ jheatmap.readers.TsvMatrixReader.prototype.read = function (heatmap, initialize)
             }
 
             heatmap.cells.ready = true;
-
-            initialize.call(this);
-
-        }
-
-    });
-};
-/**
- * A text separated value file table reader
- *
- * @example
- * new jheatmap.readers.TsvTableReader({ url: "filename.tsv" });
- *
- * @class
- * @param {string}  p.url                 File url
- * @param {string} [p.separator="tab"]    Value separator character
- */
-jheatmap.readers.TsvTableReader = function (p) {
-    p = p || {};
-    this.url = p.url || "";
-    this.separator = p.separator || "\t";
-};
-
-/**
- * Asynchronously reads a text separated value file, the result is returned in the 'result' parameter.
- *
- * @param {Array} result.header Returns the file header as a string array.
- * @param {Array} result.values Returns the file values as an array of arrays.
- * @param {function}    initialize  A callback function that is called when the file is loaded.
- *
- */
-jheatmap.readers.TsvTableReader.prototype.read = function (result, initialize) {
-
-    var sep = this.separator;
-    var url = this.url;
-
-    jQuery.ajax({
-
-        url: url,
-
-        dataType: "text",
-
-        success: function (file) {
-
-            var lines = file.replace('\r', '').split('\n');
-            jQuery.each(lines, function (lineCount, line) {
-                if (line.length > 0 && !line.startsWith("#")) {
-                    if (lineCount == 0) {
-                        result.header = line.splitCSV(sep);
-                    } else {
-                        result.values[result.values.length] = line.splitCSV(sep);
-                    }
-                }
-            });
-
-            result.ready = true;
 
             initialize.call(this);
 

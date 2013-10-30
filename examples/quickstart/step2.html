@@ -20,7 +20,7 @@
         $('#heatmap').heatmap(
                 {
                     data: {
-                        values: new jheatmap.readers.TsvMatrixReader({ url: "step1-data.tsv" })
+                        values: new jheatmap.readers.TableHeatmapReader({ url: "step1-data.tsv" })
                     },
 
                     init: function (heatmap) {
