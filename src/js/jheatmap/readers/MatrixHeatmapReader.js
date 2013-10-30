@@ -8,13 +8,13 @@
  * </code></pre>
  *
  * @example
- * new jheatmap.readers.CdmMatrixReader({ url: "filename.cdm" });
+ * new jheatmap.readers.MatrixHeatmapReader({ url: "filename.cdm" });
  *
  * @class
  * @param {string}  p.url                 File url
  * @param {string} [p.separator="tab"]    Value separator character
  */
-jheatmap.readers.CdmMatrixReader = function (p) {
+jheatmap.readers.MatrixHeatmapReader = function (p) {
     p = p || {};
     this.url = p.url || "";
     this.separator = p.separator || "\t";
@@ -27,7 +27,7 @@ jheatmap.readers.CdmMatrixReader = function (p) {
  * @param {function}    initialize  A callback function that is called when the file is loaded.
  *
  */
-jheatmap.readers.CdmMatrixReader.prototype.read = function (heatmap, initialize) {
+jheatmap.readers.MatrixHeatmapReader.prototype.read = function (heatmap, initialize) {
 
     var sep = this.separator;
     var url = this.url;

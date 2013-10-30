@@ -9,14 +9,14 @@
  * </code></pre>
  *
  * @example
- * new jheatmap.readers.GctMatrixReader({ url: "filename.gct" });
+ * new jheatmap.readers.GctHeatmapReader({ url: "filename.gct" });
  *
  * @author Ted Liefeld
  * @class
  * @param {string}  p.url                 File url
  *
  */
-jheatmap.readers.GctMatrixReader = function (p) {
+jheatmap.readers.GctHeatmapReader = function (p) {
     p = p || {};
     this.url = p.url || "";
     this.separator = p.separator || "\t";
@@ -31,7 +31,7 @@ jheatmap.readers.GctMatrixReader = function (p) {
  * @param {function}    initialize  A callback function that is called when the file is loaded.
  *
  */
-jheatmap.readers.GctMatrixReader.prototype.read = function (heatmap, initialize) {
+jheatmap.readers.GctHeatmapReader.prototype.read = function (heatmap, initialize) {
 
     var sep = this.separator;
     var url = this.url;

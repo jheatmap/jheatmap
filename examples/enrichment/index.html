@@ -15,9 +15,9 @@
             $('#heatmap').heatmap(
                     {
                         data: {
-                            rows: new jheatmap.readers.TsvTableReader({ url: "analysis-rows.tsv" }),
-                            cols: new jheatmap.readers.TsvTableReader({ url: "analysis-columns.tsv" }),
-                            values: new jheatmap.readers.TsvMatrixReader({ url: "analysis-results.tsv", orderedValues: true })
+                            rows: new jheatmap.readers.AnnotationReader({ url: "analysis-rows.tsv" }),
+                            cols: new jheatmap.readers.AnnotationReader({ url: "analysis-columns.tsv" }),
+                            values: new jheatmap.readers.TableHeatmapReader({ url: "analysis-results.tsv", orderedValues: true })
                         },
 
                         init: function (heatmap) {

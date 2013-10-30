@@ -1,15 +1,21 @@
 /**
  * A text separated value file matrix reader.
  *
+ * <pre><code>
+ *   columns  rows   value1   value2
+ *   col1     row1   0.11     0.12
+ *   col2     row2   0.21     0.22
+ * </code></pre>
+ *
  * @example
- * new jheatmap.readers.TsvMatrixReader({ url: "filename.tsv" });
+ * new jheatmap.readers.TableHeatmapReader({ url: "filename.tsv" });
  *
  * @class
  * @param {string}  p.url                 File url
  * @param {string} [p.separator="tab"]    Value separator character
  * @param {boolean} [p.orderedValues="false"]   The values follow exactly the columns and rows order and there is no need to reorder them.
  */
-jheatmap.readers.TsvMatrixReader = function (p) {
+jheatmap.readers.TableHeatmapReader = function (p) {
     p = p || {};
     this.url = p.url || "";
     this.separator = p.separator || "\t";
@@ -23,7 +29,7 @@ jheatmap.readers.TsvMatrixReader = function (p) {
  * @param {function}    initialize  A callback function that is called when the file is loaded.
  *
  */
-jheatmap.readers.TsvMatrixReader.prototype.read = function (heatmap, initialize) {
+jheatmap.readers.TableHeatmapReader.prototype.read = function (heatmap, initialize) {
 
     var sep = this.separator;
     var url = this.url;

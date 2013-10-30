@@ -2,13 +2,13 @@
  * A text separated value file table reader
  *
  * @example
- * new jheatmap.readers.TsvTableReader({ url: "filename.tsv" });
+ * new jheatmap.readers.AnnotationReader({ url: "filename.tsv" });
  *
  * @class
  * @param {string}  p.url                 File url
  * @param {string} [p.separator="tab"]    Value separator character
  */
-jheatmap.readers.TsvTableReader = function (p) {
+jheatmap.readers.AnnotationReader = function (p) {
     p = p || {};
     this.url = p.url || "";
     this.separator = p.separator || "\t";
@@ -22,7 +22,7 @@ jheatmap.readers.TsvTableReader = function (p) {
  * @param {function}    initialize  A callback function that is called when the file is loaded.
  *
  */
-jheatmap.readers.TsvTableReader.prototype.read = function (result, initialize) {
+jheatmap.readers.AnnotationReader.prototype.read = function (result, initialize) {
 
     var sep = this.separator;
     var url = this.url;

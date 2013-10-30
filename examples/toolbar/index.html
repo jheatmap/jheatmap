@@ -10,7 +10,7 @@
             $('#heatmap').heatmap(
                     {
                         data: {
-                            values: new jheatmap.readers.GctMatrixReader({ url: "aadac_shrna.gct", colAnnotationUrl: 'Achilles_v2.4_SampleInfo_small.txt' })
+                            values: new jheatmap.readers.GctHeatmapReader({ url: "aadac_shrna.gct", colAnnotationUrl: 'Achilles_v2.4_SampleInfo_small.txt' })
                         },
 
                         init: function (heatmap) {
