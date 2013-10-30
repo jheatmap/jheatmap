@@ -11,6 +11,7 @@
  */
 jheatmap.decorators.CategoricalRandom = function (p) {
     this.colors = new Object();
+    p = p || {};
     this.unknown = p.unknown || "#FFFFFF";
 };
 
