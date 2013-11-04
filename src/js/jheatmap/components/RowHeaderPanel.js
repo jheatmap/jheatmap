@@ -193,7 +193,7 @@ jheatmap.components.RowHeaderPanel.prototype.paint = function() {
     var endRow = heatmap.offset.bottom;
 
     var rowCtx = this.canvas.get()[0].getContext('2d');
-    rowCtx.clearRect(0, 0, heatmap.size.width, rowCtx.canvas.height);
+    rowCtx.clearRect(0, 0, rowCtx.canvas.width, rowCtx.canvas.height);
     rowCtx.fillStyle = "black";
     rowCtx.textAlign = "right";
     rowCtx.textBaseline = "middle";
