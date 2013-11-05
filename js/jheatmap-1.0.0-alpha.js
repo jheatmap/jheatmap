@@ -833,6 +833,7 @@ jheatmap.decorators.Categorical.prototype.toColor = function (value) {
  */
 jheatmap.decorators.CategoricalRandom = function (p) {
     this.colors = new Object();
+    p = p || {};
     this.unknown = p.unknown || "#FFFFFF";
 };
 
@@ -1298,7 +1299,7 @@ jheatmap.actions.AggregationSort = function (heatmap) {
     this.heatmap = heatmap;
     this.shortCut = "A";
     this.keyCodes = [97, 65];
-    this.title = "Use aggregation sort at rows/columns";
+    this.title = "Use aggregation sorting at rows/columns";
 };
 
 jheatmap.actions.AggregationSort.prototype.rows = function() {
@@ -1401,7 +1402,7 @@ jheatmap.actions.MutualExclusiveSort = function (heatmap) {
     this.heatmap = heatmap;
     this.shortCut = "M";
     this.keyCodes = [109, 77];
-    this.title = "Use aggregation sort at rows/columns";
+    this.title = "Use mututal exclusive sorting at rows/columns";
 };
 
 jheatmap.actions.MutualExclusiveSort.prototype.rows = function() {
@@ -2923,7 +2924,7 @@ jheatmap.components.RowHeaderPanel.prototype.paint = function() {
     var endRow = heatmap.offset.bottom;
 
     var rowCtx = this.canvas.get()[0].getContext('2d');
-    rowCtx.clearRect(0, 0, heatmap.size.width, rowCtx.canvas.height);
+    rowCtx.clearRect(0, 0, rowCtx.canvas.width, rowCtx.canvas.height);
     rowCtx.fillStyle = "black";
     rowCtx.textAlign = "right";
     rowCtx.textBaseline = "middle";
