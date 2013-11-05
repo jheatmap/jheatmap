@@ -12,7 +12,7 @@ jheatmap.actions.MutualExclusiveSort = function (heatmap) {
     this.heatmap = heatmap;
     this.shortCut = "M";
     this.keyCodes = [109, 77];
-    this.title = "Use aggregation sort at rows/columns";
+    this.title = "Use mututal exclusive sorting at rows/columns";
 };
 
 jheatmap.actions.MutualExclusiveSort.prototype.rows = function() {
