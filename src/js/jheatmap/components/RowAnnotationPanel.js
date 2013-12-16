@@ -7,14 +7,14 @@ jheatmap.components.RowAnnotationPanel = function(drawer, heatmap) {
 
     // Create markup
     this.header = $("<th>", {'class': 'border-rows-ann','rowspan': this.span });
-    this.headerCanvas = $("<canvas class='header' width='" + 10 * heatmap.rows.annotations.length + "' height='150'></canvas>");
+    this.headerCanvas = $("<canvas class='header' width='" + heatmap.rows.annotationSize * heatmap.rows.annotations.length + "' height='150'></canvas>");
     this.header.append(this.headerCanvas);
     this.headerCanvas.bind('contextmenu', function(e){
         return false;
     });
 
     this.body = $("<td class='borderL'>");
-    this.bodyCanvas = $("<canvas width='" + heatmap.rows.annotations.length * 10 + "' height='" + heatmap.size.height + "'></canvas>");
+    this.bodyCanvas = $("<canvas width='" + heatmap.rows.annotations.length * heatmap.rows.annotationSize + "' height='" + heatmap.size.height + "'></canvas>");
     this.body.append(this.bodyCanvas);
     this.bodyCanvas.bind('contextmenu', function(e){
         return false;
@@ -78,7 +78,7 @@ jheatmap.components.RowAnnotationPanel = function(drawer, heatmap) {
 
     this.headerCanvas.click(function (e) {
         var pos = $(e.target).offset();
-        var i = Math.floor((e.pageX - pos.left) / 10);
+        var i = Math.floor((e.pageX - pos.left) / heatmap.rows.annotationSize);
 
         heatmap.rows.sorter = new jheatmap.sorters.AnnotationSorter(heatmap.rows.annotations[i], !(heatmap.rows.sorter.asc));
         heatmap.rows.sorter.sort(heatmap, "rows");
@@ -109,7 +109,7 @@ jheatmap.components.RowAnnotationPanel.prototype.paint = function() {
 
             var value = heatmap.rows.header[heatmap.rows.annotations[i]];
             annRowHeadCtx.save();
-            annRowHeadCtx.translate(i * 10 + 5, 150);
+            annRowHeadCtx.translate(i * heatmap.rows.annotationSize + (heatmap.rows.annotationSize / 2), 150);
             annRowHeadCtx.rotate(Math.PI / 2);
             annRowHeadCtx.fillText(value, -textSpacing, 0);
             annRowHeadCtx.restore();
@@ -125,14 +125,14 @@ jheatmap.components.RowAnnotationPanel.prototype.paint = function() {
 
                 if (value != null) {
                     rowsAnnValuesCtx.fillStyle = heatmap.rows.decorators[field].toColor(value);
-                    rowsAnnValuesCtx.fillRect(i * 10, (row - startRow) * rz, 10, rz);
+                    rowsAnnValuesCtx.fillRect(i * heatmap.rows.annotationSize, (row - startRow) * rz, heatmap.rows.annotationSize, rz);
                 }
 
             }
 
             if ($.inArray(heatmap.rows.order[row], heatmap.rows.selected) > -1) {
                 rowsAnnValuesCtx.fillStyle = "rgba(0,0,0,0.1)";
-                rowsAnnValuesCtx.fillRect(0, (row - startRow) * rz, heatmap.rows.annotations.length * 10, rz);
+                rowsAnnValuesCtx.fillRect(0, (row - startRow) * rz, heatmap.rows.annotations.length * heatmap.rows.annotationSize, rz);
                 rowsAnnValuesCtx.fillStyle = "white";
             }
         }

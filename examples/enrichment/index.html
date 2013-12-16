@@ -50,10 +50,12 @@
                                 colors: ["pink", "blue"]
                             });
                             heatmap.cols.annotations = ["Ratio", "Sex"];
+                            heatmap.cols.annotationSize = 15;
 
                             // Row annotations
                             heatmap.rows.decorators["p-value"] = decoratorPValue;
                             heatmap.rows.annotations = ["p-value"];
+                            heatmap.rows.annotationSize = 15;
 
                             // Add filters
                             heatmap.rows.filters.add(

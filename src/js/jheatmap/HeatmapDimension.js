@@ -76,6 +76,12 @@ jheatmap.HeatmapDimension = function (heatmap) {
     this.annotations = [];
 
     /**
+     * Height or width in pixels of each annotation cell.
+     * @type {number}
+     */
+    this.annotationSize = 10;
+
+    /**
      *
      * Index of the selected items
      *

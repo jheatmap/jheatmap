@@ -9,7 +9,7 @@ jheatmap.components.ColumnAnnotationPanel = function(drawer, heatmap) {
     var colAnnHeaderCell = $("<th>", {
         "class": "border-cols-ann"
     });
-    this.canvasHeader = $("<canvas class='header' style='float:right;' width='200' height='" + 10 * heatmap.cols.annotations.length + "'></canvas>");
+    this.canvasHeader = $("<canvas class='header' style='float:right;' width='200' height='" + heatmap.cols.annotationSize * heatmap.cols.annotations.length + "'></canvas>");
     colAnnHeaderCell.append(this.canvasHeader);
     this.markup.append(colAnnHeaderCell);
     this.canvasHeader.bind('contextmenu', function(e){
@@ -17,7 +17,7 @@ jheatmap.components.ColumnAnnotationPanel = function(drawer, heatmap) {
     });
 
     var colAnnValuesCell = $("<th>");
-    this.canvasBody = $("<canvas width='" + heatmap.size.width + "' height='" + 10 * heatmap.cols.annotations.length + "'></canvas>");
+    this.canvasBody = $("<canvas width='" + heatmap.size.width + "' height='" + heatmap.cols.annotationSize * heatmap.cols.annotations.length + "'></canvas>");
     colAnnValuesCell.append(this.canvasBody);
     this.markup.append(colAnnValuesCell);
     this.canvasBody.bind('contextmenu', function(e){
@@ -81,7 +81,7 @@ jheatmap.components.ColumnAnnotationPanel = function(drawer, heatmap) {
 
     this.canvasHeader.click(function (e) {
         var pos = $(e.target).offset();
-        var i = Math.floor((e.pageY - pos.top) / 10);
+        var i = Math.floor((e.pageY - pos.top) / heatmap.cols.annotationSize);
         heatmap.cols.sorter = new jheatmap.sorters.AnnotationSorter(heatmap.cols.annotations[i], !(heatmap.cols.sorter.asc));
         heatmap.cols.sorter.sort(heatmap, "columns");
         drawer.paint();
@@ -107,7 +107,7 @@ jheatmap.components.ColumnAnnotationPanel.prototype.paint = function() {
 
         for (i = 0; i < heatmap.cols.annotations.length; i++) {
             var value = heatmap.cols.header[heatmap.cols.annotations[i]];
-            colAnnHeaderCtx.fillText(value, 200 - textSpacing, (i * 10) + 5);
+            colAnnHeaderCtx.fillText(value, 200 - textSpacing, (i * heatmap.cols.annotationSize) + (heatmap.cols.annotationSize / 2));
         }
 
         var colAnnValuesCtx = this.canvasBody.get()[0].getContext('2d');
@@ -121,7 +121,7 @@ jheatmap.components.ColumnAnnotationPanel.prototype.paint = function() {
                 if (value != null) {
                     var color = heatmap.cols.decorators[field].toColor(value);
                     colAnnValuesCtx.fillStyle = color;
-                    colAnnValuesCtx.fillRect((col - startCol) * cz, i * 10, cz, 10);
+                    colAnnValuesCtx.fillRect((col - startCol) * cz, i * heatmap.cols.annotationSize, cz, heatmap.cols.annotationSize);
                 }
             }
         }
@@ -129,7 +129,7 @@ jheatmap.components.ColumnAnnotationPanel.prototype.paint = function() {
         for (var col = startCol; col < endCol; col++) {
             if ($.inArray(heatmap.cols.order[col], heatmap.cols.selected) > -1) {
                 colAnnValuesCtx.fillStyle = "rgba(0,0,0,0.1)";
-                colAnnValuesCtx.fillRect((col - startCol) * cz, 0, cz, heatmap.cols.annotations.length * 10);
+                colAnnValuesCtx.fillRect((col - startCol) * cz, 0, cz, heatmap.cols.annotations.length * heatmap.cols.annotationSize);
                 colAnnValuesCtx.fillStyle = "white";
             }
         }
