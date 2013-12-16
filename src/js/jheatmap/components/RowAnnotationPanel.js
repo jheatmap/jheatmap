@@ -111,8 +111,25 @@ jheatmap.components.RowAnnotationPanel.prototype.paint = function() {
             annRowHeadCtx.save();
             annRowHeadCtx.translate(i * heatmap.rows.annotationSize + (heatmap.rows.annotationSize / 2), 150);
             annRowHeadCtx.rotate(Math.PI / 2);
-            annRowHeadCtx.fillText(value, -textSpacing, 0);
+            annRowHeadCtx.fillText(value, -textSpacing - 5, 0);
             annRowHeadCtx.restore();
+
+            // Order mark
+            annRowHeadCtx.save();
+            annRowHeadCtx.translate(Math.round((i * heatmap.rows.annotationSize) + (heatmap.rows.annotationSize / 2)), annRowHeadCtx.canvas.height - 4)
+            annRowHeadCtx.rotate(Math.PI / 4);
+            if (heatmap.rows.sorter.field == heatmap.rows.annotations[i]) {
+                jheatmap.components.OrderSymbol(annRowHeadCtx, heatmap.rows.sorter.asc);
+            } else {
+                if (heatmap.rows.annotationSize < 6) {
+                    annRowHeadCtx.fillRect(-1, -1, 2, 2);
+                } else {
+                    annRowHeadCtx.fillRect(-2, -2, 4, 4);
+                }
+            }
+            annRowHeadCtx.fillStyle = "black";
+            annRowHeadCtx.restore();
+
         }
 
         var rowsAnnValuesCtx = this.bodyCanvas.get()[0].getContext('2d');

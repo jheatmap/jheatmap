@@ -107,7 +107,23 @@ jheatmap.components.ColumnAnnotationPanel.prototype.paint = function() {
 
         for (i = 0; i < heatmap.cols.annotations.length; i++) {
             var value = heatmap.cols.header[heatmap.cols.annotations[i]];
-            colAnnHeaderCtx.fillText(value, 200 - textSpacing, (i * heatmap.cols.annotationSize) + (heatmap.cols.annotationSize / 2));
+            colAnnHeaderCtx.fillText(value, colAnnHeaderCtx.canvas.width - 5 - textSpacing, (i * heatmap.cols.annotationSize) + (heatmap.cols.annotationSize / 2));
+
+            // Order mark
+            colAnnHeaderCtx.save();
+            colAnnHeaderCtx.translate(colAnnHeaderCtx.canvas.width - 4, Math.round((i * heatmap.cols.annotationSize) + (heatmap.cols.annotationSize / 2)));
+            colAnnHeaderCtx.rotate(-Math.PI / 4);
+            if (heatmap.cols.sorter.field == heatmap.cols.annotations[i]) {
+                jheatmap.components.OrderSymbol(colAnnHeaderCtx, heatmap.cols.sorter.asc);
+            } else {
+                if (heatmap.cols.annotationSize < 6) {
+                    colAnnHeaderCtx.fillRect(-1, -1, 2, 2);
+                } else {
+                    colAnnHeaderCtx.fillRect(-2, -2, 4, 4);
+                }
+            }
+            colAnnHeaderCtx.fillStyle = "black";
+            colAnnHeaderCtx.restore();
         }
 
         var colAnnValuesCtx = this.canvasBody.get()[0].getContext('2d');
