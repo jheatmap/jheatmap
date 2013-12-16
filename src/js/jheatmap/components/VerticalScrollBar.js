@@ -13,6 +13,8 @@ jheatmap.components.VerticalScrollBar = function(drawer, heatmap) {
 
     // Events
     var vScrollMouseDown = false;
+    var vScrollDownOffset = 0;
+    var scrollTarget = this.canvas;
 
     var onScrollClick = function (e) {
         var maxHeight = (heatmap.offset.bottom - heatmap.offset.top) * heatmap.rows.zoom;
@@ -29,6 +31,13 @@ jheatmap.components.VerticalScrollBar = function(drawer, heatmap) {
         e.preventDefault();
 
         vScrollMouseDown = true;
+
+        var maxHeight = (heatmap.offset.bottom - heatmap.offset.top) * heatmap.rows.zoom;
+		var iniY = Math.round(maxHeight * (heatmap.offset.top / heatmap.rows.order.length));
+		var endY = Math.round(maxHeight * (heatmap.offset.bottom / heatmap.rows.order.length));
+
+        vScrollDownOffset = ((endY - iniY) / 2) - (e.pageY - scrollTarget.offset().top);
+
     }
 
     var onScrollMouseUp = function (e) {
@@ -45,7 +54,7 @@ jheatmap.components.VerticalScrollBar = function(drawer, heatmap) {
         }
     }
 
-	var scrollTarget = this.canvas;
+
     var onScrollMouseMove = function (e) {
 
         if (vScrollMouseDown) {
@@ -53,7 +62,7 @@ jheatmap.components.VerticalScrollBar = function(drawer, heatmap) {
             var iniY = Math.round(maxHeight * (heatmap.offset.top / heatmap.rows.order.length));
             var endY = Math.round(maxHeight * (heatmap.offset.bottom / heatmap.rows.order.length));
 
-            var pY = e.pageY - scrollTarget.offset().top - ((endY - iniY) / 2);
+            var pY = e.pageY + vScrollDownOffset - scrollTarget.offset().top - ((endY - iniY) / 2);
             pY = (pY < 0 ? 0 : pY);
             heatmap.offset.top = Math.round((pY / maxHeight) * heatmap.rows.order.length);
             drawer.paint();
