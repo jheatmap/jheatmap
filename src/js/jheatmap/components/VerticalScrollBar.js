@@ -32,16 +32,20 @@ jheatmap.components.VerticalScrollBar = function(drawer, heatmap) {
     }
 
     var onScrollMouseUp = function (e) {
-        e.preventDefault();
 
-        if (e.originalEvent.touches && e.originalEvent.touches.length > 1) {
-            return;
+        if (vScrollMouseDown) {
+	        e.preventDefault();
+
+	        if (e.originalEvent.touches && e.originalEvent.touches.length > 1) {
+	            return;
+	        }
+
+	        drawer.paint();
+	        vScrollMouseDown = false;
         }
-
-        drawer.paint();
-        vScrollMouseDown = false;
     }
 
+	var scrollTarget = this.canvas;
     var onScrollMouseMove = function (e) {
 
         if (vScrollMouseDown) {
@@ -49,7 +53,7 @@ jheatmap.components.VerticalScrollBar = function(drawer, heatmap) {
             var iniY = Math.round(maxHeight * (heatmap.offset.top / heatmap.rows.order.length));
             var endY = Math.round(maxHeight * (heatmap.offset.bottom / heatmap.rows.order.length));
 
-            var pY = e.pageY - $(e.target).offset().top - ((endY - iniY) / 2);
+            var pY = e.pageY - scrollTarget.offset().top - ((endY - iniY) / 2);
             pY = (pY < 0 ? 0 : pY);
             heatmap.offset.top = Math.round((pY / maxHeight) * heatmap.rows.order.length);
             drawer.paint();
@@ -64,10 +68,10 @@ jheatmap.components.VerticalScrollBar = function(drawer, heatmap) {
     this.canvas.bind('mousedown', function (e) {
         onScrollMouseDown(e);
     });
-    this.canvas.bind('mouseup', function (e) {
-        onScrollMouseUp(e);
+    $(document).bind('mouseup', function (e) {
+            onScrollMouseUp(e);
     });
-    this.canvas.bind('mousemove', function (e) {
+    $(document).bind('mousemove', function (e) {
         onScrollMouseMove(e);
     });
 

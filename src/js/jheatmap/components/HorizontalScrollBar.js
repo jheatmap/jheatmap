@@ -41,13 +41,14 @@ jheatmap.components.HorizontalScrollBar = function(drawer, heatmap) {
         drawer.paint();
     };
 
+	var scrollTarget = this.canvas;
     var onScrollMouseMove = function (e) {
 
         if (hScrollMouseDown) {
             var maxWidth = (heatmap.offset.right - heatmap.offset.left) * heatmap.cols.zoom;
             var iniX = Math.round(maxWidth * (heatmap.offset.left / heatmap.cols.order.length));
             var endX = Math.round(maxWidth * (heatmap.offset.right / heatmap.cols.order.length));
-            var pX = e.pageX - $(e.target).offset().left - ((endX - iniX) / 2);
+            var pX = e.pageX - scrollTarget.offset().left - ((endX - iniX) / 2);
             pX = (pX < 0 ? 0 : pX);
             heatmap.offset.left = Math.round((pX / maxWidth) * heatmap.cols.order.length);
             drawer.paint();
@@ -62,10 +63,10 @@ jheatmap.components.HorizontalScrollBar = function(drawer, heatmap) {
     this.canvas.bind('mousedown', function (e) {
         onScrollMouseDown(e);
     });
-    this.canvas.bind('mouseup', function (e) {
+    $(document).bind('mouseup', function (e) {
         onScrollMouseUp(e);
     });
-    this.canvas.bind('mousemove', function (e) {
+    $(document).bind('mousemove', function (e) {
         onScrollMouseMove(e);
     });
 
