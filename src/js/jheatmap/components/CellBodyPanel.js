@@ -15,17 +15,18 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
     var downY = null;
     var lastX = null;
     var lastY = null;
+    var eventTarget = this.canvas;
 
-    var onMouseUp = function (e) {
+    var onMouseUp = function (e, pageX, pageY) {
         e.preventDefault();
 
         if (e.originalEvent.touches && e.originalEvent.touches.length > 1) {
             return;
         }
 
-        var position = $(e.target).offset();
-        var pX = e.pageX - position.left - downX;
-        var pY = e.pageY - position.top - downY;
+        var position = eventTarget.offset();
+        var pX = pageX - position.left - downX;
+        var pY = pageY - position.top - downY;
 
         var c = Math.round(pX / heatmap.cols.zoom);
         var r = Math.round(pY / heatmap.rows.zoom);
@@ -35,12 +36,12 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
 
         if (r == 0 && c == 0) {
 
-            var col = Math.floor((e.originalEvent.pageX - position.left) / heatmap.cols.zoom) + heatmap.offset.left;
-            var row = Math.floor((e.originalEvent.pageY - position.top) / heatmap.rows.zoom) + heatmap.offset.top;
+            var col = Math.floor((pageX - position.left) / heatmap.cols.zoom) + heatmap.offset.left;
+            var row = Math.floor((pageY - position.top) / heatmap.rows.zoom) + heatmap.offset.top;
 
             var details = $('table.heatmap div.detailsbox');
-            var boxTop = e.pageY - $(heatmap.options.container).offset().top;
-            var boxLeft = e.pageX - $(heatmap.options.container).offset().left;
+            var boxTop = pageY - $(heatmap.options.container).offset().top;
+            var boxLeft = pageX - $(heatmap.options.container).offset().left;
 
             heatmap.paintCellDetails(row, col, heatmap, boxTop, boxLeft, details);
 
@@ -48,62 +49,77 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
         drawer.paint();
     };
 
-    var onMouseMove = function (e) {
+    var onMouseMove = function (e, pageX, pageY) {
         e.preventDefault();
 
+        if (e.originalEvent.touches && e.originalEvent.touches.length > 1) {
+            return;
+        }
+
         if (downX != null) {
-            var position = $(e.target).offset();
-            var pX = e.pageX - position.left - lastX;
-            var pY = e.pageY - position.top - lastY;
+            var position = eventTarget.offset();
+            var pX = pageX - position.left - lastX;
+            var pY = pageY - position.top - lastY;
 
             var c = Math.round(pX / heatmap.cols.zoom);
             var r = Math.round(pY / heatmap.rows.zoom);
 
             if (!(r == 0 && c == 0)) {
-
                 heatmap.offset.top -= r;
                 heatmap.offset.left -= c;
                 drawer.paint();
-                lastX = e.pageX - position.left;
-                lastY = e.pageY - position.top;
+                lastX = pageX - position.left;
+                lastY = pageY - position.top;
             }
         }
 
     };
 
-    var onMouseDown = function (e) {
+    var onMouseDown = function (e, pageX, pageY) {
         e.preventDefault();
 
-        var position = $(e.target).offset();
-        downX = e.pageX - position.left;
-        downY = e.pageY - position.top;
+        if (e.originalEvent.touches && e.originalEvent.touches.length > 1) {
+              var pos = eventTarget.offset();
+              var pageX1 = e.originalEvent.touches[0].pageX;
+              var pageY1 = e.originalEvent.touches[0].pageY;
+              var pageX2 = e.originalEvent.touches[1].pageX;
+              var pageY2 = e.originalEvent.touches[1].pageY;
+              x = Math.round(pageX1 + (pageX2 - pageX1)/2 ) - pos.left;
+              y = Math.round(pageY1 + (pageY2-pageY1)/2) - pos.top;
+              downX = null;
+              downY = null;
+              return;
+        }
+
+        var position = eventTarget.offset();
+        downX = pageX - position.left;
+        downY = pageY - position.top;
         lastX = downX;
         lastY = downY;
-
     };
 
     var col, row;
     var x, y;
     var startWheel = new Date().getTime();
 
-    var zoomHeatmap = function (zoomin, col, row) {
+    var zoomHeatmap = function (inc, zoomin, col, row) {
 
         var ncz = null;
         var nrz = null;
 
         if (zoomin) {
-            ncz = heatmap.cols.zoom + 3;
-            nrz = heatmap.rows.zoom + 3;
+            ncz = heatmap.cols.zoom + inc;
+            nrz = heatmap.rows.zoom + inc;
         } else {
-            ncz = heatmap.cols.zoom - 3;
-            nrz = heatmap.rows.zoom - 3;
+            ncz = heatmap.cols.zoom - inc;
+            nrz = heatmap.rows.zoom - inc;
         }
 
         ncz = ncz < 3 ? 3 : ncz;
-        ncz = ncz > 32 ? 32 : ncz;
+        ncz = ncz > 64 ? 64 : ncz;
 
         nrz = nrz < 3 ? 3 : nrz;
-        nrz = nrz > 32 ? 32 : nrz;
+        nrz = nrz > 64 ? 64 : nrz;
 
         if (!(nrz == heatmap.rows.zoom && ncz == heatmap.cols.zoom)) {
 
@@ -119,15 +135,26 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
     var onGestureEnd = function (e) {
         e.preventDefault();
 
-        col = Math.round(heatmap.offset.left + ((heatmap.offset.right - heatmap.offset.left) / 2));
-        row = Math.round(heatmap.offset.top + ((heatmap.offset.bottom - heatmap.offset.top) / 2));
+        col = Math.floor(x / heatmap.cols.zoom) + heatmap.offset.left;
+        row = Math.floor(y / heatmap.rows.zoom) + heatmap.offset.top;
+
         var zoomin = e.originalEvent.scale > 1;
 
-        zoomHeatmap(zoomin, col, row);
+        var inc = 3;
+        if (zoomin) {
+            inc = Math.round(inc * e.originalEvent.scale * 0.75 );
+        } else {
+            inc = Math.round(inc * (1 / e.originalEvent.scale) * 0.75);
+        }
+
+        zoomHeatmap(inc, zoomin, col, row);
+
     };
 
     var onGestureChange = function (e) {
         e.preventDefault();
+
+        return;
     };
 
     var onMouseWheel = function (e, delta, deltaX, deltaY) {
@@ -135,7 +162,7 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
 
         var currentTime = new Date().getTime();
         if ((currentTime - startWheel) > 500) {
-            var pos = $(e.target).offset();
+            var pos = eventTarget.offset();
             x = (e.pageX - pos.left);
             y = (e.pageY - pos.top);
             col = Math.floor(x / heatmap.cols.zoom) + heatmap.offset.left;
@@ -144,7 +171,7 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
         startWheel = currentTime;
 
         var zoomin = delta / 120 > 0;
-        zoomHeatmap(zoomin, col, row);
+        zoomHeatmap(3, zoomin, col, row);
     };
 
     // Bind events
@@ -158,13 +185,28 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
         onGestureEnd(e);
     });
     this.canvas.bind('mousedown', function (e) {
-        onMouseDown(e);
+        onMouseDown(e, e.pageX, e.pageY);
     });
+    this.canvas.bind('touchstart', function(e) {
+        onMouseDown(e, e.originalEvent.touches[0].pageX, e.originalEvent.touches[0].pageY);
+    });
+
     this.canvas.bind('mousemove', function (e) {
-        onMouseMove(e);
+        onMouseMove(e, e.pageX, e.pageY);
     });
+    this.canvas.bind('touchmove', function(e) {
+        onMouseMove(e, e.originalEvent.touches[0].pageX, e.originalEvent.touches[0].pageY);
+    });
+
     this.canvas.bind('mouseup', function (e) {
-        onMouseUp(e);
+        onMouseUp(e, e.pageX, e.pageY);
+    });
+
+    this.canvas.bind('touchend touchcancel', function (e) {
+        if (downX && downY && (Math.abs(downX - lastX) < 10) && (Math.abs(downY - lastY) < 10))  {
+            var pos = eventTarget.offset();
+            onMouseUp(e, downX + pos.left, downY + pos.top);
+        }
     });
 
 };

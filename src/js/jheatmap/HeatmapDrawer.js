@@ -87,6 +87,11 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         container.append(table);
         $('#heatmap-loader').hide();
         $('#heatmap-details').details({ show: false });
+        $('canvas').hammer({
+            tap_always: false,
+            swipe: false
+        });
+        Hammer.plugins.fakeMultitouch();
 
     };
 
@@ -102,13 +107,13 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         // Zoom columns
         var cz = heatmap.cols.zoom;
         cz = cz < mcz ? mcz : cz;
-        cz = cz > 32 ? 32 : cz;
+        cz = cz > 64 ? 64 : cz;
         heatmap.cols.zoom = cz;
 
         // Zoom rows
         var rz = heatmap.rows.zoom;
         rz = rz < mrz ? mrz : rz;
-        rz = rz > 32 ? 32 : rz;
+        rz = rz > 64 ? 64 : rz;
         heatmap.rows.zoom = rz;
 
         var maxCols = Math.min(heatmap.cols.order.length, Math.round(heatmap.size.width / cz) + 1);

@@ -17,136 +17,10 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
     });
 
     // Event functions
-    var colsMouseDown = false;
-    var colsSelecting = true;
-    var colsDownColumn = null;
-    var colsShiftColumn = null;
-    var lastColSelected = null;
-
-    var onMouseDown = function (e) {
-
-        colsMouseDown = true;
-
-        colsShiftColumn = Math.floor((e.pageX - $(e.target).offset().left) / heatmap.cols.zoom) + heatmap.offset.left;
-        colsDownColumn = colsShiftColumn;
-
-        var index = $.inArray(heatmap.cols.order[colsDownColumn], heatmap.cols.selected);
-        colsSelecting = index <= -1;
-    };
-
-    var onMouseUp = function (e) {
-
-        colsMouseDown = false;
-
-        var col = Math.floor((e.pageX - $(e.target).offset().left) / heatmap.cols.zoom) + heatmap.offset.left;
-
-        if (col == colsDownColumn) {
-            var index = $.inArray(heatmap.cols.order[col], heatmap.cols.selected);
-            if (colsSelecting) {
-                if (index == -1) {
-                    var y = e.pageY - $(e.target).offset().top;
-                    if (y > (heatmap.cols.labelSize - 10)) {
-                        heatmap.rows.sorter = new jheatmap.sorters.ValueSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), heatmap.cols.order[col]);
-                        heatmap.rows.sorter.sort(heatmap, "rows");
-                    } else {
-                        heatmap.cols.selected[heatmap.cols.selected.length] = heatmap.cols.order[col];
-                    }
-                }
-            } else {
-                var y = e.pageY - $(e.target).offset().top;
-                if (y > (heatmap.cols.labelSize - 10)) {
-                    heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), heatmap.cols.selected.slice(0));
-                    heatmap.rows.sorter.sort(heatmap, "rows");
-                } else {
-                    var unselectCols = [ col ];
-
-                    for (var i = col + 1; i < heatmap.cols.order.length; i++) {
-                        var index = $.inArray(heatmap.cols.order[i], heatmap.cols.selected);
-                        if (index > -1) {
-                            unselectCols[unselectCols.length] = i;
-                        } else {
-                            break;
-                        }
-                    }
-
-                    for (var i = col - 1; i > 0; i--) {
-                        var index = $.inArray(heatmap.cols.order[i], heatmap.cols.selected);
-                        if (index > -1) {
-                            unselectCols[unselectCols.length] = i;
-                        } else {
-                            break;
-                        }
-                    }
-
-                    for (var i = 0; i < unselectCols.length; i++) {
-                        var index = $.inArray(heatmap.cols.order[unselectCols[i]], heatmap.cols.selected);
-                        heatmap.cols.selected.splice(index, 1);
-                    }
-                }
-            }
-        }
-
-        lastColSelected = null;
-
-        drawer.paint();
-    }
-
-    var onMouseMove = function (e) {
-
-        if (colsMouseDown) {
-            var col = Math.floor((e.pageX - $(e.target).offset().left) / heatmap.cols.zoom) + heatmap.offset.left;
-
-            if (colsSelecting) {
-                var index = $.inArray(heatmap.cols.order[col], heatmap.cols.selected);
-                if (index == -1) {
-                    heatmap.cols.selected[heatmap.cols.selected.length] = heatmap.cols.order[col];
-
-                    // Select the gap
-                    if (lastColSelected != null && Math.abs(lastColSelected - col) > 1) {
-                        var upCol = (lastColSelected < col ? lastColSelected : col );
-                        var downCol = (lastColSelected < col ? col : lastColSelected );
-                        for (var i = upCol + 1; i < downCol; i++) {
-                            heatmap.cols.selected[heatmap.cols.selected.length] = heatmap.cols.order[i];
-                        }
-                    }
-                    lastColSelected = col;
-                }
-            } else {
-                var diff = col - colsShiftColumn;
-                if (diff != 0) {
-                    if (diff > 0) {
-                        if ($.inArray(heatmap.cols.order[heatmap.cols.order.length - 1], heatmap.cols.selected) == -1) {
-                            for (var i = heatmap.cols.order.length - 2; i >= 0; i--) {
-                                if ($.inArray(heatmap.cols.order[i], heatmap.cols.selected) != -1) {
-                                    var nextCol = heatmap.cols.order[i + 1];
-                                    heatmap.cols.order[i + 1] = heatmap.cols.order[i];
-                                    heatmap.cols.order[i] = nextCol;
-                                }
-                            }
-                        }
-                    } else {
-                        if ($.inArray(heatmap.cols.order[0], heatmap.cols.selected) == -1) {
-                            for (var i = 1; i < heatmap.cols.order.length; i++) {
-                                if ($.inArray(heatmap.cols.order[i], heatmap.cols.selected) != -1) {
-                                    var prevCol = heatmap.cols.order[i - 1];
-                                    heatmap.cols.order[i - 1] = heatmap.cols.order[i];
-                                    heatmap.cols.order[i] = prevCol;
-                                }
-                            }
-                        }
-                    }
-                    colsShiftColumn = col;
-                }
-            }
-
-            drawer.paint();
-        }
-    };
+    var eventTarget = this.canvas;
 
     var onKeyPress = function (e) {
-
         var charCode = e.which || e.keyCode;
-
         for (var key in heatmap.actions) {
             var action = heatmap.actions[key];
 
@@ -154,29 +28,168 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
                 action.columns();
             }
         }
-
     };
 
-    // Bind events
-    this.canvas.bind('mousedown', function (e) {
-        onMouseDown(e);
-    });
-    this.canvas.bind('mousemove', function (e) {
-        onMouseMove(e);
-    });
-    this.canvas.bind('mouseup', function (e) {
-        onMouseUp(e);
-    });
-    this.canvas.bind('mouseover', function (e) {
-        drawer.handleFocus(e);
-    });
-    this.canvas.bind('mouseout', function (e) {
-        drawer.handleFocus(e);
-    });
-    this.canvas.bind('keypress', function (e) {
-        onKeyPress(e);
-    });
+    // Return true if the col is selected
+    var isSelected = function(col) {
+        return $.inArray(heatmap.cols.order[col], heatmap.cols.selected) > -1;
+    };
 
+     // Computes the relative to canvas x, y and the row
+     var getCenter = function (e) {
+           e.gesture.center.x = e.gesture.center.pageX - eventTarget.offset().left;
+           e.gesture.center.y = e.gesture.center.pageY - eventTarget.offset().top;
+           e.gesture.center.col = Math.floor(e.gesture.center.x / heatmap.cols.zoom) + heatmap.offset.left;
+           return e.gesture.center;
+     };
+
+     // Select multiple rows or move the selected rows
+     var firstCol;
+     var firstX;
+     var firstZoom;
+     var doingPinch = false;
+     var lastMovedCol = null;
+     var movingSelection;
+
+     this.canvas.bind('touch', function (e) {
+         e.gesture.preventDefault();
+         var center = getCenter(e);
+         firstCol = center.col;
+         firstX = center.x;
+         firstZoom = heatmap.cols.zoom;
+
+         lastMovedCol = firstCol;
+         movingSelection = isSelected(firstCol);
+     });
+     this.canvas.bind('release', function (e) {
+         doingPinch = false;
+     });
+     this.canvas.bind('drag', function (e) {
+         e.gesture.preventDefault();
+
+         if (doingPinch) {
+             return;
+         }
+
+         var center = getCenter(e);
+
+         if (firstCol == center.col) {
+             return;
+         }
+
+         if (movingSelection) {
+             var diff = center.col - lastMovedCol;
+             if (diff != 0) {
+                 if (diff > 0) {
+                     for (var r=0; r < diff; r++) {
+                        if ($.inArray(heatmap.cols.order[heatmap.cols.order.length - 1], heatmap.cols.selected) == -1) {
+                            for (var i = heatmap.cols.order.length - 2; i >= 0; i--) {
+                                var index = $.inArray(heatmap.cols.order[i], heatmap.cols.selected);
+                                if (index != -1) {
+                                    var nextCol = heatmap.cols.order[i + 1];
+                                    heatmap.cols.order[i + 1] = heatmap.cols.order[i];
+                                    heatmap.cols.order[i] = nextCol;
+                                }
+                            }
+                        }
+                     }
+                 } else {
+                     for (var r=0; r < -diff; r++) {
+                        if ($.inArray(heatmap.cols.order[0], heatmap.cols.selected) == -1) {
+                            for (var i = 1; i < heatmap.cols.order.length; i++) {
+                                var index = $.inArray(heatmap.cols.order[i], heatmap.cols.selected);
+                                if (index != -1) {
+                                    var prevCol = heatmap.cols.order[i - 1];
+                                    heatmap.cols.order[i - 1] = heatmap.cols.order[i];
+                                    heatmap.cols.order[i] = prevCol;
+                                }
+                            }
+                        }
+                     }
+                 }
+                 lastMovedCol = center.col;
+             }
+         }
+         else
+         {
+            heatmap.cols.selected = [];
+            if (firstCol < center.col) {
+                for (var i=firstCol; i<=center.col; i++) {
+                    heatmap.cols.selected[heatmap.cols.selected.length] = heatmap.cols.order[i];
+                }
+            } else {
+                for (var i=center.col; i<=firstCol; i++) {
+                    heatmap.cols.selected[heatmap.cols.selected.length] = heatmap.cols.order[i];
+                }
+            }
+         }
+
+         drawer.paint();
+     });
+
+     this.canvas.bind('tap', function (e) {
+         e.gesture.preventDefault();
+
+        var center = getCenter(e);
+        if (center.y > 200)
+        {
+            // Sort the col
+            heatmap.rows.sorter = new jheatmap.sorters.ValueSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), heatmap.cols.order[center.col]);
+            heatmap.rows.sorter.sort(heatmap, "rows");
+        }
+        else if (!isSelected(center.col))
+        {
+            // Select the row
+            if (heatmap.cols.selected.length == 0) {
+                heatmap.cols.selected = [ heatmap.cols.order[center.col] ];
+            } else {
+                heatmap.cols.selected = [];
+            }
+        }
+
+        drawer.paint();
+     });
+
+     this.canvas.bind('doubletap', function(e) {
+         e.gesture.preventDefault();
+
+        var center = getCenter(e);
+        if (isSelected(center.col))
+        {
+               heatmap.cols.selected = [];
+        }
+
+        drawer.paint();
+     });
+
+     this.canvas.bind('pinch', function (e) {
+         e.gesture.preventDefault();
+         doingPinch = true;
+         var nz = firstZoom * e.gesture.scale;
+         nz = nz < 3 ? 3 : nz;
+         nz = nz > 64 ? 64 : nz;
+
+         if (nz != heatmap.cols.zoom) {
+             heatmap.cols.zoom = Math.round(nz);
+             heatmap.offset.left = firstCol - Math.floor(firstX / heatmap.cols.zoom);
+         }
+     });
+
+     this.canvas.bind('transformend', function (e) {
+        drawer.paint();
+     });
+
+
+     this.canvas.bind('mouseover', function(e) {
+         drawer.handleFocus(e);
+     });
+     this.canvas.bind('mouseout', function(e) {
+         drawer.handleFocus(e);
+     });
+
+     this.canvas.bind('keypress', function (e) {
+         onKeyPress(e);
+     });
 };
 
 jheatmap.components.ColumnHeaderPanel.prototype.paint = function() {
@@ -188,8 +201,19 @@ jheatmap.components.ColumnHeaderPanel.prototype.paint = function() {
     var startCol = heatmap.offset.left;
     var endCol = heatmap.offset.right;
 
-    var colCtx = this.canvas.get()[0].getContext('2d');
+    var canvas = this.canvas.get()[0];
+    var colCtx = canvas.getContext('2d');
+
+    // Bug clear canvas workaround
+    androidBug39247 = function() {
+      canvas.style.opacity = 0.99;
+      setTimeout(function() {
+      canvas.style.opacity = 1;
+      }, 1);
+    }
+
     colCtx.clearRect(0, 0, colCtx.canvas.width, colCtx.canvas.height);
+    androidBug39247();
 
     colCtx.fillStyle = "black";
     colCtx.textAlign = "right";

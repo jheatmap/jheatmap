@@ -69,6 +69,8 @@
             <!-- jQuery plugins -->
             <fileset dir="." includes="src/js/jquery.bootstrap.js"/>
             <fileset dir="." includes="src/js/jquery.mousewheel.js"/>
+            <fileset dir="." includes="src/js/jquery.hammer.js"/>
+            <fileset dir="." includes="src/js/hammer.fakemultitouch.js"/>
             <fileset dir="." includes="src/js/jquery.jheatmap.js"/>
 
         </concat>
