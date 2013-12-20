@@ -157,26 +157,39 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
         return;
     };
 
-    var onMouseWheel = function (e, delta, deltaX, deltaY) {
-        e.preventDefault();
-
-        var currentTime = new Date().getTime();
-        if ((currentTime - startWheel) > 500) {
-            var pos = eventTarget.offset();
-            x = (e.pageX - pos.left);
-            y = (e.pageY - pos.top);
-            col = Math.floor(x / heatmap.cols.zoom) + heatmap.offset.left;
-            row = Math.floor(y / heatmap.rows.zoom) + heatmap.offset.top;
-        }
-        startWheel = currentTime;
-
-        var zoomin = delta / 120 > 0;
-        zoomHeatmap(3, zoomin, col, row);
-    };
-
     // Bind events
     this.canvas.bind('mousewheel', function (e, delta, deltaX, deltaY) {
-        onMouseWheel(e, delta, deltaX, deltaY);
+        e.preventDefault();
+
+        if (e.shiftKey) {
+           // Zoom
+	        var currentTime = new Date().getTime();
+	        if ((currentTime - startWheel) > 500) {
+	            var pos = eventTarget.offset();
+	            x = (e.pageX - pos.left);
+	            y = (e.pageY - pos.top);
+	            col = Math.floor(x / heatmap.cols.zoom) + heatmap.offset.left;
+	            row = Math.floor(y / heatmap.rows.zoom) + heatmap.offset.top;
+	        }
+	        startWheel = currentTime;
+
+	        var zoomin = delta / 120 > 0;
+	        zoomHeatmap(3, zoomin, col, row);
+
+        } else {
+             // Scroll rows
+
+             // Normal speed
+             var momentum = Math.round(heatmap.size.height / (7 * heatmap.rows.zoom));
+
+             // Increase speed when user swipes the wheel (the increment depends on heatmap size).
+             momentum = Math.abs(delta) > 1 ? Math.round(heatmap.rows.values.length / (20*Math.abs(delta))) : momentum;
+
+             heatmap.offset.top = heatmap.offset.top - delta * momentum;
+
+	         drawer.paint();
+
+        }
     });
     this.canvas.bind('gesturechange', function (e) {
         onGestureChange(e);

@@ -15,17 +15,6 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
     // Event functions
 	var eventTarget = this.canvas;
 
-    var onKeyPress = function (e) {
-        var charCode = e.which || e.keyCode;
-        for (var key in heatmap.actions) {
-            var action = heatmap.actions[key];
-
-            if (action.rows != undefined && action.shortCut != undefined && action.keyCodes.indexOf(charCode) != -1) {
-                action.rows();
-            }
-        }
-    };
-
     // Return true if the row is selected
     var isSelected = function(row) {
         return $.inArray(heatmap.rows.order[row], heatmap.rows.selected) > -1;
@@ -158,10 +147,9 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
        drawer.paint();
     });
 
-    this.canvas.bind('pinch', function (e) {
-        e.gesture.preventDefault();
-        doingPinch = true;
-        var nrz = firstZoom * e.gesture.scale;
+    var zoom = function(scale) {
+
+        var nrz = firstZoom * scale;
         nrz = nrz < 3 ? 3 : nrz;
         nrz = nrz > 64 ? 64 : nrz;
 
@@ -169,12 +157,42 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
             heatmap.rows.zoom = Math.round(nrz);
             heatmap.offset.top = firstRow - Math.floor(firstY / heatmap.rows.zoom);
         }
+    };
+
+    this.canvas.bind('pinch', function (e) {
+        e.gesture.preventDefault();
+        doingPinch = true;
+        zoom(e.gesture.scale)
     });
 
     this.canvas.bind('transformend', function (e) {
        drawer.paint();
     });
 
+    this.canvas.bind('mousewheel', function (e, delta, deltaX, deltaY) {
+         e.preventDefault();
+
+         if (e.shiftKey) {
+
+             // Zoom
+             firstZoom = heatmap.rows.zoom;
+             firstY = e.pageY - eventTarget.offset().top;
+             firstRow = Math.floor(firstY / heatmap.rows.zoom) + heatmap.offset.top;
+             var scale = delta > 0 ? 1 + (0.2 * delta) : 1 / (1 + (0.2 * -delta));
+             zoom(scale);
+
+         } else {
+             // Scroll
+             // Normal speed
+	         var momentum = Math.round(heatmap.size.height / (7 * heatmap.rows.zoom));
+
+	         // Increase speed when user swipes the wheel (the increment depends on heatmap size).
+	         momentum = Math.abs(delta) > 1 ? Math.round(heatmap.rows.values.length / (20*Math.abs(delta))) : momentum;
+
+	         heatmap.offset.top = heatmap.offset.top - delta * momentum;
+	     }
+         drawer.paint();
+    });
 
     this.canvas.bind('mouseover', function(e) {
         drawer.handleFocus(e);
@@ -184,8 +202,17 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
     });
 
     this.canvas.bind('keypress', function (e) {
-        onKeyPress(e);
+        var charCode = e.which || e.keyCode;
+        for (var key in heatmap.actions) {
+            var action = heatmap.actions[key];
+
+            if (action.rows != undefined && action.shortCut != undefined && action.keyCodes.indexOf(charCode) != -1) {
+                action.rows();
+            }
+        }
     });
+
+
 
 };
 

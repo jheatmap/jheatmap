@@ -162,23 +162,55 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
         drawer.paint();
      });
 
+     var zoom = function(scale) {
+
+          var nz = firstZoom * scale;
+          nz = nz < 3 ? 3 : nz;
+          nz = nz > 64 ? 64 : nz;
+
+          if (nz != heatmap.cols.zoom) {
+              heatmap.cols.zoom = Math.round(nz);
+              heatmap.offset.left = firstCol - Math.floor(firstX / heatmap.cols.zoom);
+          }
+
+     };
+
      this.canvas.bind('pinch', function (e) {
          e.gesture.preventDefault();
          doingPinch = true;
-         var nz = firstZoom * e.gesture.scale;
-         nz = nz < 3 ? 3 : nz;
-         nz = nz > 64 ? 64 : nz;
-
-         if (nz != heatmap.cols.zoom) {
-             heatmap.cols.zoom = Math.round(nz);
-             heatmap.offset.left = firstCol - Math.floor(firstX / heatmap.cols.zoom);
-         }
+         zoom(e.gesture.scale);
      });
 
      this.canvas.bind('transformend', function (e) {
         drawer.paint();
      });
 
+     this.canvas.bind('mousewheel', function (e, delta, deltaX, deltaY) {
+              e.preventDefault();
+
+              if (e.shiftKey) {
+
+                 // Zoom
+                 firstZoom = heatmap.cols.zoom;
+                 firstX = e.pageX - eventTarget.offset().left;
+                 firstCol = Math.floor(firstX / heatmap.cols.zoom) + heatmap.offset.left;
+                 var scale = delta > 0 ? 1 + (0.2 * delta) : 1 / (1 + (0.2 * -delta));
+                 zoom(scale);
+
+              } else {
+
+	              // Normal speed
+	              var momentum = Math.round(heatmap.size.width / (7 * heatmap.cols.zoom));
+
+	              // Increase speed when user swipes the wheel (the increment depends on heatmap size).
+	              momentum = Math.abs(delta) > 1 ? Math.round(heatmap.cols.values.length / (20*Math.abs(delta))) : momentum;
+
+	              heatmap.offset.left = heatmap.offset.left - delta * momentum;
+
+              }
+
+              drawer.paint();
+     });
 
      this.canvas.bind('mouseover', function(e) {
          drawer.handleFocus(e);
