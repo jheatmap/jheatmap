@@ -11,7 +11,7 @@ jheatmap.actions.ShowHidden = function (heatmap) {
     this.heatmap = heatmap;
     this.shortCut = "S";
     this.keyCodes = [83, 115];
-    this.title = "Show hidden rows/columns";
+    this.title = "Show hidden";
 };
 
 /**

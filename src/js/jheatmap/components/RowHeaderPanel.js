@@ -6,10 +6,29 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
     // Create markup
     this.markup = $("<td>", {"class": "row" });
     this.canvas = $("<canvas class='header' width='" + heatmap.rows.labelSize + "' height='" + heatmap.size.height + "' tabindex='1'></canvas>");
-
     this.markup.append(this.canvas);
-    this.canvas.bind('contextmenu', function(e){
-        return false;
+
+    // Context menu
+    var menu = {
+          selector: 'canvas',
+          callback: function(key, options) {
+              var action = heatmap.actions[key];
+              if (action.rows != undefined) {
+                  action.rows();
+              }
+          },
+          items: {}
+    }
+    for (var key in heatmap.actions) {
+            var action = heatmap.actions[key];
+            if (action.rows != undefined) {
+                menu.items[key] = { name: action.title };
+            }
+    }
+    this.markup.contextMenu(menu);
+    this.canvas.bind('hold', function(e){
+        e.gesture.preventDefault();
+        $(this).contextMenu({ x: e.gesture.center.pageX, y: e.gesture.center.pageY });
     });
 
     // Event functions
@@ -37,6 +56,9 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
     var movingSelection;
 
     this.canvas.bind('touch', function (e) {
+        heatmap.focus.row = undefined;
+        heatmap.focus.col = undefined;
+
         e.gesture.preventDefault();
         var center = getCenter(e);
         firstRow = center.row;
@@ -49,6 +71,7 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
     this.canvas.bind('release', function (e) {
         doingPinch = false;
     });
+
     this.canvas.bind('drag', function (e) {
         e.gesture.preventDefault();
 

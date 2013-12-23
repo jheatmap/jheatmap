@@ -70,7 +70,7 @@
             <fileset dir="." includes="src/js/jquery.bootstrap.js"/>
             <fileset dir="." includes="src/js/jquery.mousewheel.js"/>
             <fileset dir="." includes="src/js/jquery.hammer.js"/>
-            <fileset dir="." includes="src/js/hammer.fakemultitouch.js"/>
+            <fileset dir="." includes="src/js/jquery.contextMenu.js"/>
             <fileset dir="." includes="src/js/jquery.jheatmap.js"/>
 
         </concat>
@@ -79,6 +79,7 @@
         <echo message="Building global cascading stylesheets"/>
         <concat destfile="site/css/jheatmap-${jheatmap.version}.css" force="no">
             <fileset dir="." includes="src/css/bootstrap.css"/>
+            <fileset dir="." includes="src/css/jquery.contextMenu.css"/>
             <fileset dir="." includes="src/css/jheatmap.css"/>
         </concat>
     </target>

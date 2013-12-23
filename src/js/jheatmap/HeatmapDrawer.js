@@ -94,7 +94,6 @@ jheatmap.HeatmapDrawer = function (heatmap) {
             tap_always: false,
             swipe: false
         });
-        Hammer.plugins.fakeMultitouch();
 
     };
 

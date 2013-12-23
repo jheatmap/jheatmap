@@ -12,8 +12,28 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
     this.markup = $("<th>");
     this.canvas = $("<canvas class='header' id='colCanvas' width='" + heatmap.size.width + "' height='"+heatmap.cols.labelSize+"' tabindex='3'></canvas>");
     this.markup.append(this.canvas);
-    this.canvas.bind('contextmenu', function(e){
-        return false;
+
+    // Context menu
+    var menu = {
+          selector: 'canvas',
+          callback: function(key, options) {
+              var action = heatmap.actions[key];
+              if (action.columns != undefined) {
+                  action.columns();
+              }
+          },
+          items: {}
+    }
+    for (var key in heatmap.actions) {
+            var action = heatmap.actions[key];
+            if (action.columns != undefined) {
+                menu.items[key] = { name: action.title };
+            }
+    }
+    this.markup.contextMenu(menu);
+    this.canvas.bind('hold', function(e){
+        e.gesture.preventDefault();
+        $(this).contextMenu({ x: e.gesture.center.pageX, y: e.gesture.center.pageY });
     });
 
     // Event functions
@@ -52,6 +72,9 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
      var movingSelection;
 
      this.canvas.bind('touch', function (e) {
+         heatmap.focus.row = undefined;
+         heatmap.focus.col = undefined;
+
          e.gesture.preventDefault();
          var center = getCenter(e);
          firstCol = center.col;

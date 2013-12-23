@@ -11,7 +11,7 @@ jheatmap.actions.HideSelected = function (heatmap) {
     this.heatmap = heatmap;
     this.shortCut = "H";
     this.keyCodes = [72, 104];
-    this.title = "Hide selected rows/columns";
+    this.title = "Hide selected";
 };
 
 /**

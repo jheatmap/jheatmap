@@ -11,7 +11,7 @@ jheatmap.actions.ClearSelection = function (heatmap) {
     this.heatmap = heatmap;
     this.shortCut = "C";
     this.keyCodes = [99, 67];
-    this.title = "Clear selection from rows/columns";
+    this.title = "Clear selection";
 };
 
 /**

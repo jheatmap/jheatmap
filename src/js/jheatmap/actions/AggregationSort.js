@@ -11,7 +11,7 @@ jheatmap.actions.AggregationSort = function (heatmap) {
     this.heatmap = heatmap;
     this.shortCut = "A";
     this.keyCodes = [97, 65];
-    this.title = "Use aggregation sorting at rows/columns";
+    this.title = "Sort by aggregated values";
 };
 
 jheatmap.actions.AggregationSort.prototype.rows = function() {

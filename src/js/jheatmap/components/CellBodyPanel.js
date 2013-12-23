@@ -267,6 +267,14 @@ jheatmap.components.CellBodyPanel.prototype.paint = function() {
     var details = $('table.heatmap div.detailsbox');
     if (heatmap.focus.col != undefined && heatmap.focus.row != undefined) {
 
+        // Paint focus lines
+        cellCtx.fillStyle = "#DDDDDD";
+        cellCtx.fillRect((heatmap.focus.col - startCol) * cz, 0, 1, (endRow - startRow) * rz);
+        cellCtx.fillRect((heatmap.focus.col - startCol + 1) * cz, 0, 1, (endRow - startRow) * rz);
+        cellCtx.fillRect(0, (heatmap.focus.row - startRow) * rz, (endCol - startCol) * cz, 1);
+        cellCtx.fillRect(0, (heatmap.focus.row - startRow + 1) * rz, (endCol - startCol) * cz, 1);
+        cellCtx.fillStyle = "white";
+
         var boxTop = this.canvas.offset().top + ((heatmap.focus.row - heatmap.offset.top) * heatmap.rows.zoom);
         var boxLeft = this.canvas.offset().left + ((heatmap.focus.col - heatmap.offset.left) * heatmap.cols.zoom);
 
