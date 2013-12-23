@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset=utf-8 />
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1" />
     <title>jHeatmap</title>
     <link href="../../css/jheatmap-1.0.0-alpha-min.css" rel="stylesheet" type="text/css"/>
     <style>
@@ -50,10 +52,12 @@
                                 colors: ["pink", "blue"]
                             });
                             heatmap.cols.annotations = ["Ratio", "Sex"];
+                            heatmap.cols.annotationSize = 15;
 
                             // Row annotations
                             heatmap.rows.decorators["p-value"] = decoratorPValue;
                             heatmap.rows.annotations = ["p-value"];
+                            heatmap.rows.annotationSize = 15;
 
                             // Add filters
                             heatmap.rows.filters.add(

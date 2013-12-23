@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: AnnotationReader</title>
+    <title>JSDoc: Class: Instance</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: AnnotationReader</h1>
+    <h1 class="page-title">Class: Instance</h1>
     
     
 
@@ -27,9 +27,7 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.readers.html">.readers</a>.</span>
-    
-    AnnotationReader
+    Instance
     </h2>
     
 </header>  
@@ -41,7 +39,7 @@
     
         
 <dt>
-    <h4 class="name" id="AnnotationReader"><span class="type-signature"></span>new AnnotationReader<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Instance"><span class="type-signature"></span>new Instance<span class="signature">(element, <span class="optional">options</span>)</span><span class="type-signature"> &rarr; {<a href="Hammer.Instance.html">Hammer.Instance</a>}</span></h4>
     
     
 </dt>
@@ -49,7 +47,8 @@
     
     
     <div class="description">
-        A text separated value file table reader
+        create new hammer instance
+all methods should return the instance itself, so it is chainable.
     </div>
     
 
@@ -87,13 +86,13 @@
 	
         <tr>
             
-                <td class="name"><code>p.url</code></td>
+                <td class="name"><code>element</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">HTMLElement</span>
 
 
             
@@ -113,20 +112,20 @@
                 </td>
             
             
-            <td class="description last">File url</td>
+            <td class="description last"></td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>p.separator</code></td>
+                <td class="name"><code>options</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Object</span>
 
 
             
@@ -145,12 +144,12 @@
             
                 <td class="default">
                 
-                    "tab"
+                    {}
                 
                 </td>
             
             
-            <td class="description last">Value separator character</td>
+            <td class="description last"></td>
         </tr>
 	
 	
@@ -181,7 +180,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jheatmap-1.0.0-alpha.js.html">jheatmap-1.0.0-alpha.js</a>, line 330
+        <a href="jheatmap-1.0.0-alpha.js.html">jheatmap-1.0.0-alpha.js</a>, line 4639
     </li></ul></dd>
     
     
@@ -198,12 +197,25 @@
     
     
     
+    <h5>Returns:</h5>
     
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>new jheatmap.readers.AnnotationReader({ url: "filename.tsv" });</code></pre>
+            
 
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Hammer.Instance.html">Hammer.Instance</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
     
 </dd>
 
@@ -228,7 +240,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="read"><span class="type-signature"></span>read<span class="signature">(initialize)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="enable"><span class="type-signature"></span>enable<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Hammer.Instance.html">Hammer.Instance</a>}</span></h4>
     
     
 </dt>
@@ -236,7 +248,7 @@
     
     
     <div class="description">
-        Asynchronously reads a text separated value file, the result is returned in the 'result' parameter.
+        enable of disable hammer.js detection
     </div>
     
 
@@ -270,13 +282,13 @@
 	
         <tr>
             
-                <td class="name"><code>result.header</code></td>
+                <td class="name"><code>state</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">Boolean</span>
 
 
             
@@ -286,53 +298,7 @@
             
             
             
-            <td class="description last">Returns the file header as a string array.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>result.values</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Returns the file values as an array of arrays.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>initialize</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">A callback function that is called when the file is loaded.</td>
+            <td class="description last"></td>
         </tr>
 	
 	
@@ -363,7 +329,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jheatmap-1.0.0-alpha.js.html">jheatmap-1.0.0-alpha.js</a>, line 344
+        <a href="jheatmap-1.0.0-alpha.js.html">jheatmap-1.0.0-alpha.js</a>, line 4733
     </li></ul></dd>
     
     
@@ -380,6 +346,486 @@
     
     
     
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Hammer.Instance.html">Hammer.Instance</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="off"><span class="type-signature"></span>off<span class="signature">(gesture, handler)</span><span class="type-signature"> &rarr; {<a href="Hammer.Instance.html">Hammer.Instance</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        unbind events to the instance
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>gesture</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>handler</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Function</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jheatmap-1.0.0-alpha.js.html">jheatmap-1.0.0-alpha.js</a>, line 4695
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Hammer.Instance.html">Hammer.Instance</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="on"><span class="type-signature"></span>on<span class="signature">(gesture, handler)</span><span class="type-signature"> &rarr; {<a href="Hammer.Instance.html">Hammer.Instance</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        bind events to the instance
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>gesture</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>handler</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Function</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jheatmap-1.0.0-alpha.js.html">jheatmap-1.0.0-alpha.js</a>, line 4680
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Hammer.Instance.html">Hammer.Instance</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="trigger"><span class="type-signature"></span>trigger<span class="signature">(gesture, eventData)</span><span class="type-signature"> &rarr; {<a href="Hammer.Instance.html">Hammer.Instance</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        trigger gesture event
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>gesture</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>eventData</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jheatmap-1.0.0-alpha.js.html">jheatmap-1.0.0-alpha.js</a>, line 4710
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Hammer.Instance.html">Hammer.Instance</a></span>
+
+
+	</dd>
+</dl>
+
+        
     
     
 </dd>
@@ -406,7 +852,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Mon Dec 23 2013 13:35:40 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Mon Dec 23 2013 13:35:38 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>
