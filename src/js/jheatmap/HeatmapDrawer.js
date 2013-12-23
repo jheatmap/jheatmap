@@ -86,7 +86,10 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         table.append(lastRow);
         container.append(table);
         $('#heatmap-loader').hide();
-        $('#heatmap-details').details({ show: false });
+        $('.detailsbox').hammer({
+             tap_always: false,
+             swipe: false
+         });
         $('canvas').hammer({
             tap_always: false,
             swipe: false

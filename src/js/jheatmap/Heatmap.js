@@ -54,6 +54,14 @@ jheatmap.Heatmap = function (options) {
     };
 
     /**
+     * The cell focused for details.
+     */
+    this.focus = {
+        row: undefined,
+        col: undefined
+    }
+
+    /**
      * Current search string to highlight matching rows and columns.
      * Default 'null' means no search.
      */
@@ -162,10 +170,16 @@ jheatmap.Heatmap = function (options) {
 
             if (boxTop + boxHeight > wHeight) {
                 boxTop -= boxHeight;
+                boxTop -= heatmap.rows.zoom;
+            } else {
+                boxTop += heatmap.rows.zoom;
             }
 
             if (boxLeft + boxWidth > wWidth) {
                 boxLeft -= boxWidth;
+                boxLeft -= heatmap.cols.zoom;
+            } else {
+                boxLeft += heatmap.cols.zoom;
             }
 
             details.css('left', boxLeft);
@@ -174,8 +188,24 @@ jheatmap.Heatmap = function (options) {
             details.css('height', boxHeight);
 
             details.css('display', 'block');
-            details.bind('click', function () {
+
+            details.bind('tap', function () {
+                heatmap.focus.col = undefined;
+                heatmap.focus.row = undefined;
                 $(this).css('display', 'none');
+            });
+
+            var top, left;
+            details.bind('touch', function(e) {
+                e.gesture.preventDefault();
+                top = e.gesture.center.pageY;
+                left = e.gesture.center.pageX;
+            });
+
+            details.bind('drag', function (e) {
+                e.gesture.preventDefault();
+                details.css('left', boxLeft + (e.gesture.center.pageX - left));
+                details.css('top', boxTop + (e.gesture.center.pageY - top));
             });
         } else {
             details.css('display', 'none');

@@ -35,16 +35,13 @@ jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
         downY = null;
 
         if (r == 0 && c == 0) {
-
-            var col = Math.floor((pageX - position.left) / heatmap.cols.zoom) + heatmap.offset.left;
-            var row = Math.floor((pageY - position.top) / heatmap.rows.zoom) + heatmap.offset.top;
-
-            var details = $('table.heatmap div.detailsbox');
-            var boxTop = pageY - $(heatmap.options.container).offset().top;
-            var boxLeft = pageX - $(heatmap.options.container).offset().left;
-
-            heatmap.paintCellDetails(row, col, heatmap, boxTop, boxLeft, details);
-
+            if (heatmap.focus.row != undefined) {
+                heatmap.focus.row = undefined;
+                heatmap.focus.col = undefined;
+            } else {
+                heatmap.focus.row = Math.floor((pageY - position.top) / heatmap.rows.zoom) + heatmap.offset.top;
+                heatmap.focus.col = Math.floor((pageX - position.left) / heatmap.cols.zoom) + heatmap.offset.left;
+            }
         }
         drawer.paint();
     };
@@ -264,6 +261,19 @@ jheatmap.components.CellBodyPanel.prototype.paint = function() {
             cellCtx.fillRect((col - startCol) * cz, 0, cz, (endRow - startRow) * rz);
             cellCtx.fillStyle = "white";
         }
+    }
+
+    // Paint details
+    var details = $('table.heatmap div.detailsbox');
+    if (heatmap.focus.col != undefined && heatmap.focus.row != undefined) {
+
+        var boxTop = this.canvas.offset().top + ((heatmap.focus.row - heatmap.offset.top) * heatmap.rows.zoom);
+        var boxLeft = this.canvas.offset().left + ((heatmap.focus.col - heatmap.offset.left) * heatmap.cols.zoom);
+
+        heatmap.paintCellDetails(heatmap.focus.row, heatmap.focus.col, heatmap, boxTop, boxLeft, details);
+
+    }  else {
+        details.css('display', 'none');
     }
 
 };
