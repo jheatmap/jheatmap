@@ -23,11 +23,11 @@
 				      },
 			       init : function(heatmap) {
 
-
-
 					// Default cell value
 					heatmap.cells.selectedValue = "ma-score";
-				       // Setup default zoom 
+					heatmap.rows.selectedValue = "symbol";
+
+				    // Setup default zoom
 					heatmap.cols.zoom = 1;
 
 
@@ -59,13 +59,13 @@
 						cutoff: 0.05 });
 					heatmap.rows.annotations = ["fm-bias","mut-freq","clust-bias"];
 
-					// Mutually exclusive sorting
-					heatmap.rows.sorter = new
-						jheatmap.sorters.MutualExclusiveSorter(3, false);
-					heatmap.rows.DefaultAggregationSorter =
-						jheatmap.sorters.MutualExclusiveSorter;
-					heatmap.cols.DefaultAggregationSorter =
-						jheatmap.sorters.MutualExclusiveSorter;
+					// Mutually exclusive rows sorting
+					heatmap.rows.sorter = new jheatmap.sorters.MutualExclusiveSorter(3, false);
+					heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
+					heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
+
+					heatmap.cols.sorter = new jheatmap.sorters.AnnotationSorter(1, false);
+
 				}
 
 			}

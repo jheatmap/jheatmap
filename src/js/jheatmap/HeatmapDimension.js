@@ -120,6 +120,7 @@ jheatmap.HeatmapDimension.prototype.reindex = function (heatmap) {
     }
 
     this.sorter.field = jheatmap.utils.reindexField(this.sorter.field, heatmap.cells.header);
+    this.selectedValue = jheatmap.utils.reindexField(this.selectedValue, this.header);
 
 };
 

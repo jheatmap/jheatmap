@@ -268,7 +268,7 @@ jheatmap.components.CellBodyPanel.prototype.paint = function() {
     if (heatmap.focus.col != undefined && heatmap.focus.row != undefined) {
 
         // Paint focus lines
-        cellCtx.fillStyle = "#DDDDDD";
+        cellCtx.fillStyle = "#777777";
         cellCtx.fillRect((heatmap.focus.col - startCol) * cz, 0, 1, (endRow - startRow) * rz);
         cellCtx.fillRect((heatmap.focus.col - startCol + 1) * cz, 0, 1, (endRow - startRow) * rz);
         cellCtx.fillRect(0, (heatmap.focus.row - startRow) * rz, (endCol - startCol) * cz, 1);
