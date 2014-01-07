@@ -221,6 +221,8 @@ table.heatmap {
     border-collapse: collapse;
     border-spacing: 0;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin: 0px;
+    padding: 0px;
 }
 
 div.shortcuts { 
