@@ -31,9 +31,11 @@ jheatmap.Heatmap = function (options) {
         HideSelected: new jheatmap.actions.HideSelected(this),
         ShowHidden: new jheatmap.actions.ShowHidden(this),
         ClearSelection: new jheatmap.actions.ClearSelection(this),
-        Separator: new jheatmap.actions.Separator(),
+        Separator1: new jheatmap.actions.Separator(),
         AggregationSort: new jheatmap.actions.AggregationSort(this),
-        MutualExclusiveSort: new jheatmap.actions.MutualExclusiveSort(this)
+        MutualExclusiveSort: new jheatmap.actions.MutualExclusiveSort(this),
+        Separator2: new jheatmap.actions.Separator(),
+        CopyToClipboard: new jheatmap.actions.CopyToClipboard(this)
     };
 
     /**
