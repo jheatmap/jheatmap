@@ -27,7 +27,11 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
     for (var key in heatmap.actions) {
             var action = heatmap.actions[key];
             if (action.columns != undefined) {
-                menu.items[key] = { name: action.title };
+                menu.items[key] = { name: action.title, icon: action.icon };
+            }
+
+            if (action instanceof jheatmap.actions.Separator) {
+                menu.items[key] = "---------";
             }
     }
     this.markup.contextMenu(menu);

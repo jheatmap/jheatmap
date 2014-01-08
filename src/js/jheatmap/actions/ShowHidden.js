@@ -12,6 +12,7 @@ jheatmap.actions.ShowHidden = function (heatmap) {
     this.shortCut = "S";
     this.keyCodes = [83, 115];
     this.title = "Show hidden";
+    this.icon = "fa-eye";
 };
 
 /**
