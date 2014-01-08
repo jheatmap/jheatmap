@@ -28,9 +28,9 @@
 					heatmap.cells.selectedValue = "Genomic Alterations";
 					heatmap.rows.selectedValue = "symbol";
 
-				    // Setup default zoom
-					heatmap.cols.zoom = 0.5;
-
+				    // Setup default zoom & size
+					heatmap.cols.zoom = 1;
+					heatmap.cols.labelSize = 170;
 
 					// Configure decorators and aggregators
 					heatmap.cells.decorators["Genomic Alterations"] = new jheatmap.decorators.Categorical({
