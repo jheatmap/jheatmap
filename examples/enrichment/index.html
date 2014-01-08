@@ -17,9 +17,7 @@
             $('#heatmap').heatmap(
                     {
                         data: {
-                            rows: new jheatmap.readers.AnnotationReader({ url: "analysis-rows.tsv" }),
-                            cols: new jheatmap.readers.AnnotationReader({ url: "analysis-columns.tsv" }),
-                            values: new jheatmap.readers.TableHeatmapReader({ url: "analysis-results.tsv", orderedValues: true })
+                            values: new jheatmap.readers.TableHeatmapReader({ url: "analysis-results.tsv"})
                         },
 
                         init: function (heatmap) {
@@ -29,7 +27,7 @@
                             heatmap.rows.zoom = 12;
 
                             // Default cell value
-                            heatmap.cells.selectedValue = "left-p-value";
+                            heatmap.cells.selectedValue = "right-p-value";
 
                             // Configure decorators and aggregators
                             var decoratorPValue = new jheatmap.decorators.PValue();
@@ -45,26 +43,12 @@
                                 heatmap.cells.aggregators[value] = aggregatorPValue;
                             });
 
-                            // Column annotations
-                            heatmap.cols.decorators["Ratio"] = new jheatmap.decorators.Constant({});
-                            heatmap.cols.decorators["Sex"] = new jheatmap.decorators.Categorical({
-                                values: ["F", "M"],
-                                colors: ["pink", "blue"]
-                            });
-                            heatmap.cols.annotations = ["Ratio", "Sex"];
-                            heatmap.cols.annotationSize = 15;
-
-                            // Row annotations
-                            heatmap.rows.decorators["p-value"] = decoratorPValue;
-                            heatmap.rows.annotations = ["p-value"];
-                            heatmap.rows.annotationSize = 15;
-
                             // Add filters
                             heatmap.rows.filters.add(
                                     "Hide non-significant rows",
                                     new jheatmap.filters.NonSignificance(),
                                     [
-                                        "left-p-value"
+                                        "right-p-value"
                                     ],
                                     [
                                         "left-p-value",
@@ -77,8 +61,8 @@
                             );
 
                             // Sorting
-                            heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter("left-p-value");
-                            heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter("left-p-value");
+                            heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter("right-p-value");
+                            heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter("right-p-value");
 
                         }
                     }
@@ -87,7 +71,12 @@
     </script>
 </head>
 <body>
-
+<div>
+  <h3>Pathway enrichment</h3>
+  <p>This heatmap shows results of an enrichment analysis of up-regulated genes in different tumor types. The analysis has been performed with 
+     <a target="tab" href="http://www.gitools.org">Gitools</a>. Pathways are represented by the rows and tumor types in the columns.
+  </p>
+</div>
 <div id="heatmap-loader">
     <div class="background"></div>
     <div class="loader">

@@ -62,14 +62,6 @@
 						cutoff: 0.05 });
 					heatmap.rows.annotations = ["fm-bias","mut-freq","clust-bias"];
 
-					// Mutually exclusive rows sorting
-//					heatmap.rows.sorter = new jheatmap.sorters.MutualExclusiveSorter("Genomic Alterations", false);
-//					heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
-//					heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
-
-					// Group samples by subtype annotations 
-					//heatmap.cols.sorter = new jheatmap.sorters.AnnotationSorter(1, false);
-
 				}
 
 			}
@@ -86,7 +78,7 @@
     is an integration of the latter two. Mutations are shown in green, CNA loss in blue and CNA gain in red. Expression values shift from blue to yellow.  
  </p>
  <p> The heatmap is sorted by the column annotation which represents the <b>glioblastoma subtype</b>. The row annotations contain information for the bias towards 
-     functional mutations (<b>fm-bias</b>), mutation frequency (<b>mut-freq</b>), and bias of mutational clustering in the gene (<b>clust-bias</b>) 
+     functional mutations (<b>fm-bias</b>), mutation frequency (<b>mut-freq</b>), and bias of mutational clustering in the gene (<b>clust-bias</b>). 
  </p>
 </div> 
 <div id="heatmap-loader">
