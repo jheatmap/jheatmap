@@ -8,7 +8,7 @@
  *                         });
  *
  * @class
- * @param {Array} p.values                All posible values
+ * @param {Array} p.values                All posible values. Specify always in String notation.
  * @param {Array} p.colors                Corresponding colors
  * @param {string} [p.unknown="white"]    Color for values not in options.values
  */
