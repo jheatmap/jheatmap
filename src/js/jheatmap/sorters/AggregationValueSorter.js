@@ -6,12 +6,14 @@
  * @class
  * @param {int}     field       Value field to aggregate
  * @param {boolean} asc         True to sort ascending, false to sort descending
+ * @param {boolean} nullsLast   True to sort null values always to the end. False to treat as zero.
  * @param {Array}   indices     Integer positions of the selected rows/columns to aggregate.
  */
-jheatmap.sorters.AggregationValueSorter = function (field, asc, indices) {
+jheatmap.sorters.AggregationValueSorter = function (field, asc, nullsLast, indices) {
     this.field = field;
     this.asc = asc;
     this.indices = indices;
+    this.nullsLast = nullsLast;
 };
 
 /**
@@ -37,10 +39,10 @@ jheatmap.sorters.AggregationValueSorter.prototype.sort = function(heatmap, sortT
             var pos = (rowsSort ? sortDimension.order[r] * cl + this.indices[i] : this.indices[i] * cl + sortDimension.order[r]);
             var value = cells.values[pos];
             if (value != null) {
-                v1 = value[this.field];
-                if (v1 != null && v1 != '-') {
+                  v1 = value[this.field];
+                  if (v1 != null && v1 != '-') {
                     values.push(v1);
-                }
+                  }
             }
         }
         if (values.length == 0) {
@@ -51,6 +53,7 @@ jheatmap.sorters.AggregationValueSorter.prototype.sort = function(heatmap, sortT
     }
 
     var asc = this.asc;
+    var nullsLast = this.nullsLast;
 
     var compareFunction = function (o_a, o_b) {
         var v_a = aggregation[o_a];
@@ -58,11 +61,19 @@ jheatmap.sorters.AggregationValueSorter.prototype.sort = function(heatmap, sortT
         var val = (asc ? 1 : -1);
 
         if (v_a == undefined) {
-            return 1;
+           if (nullsLast) {
+               return 1;
+           } else {
+               v_a = 0;
+           }
         }
 
         if (v_b == undefined) {
-            return -1;
+            if (nullsLast) {
+                return -1;
+            } else {
+                v_b = 0;
+            }
         }
 
         return (v_a == v_b) ? 0 : (v_a > v_b ? val : -val);

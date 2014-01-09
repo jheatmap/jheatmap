@@ -19,7 +19,7 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
           },
           items: {}
     }
-    for (var key in heatmap.actions) {
+    for (var key=0; key < heatmap.actions.length; key++) {
             var action = heatmap.actions[key];
             if (action.rows != undefined) {
                 menu.items[key] = { name: action.title, icon: action.icon };

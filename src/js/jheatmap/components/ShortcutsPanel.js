@@ -2,7 +2,7 @@
 jheatmap.components.ShortcutsPanel = function(heatmap, container) {
 
     var actionTips = "";
-    for (var key in heatmap.actions) {
+    for (var key=0; key < heatmap.actions.length; key++) {
         var action = heatmap.actions[key];
 
         if (action.shortCut != undefined) {

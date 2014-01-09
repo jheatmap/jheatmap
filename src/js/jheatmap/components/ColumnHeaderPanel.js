@@ -24,7 +24,7 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
           },
           items: {}
     }
-    for (var key in heatmap.actions) {
+    for (var key=0; key < heatmap.actions.length; key++) {
             var action = heatmap.actions[key];
             if (action.columns != undefined) {
                 menu.items[key] = { name: action.title, icon: action.icon };
@@ -45,7 +45,7 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
 
     var onKeyPress = function (e) {
         var charCode = e.which || e.keyCode;
-        for (var key in heatmap.actions) {
+        for (var key=0; key < heatmap.actions.length; key++) {
             var action = heatmap.actions[key];
 
             if (action.columns != undefined && action.shortCut != undefined && action.keyCodes.indexOf(charCode) != -1) {

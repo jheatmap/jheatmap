@@ -34,7 +34,7 @@
 
 					// Configure decorators and aggregators
 					heatmap.cells.decorators["Genomic Alterations"] = new jheatmap.decorators.Categorical({
-						values: ["1","2","3"], colors : ["green","red","blue"] });
+						values: ["1","2","3", "11", "12"], colors : ["green","red","blue", "DarkRed", "DarkBlue"] });
 					heatmap.cells.aggregators["Genomic Alterations"] = new jheatmap.aggregators.AbsoluteAddition();
 					heatmap.cells.decorators["Mutation"] = new jheatmap.decorators.Categorical({
 						values: ["0","1"], colors : ["white","green"] });
@@ -61,6 +61,9 @@
 					heatmap.rows.decorators["clust-bias"] = new jheatmap.decorators.PValue({
 						cutoff: 0.05 });
 					heatmap.rows.annotations = ["fm-bias","mut-freq","clust-bias"];
+
+					// Add mutually exclusive action
+                    heatmap.actions.splice(6,0,new jheatmap.actions.MutualExclusiveSort(heatmap));
 
 				}
 

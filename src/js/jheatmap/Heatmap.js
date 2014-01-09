@@ -28,17 +28,16 @@ jheatmap.Heatmap = function (options) {
         "poweredByJHeatmap": true
     };
 
-    this.actions = {
-        HideSelected: new jheatmap.actions.HideSelected(this),
-        ShowHidden: new jheatmap.actions.ShowHidden(this),
-        InvertSelection: new jheatmap.actions.InvertSelection(this),
-        ClearSelection: new jheatmap.actions.ClearSelection(this),
-        Separator1: new jheatmap.actions.Separator(),
-        AggregationSort: new jheatmap.actions.AggregationSort(this),
-        MutualExclusiveSort: new jheatmap.actions.MutualExclusiveSort(this),
-        Separator2: new jheatmap.actions.Separator(),
-        CopyToClipboard: new jheatmap.actions.CopyToClipboard(this)
-    };
+    this.actions = [
+        new jheatmap.actions.HideSelected(this),
+        new jheatmap.actions.ShowHidden(this),
+        new jheatmap.actions.InvertSelection(this),
+        new jheatmap.actions.ClearSelection(this),
+        new jheatmap.actions.Separator(),
+        new jheatmap.actions.AggregationSort(this),
+        new jheatmap.actions.Separator(),
+        new jheatmap.actions.CopyToClipboard(this)
+    ];
 
     /**
      * Size of the cells panel

@@ -23,7 +23,7 @@ jheatmap.sorters.MutualExclusiveSorter.prototype.sort = function(heatmap, sortTy
     var otherType = (sortType == "rows" ? "columns" : "rows");
     var sortDimension = (sortType == "rows" ? heatmap.rows : heatmap.cols);
 
-    var sorter = new jheatmap.sorters.AggregationValueSorter(this.field, this.asc, this.indices);
+    var sorter = new jheatmap.sorters.AggregationValueSorter(this.field, this.asc, false, this.indices);
     sorter.sort(heatmap, sortType);
 
     sorter.indices = [ 0 ];
