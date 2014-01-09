@@ -59,10 +59,13 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         tableRow.append("<td class='borderL'>&nbsp;</td>");
         table.append(tableRow);
 
+	    var poweredBy = "";
+	    if (heatmap.controls.poweredByJHeatmap) {
+	        poweredBy = "<span>powered by <a href='http://jheatmap.github.io/jheatmap' target='_blank'>jHeatmap</a></span>";
+	    }
+
         var scrollRow = $("<tr class='horizontalScroll'>");
-        scrollRow.append("<td class='border' style='font-size: 9px; vertical-align: right; padding-left: 10px; padding-top: 6px;'>" +
-            "<span>powered by <a href='http://jheatmap.github.io/jheatmap' target='_blank'>jHeatmap</a></span>" +
-            "</td>");
+        scrollRow.append("<td class='border' style='font-size: 9px; vertical-align: right; padding-left: 10px; padding-top: 6px;'>" + poweredBy + "</td>");
 
         scrollRow.append(horizontalScrollBar.markup);
         scrollRow.append("<td class='border'></td>");

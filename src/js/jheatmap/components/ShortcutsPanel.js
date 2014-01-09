@@ -11,7 +11,7 @@ jheatmap.components.ShortcutsPanel = function(heatmap, container) {
     }
 
     container.append(
-        "<div class='shortcuts'><a href='#heatmap-details' data-toggle='details'>Keyboard shortcuts</a></div>" +
+        "<div class='shortcuts'><a href='#heatmap-details' data-toggle='details'><i class='fa fa-question-circle'></i></a></div>" +
         "<div class='details hide' id='heatmap-details' tabindex='-1' role='dialog'>" +
         "<div class='details-header'><button type='button' class='close' data-dismiss='details'>&times;</button>" +
         "<h3>Keyboard shortcuts</h3></div>" +

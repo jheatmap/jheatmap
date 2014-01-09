@@ -17,14 +17,15 @@ jheatmap.Heatmap = function (options) {
     /**
      * Sets the controls visibility.
      *
-     * @type {{shortcuts: boolean, filters: boolean, columnSelector: boolean, rowSelector: boolean, cellSelector: boolean}}
+     * @type {{shortcuts: boolean, filters: boolean, columnSelector: boolean, rowSelector: boolean, cellSelector: boolean, poweredByJHeatmap: boolean}}
      */
     this.controls = {
         "shortcuts" : true,
         "filters": true,
         "columnSelector": true,
         "rowSelector": true,
-        "cellSelector": true
+        "cellSelector": true,
+        "poweredByJHeatmap": true
     };
 
     this.actions = {
