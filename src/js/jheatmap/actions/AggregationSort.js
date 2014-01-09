@@ -12,6 +12,7 @@ jheatmap.actions.AggregationSort = function (heatmap) {
     this.shortCut = "A";
     this.keyCodes = [97, 65];
     this.title = "Sort by aggregated values";
+    this.icon = "fa-sort";
 };
 
 jheatmap.actions.AggregationSort.prototype.rows = function() {

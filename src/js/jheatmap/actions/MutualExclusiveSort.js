@@ -12,7 +12,7 @@ jheatmap.actions.MutualExclusiveSort = function (heatmap) {
     this.heatmap = heatmap;
     this.shortCut = "M";
     this.keyCodes = [109, 77];
-    this.title = "Sort by mutual exclusive";
+    this.title = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by mutual exclusive";
 };
 
 jheatmap.actions.MutualExclusiveSort.prototype.rows = function() {

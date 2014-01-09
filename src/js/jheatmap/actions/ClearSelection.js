@@ -12,6 +12,7 @@ jheatmap.actions.ClearSelection = function (heatmap) {
     this.shortCut = "C";
     this.keyCodes = [99, 67];
     this.title = "Clear selection";
+    this.icon = "fa-times";
 };
 
 /**

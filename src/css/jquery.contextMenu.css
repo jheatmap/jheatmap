@@ -36,18 +36,28 @@
 }
 
 .context-menu-item {
-    padding: 2px 2px 2px 24px;
+    min-height: 18px;
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    padding: 9px 12px 3px 24px;
     background-color: #EEE;
     position: relative;
     -webkit-user-select: none;
-       -moz-user-select: -moz-none;
-        -ms-user-select: none;
-            user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .context-menu-separator {
     padding-bottom:0;
     border-bottom: 1px solid #DDD;
+    min-height: 1px;
+    margin-bottom: 2px;
+    margin-top: 0px;
+    padding: 0px;
 }
 
 .context-menu-item > label > input,
@@ -82,19 +92,7 @@
     z-index: 1;
 }
 
-/* icons
-    #protip:
-    In case you want to use sprites for icons (which I would suggest you do) have a look at
-    http://css-tricks.com/13224-pseudo-spriting/ to get an idea of how to implement 
-    .context-menu-item.icon:before {}
- */
 .context-menu-item.icon {
-	min-height: 18px;
-	font-family: FontAwesome;
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
     padding-left: 6px;
 }
 
