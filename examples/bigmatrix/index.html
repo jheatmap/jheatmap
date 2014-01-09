@@ -17,8 +17,8 @@
                 			init : function(heatmap) {
 
                                 // Default zoom
-                                heatmap.cols.zoom = 5;
-                                heatmap.rows.zoom = 5;
+                                heatmap.cols.zoom = 1;
+                                heatmap.rows.zoom = 1;
 
                                 // Hide controls
                                 heatmap.controls.shortcuts = false;
@@ -32,16 +32,13 @@
                 				heatmap.cells.selectedValue = 0;
                 				                				
                 				// Configure decorators and aggregators
-                				heatmap.cells.decorators[0] = new jheatmap.decorators.Median( { maxValue: 4 });
-                				heatmap.cells.aggregators[0] = new jheatmap.aggregators.Median( { maxValue: 4 });
+                				heatmap.cells.decorators[0] = new jheatmap.decorators.Median( { maxValue: 2 });
+                				heatmap.cells.aggregators[0] = new jheatmap.aggregators.Median( { maxValue: 2 });
 
                 				// Add filters
                 				heatmap.rows.filters.add(
-                                        "Hide non-differentially expressed",
-                					    new jheatmap.filters.NonExpressed({ maxValue: 4 }),
-                                        [ 0 ],
-                						[ 0 ]
-                                );
+                                                            "Show only rows with outlier values",
+                					    new jheatmap.filters.NonExpressed({ maxValue: 3, hide: false }),[ 0 ],[ 0 ]);
 
                 			}
                 		}
@@ -51,6 +48,14 @@
 </head>
 <body>
 
+<div > 
+ <h3>Expression arrays: big matrices</h3>
+ <p> This heatmap contains probes (in the rows) from expression arrays for a series of samples (in the columns) 
+     of tumour tissues. 
+     By default a <b>filter</b> which only shows the rows with outlier values is applied. The activated filter 
+     only shows the rows that contain outlier values meanwhile the deactivated filter shows all the data.
+</p>
+</div> 
 <div id="heatmap-loader">
     <div class="background"></div>
     <div class="loader">
