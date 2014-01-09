@@ -30,6 +30,7 @@ jheatmap.Heatmap = function (options) {
 
     this.actions = {
         HideSelected: new jheatmap.actions.HideSelected(this),
+        HideNotSelected: new jheatmap.actions.HideNotSelected(this),
         ShowHidden: new jheatmap.actions.ShowHidden(this),
         ClearSelection: new jheatmap.actions.ClearSelection(this),
         Separator1: new jheatmap.actions.Separator(),
