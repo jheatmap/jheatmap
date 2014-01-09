@@ -18,6 +18,7 @@
 
                                 // Default zoom
                                 heatmap.cols.zoom = 1;
+                                heatmap.cols.labelSize = 100;
                                 heatmap.rows.zoom = 1;
 
                                 // Hide controls
@@ -53,7 +54,9 @@
  <p> This heatmap contains probes (in the rows) from expression arrays for a series of samples (in the columns) 
      of tumour tissues. 
      By default a <b>filter</b> which only shows the rows with outlier values is applied. The activated filter 
-     only shows the rows that contain outlier values meanwhile the deactivated filter shows all the data.
+     only shows the rows that contain outlier values meanwhile the deactivated filter shows all the data, about
+     two milliomillionells.
+     Since this data set does only contain one value per probe and sample the <b>controls are hidden</b>.
 </p>
 </div> 
 <div id="heatmap-loader">
