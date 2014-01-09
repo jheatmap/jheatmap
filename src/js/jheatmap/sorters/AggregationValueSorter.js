@@ -37,10 +37,17 @@ jheatmap.sorters.AggregationValueSorter.prototype.sort = function(heatmap, sortT
             var pos = (rowsSort ? sortDimension.order[r] * cl + this.indices[i] : this.indices[i] * cl + sortDimension.order[r]);
             var value = cells.values[pos];
             if (value != null) {
-                values.push(value[this.field]);
+                v1 = value[this.field];
+                if (v1 != null && v1 != '-') {
+                    values.push(v1);
+                }
             }
         }
-        aggregation[sortDimension.order[r]] = sum = cells.aggregators[this.field].accumulate(values);
+        if (values.length == 0) {
+            aggregation[sortDimension.order[r]] = undefined;
+        } else {
+            aggregation[sortDimension.order[r]] = cells.aggregators[this.field].accumulate(values);
+        }
     }
 
     var asc = this.asc;
@@ -49,6 +56,15 @@ jheatmap.sorters.AggregationValueSorter.prototype.sort = function(heatmap, sortT
         var v_a = aggregation[o_a];
         var v_b = aggregation[o_b];
         var val = (asc ? 1 : -1);
+
+        if (v_a == undefined) {
+            return 1;
+        }
+
+        if (v_b == undefined) {
+            return -1;
+        }
+
         return (v_a == v_b) ? 0 : (v_a > v_b ? val : -val);
     };
 

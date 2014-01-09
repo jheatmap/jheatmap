@@ -19,12 +19,11 @@
 
     <script>$(document).ready(function () {
         $('#heatmap').heatmap(
-                {
-                    data: {
-                        values: new jheatmap.readers.TableHeatmapReader({ url: "step1-data.tsv" })
-                    }
-                }
-        );
+        {
+            data: {
+                values: new jheatmap.readers.TableHeatmapReader({ url: "quickstart-data.tsv" })
+            }
+        });
     });</script>
 </head>
 <body>
