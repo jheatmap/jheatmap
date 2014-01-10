@@ -637,6 +637,8 @@ jheatmap.readers.TableHeatmapReader.prototype.read = function (heatmap, initiali
                             break;
                         }
                     }
+                    heatmap.cells.header[valuesRowKey] = undefined;
+
                 } else {
                     rowKey = 0;
 
@@ -671,6 +673,8 @@ jheatmap.readers.TableHeatmapReader.prototype.read = function (heatmap, initiali
                             }
                         }
                     }
+                    heatmap.cells.header[valuesColKey] = undefined;
+
                 } else {
                     colKey = 0;
 
@@ -796,7 +800,7 @@ jheatmap.readers.TableHeatmapReader.prototype.read = function (heatmap, initiali
  *                         });
  *
  * @class
- * @param {Array} p.values                All posible values
+ * @param {Array} p.values                All posible values. Specify always in String notation.
  * @param {Array} p.colors                Corresponding colors
  * @param {string} [p.unknown="white"]    Color for values not in options.values
  */
@@ -1229,6 +1233,32 @@ jheatmap.aggregators.Average.prototype.accumulate = function (values) {
     return (count==0 ? -10 : (avg/count));
 };
 /**
+ * Binary string addition aggregator. It assigns a zero to a null, undefined and '-' values, otherwise a one and
+ * returns the addition.
+ *
+ * @example
+ * new jheatmap.aggregators.BinaryStringAddition();
+ *
+ * @class
+ */
+jheatmap.aggregators.BinaryStringAddition = function () {
+};
+
+/**
+ * Accumulates all the values
+ * @param {Array}   values  The values to accumulate
+ */
+jheatmap.aggregators.BinaryStringAddition.prototype.accumulate = function (values) {
+    var sum = 0;
+    for (var i = 0; i < values.length; i++) {
+        var value = values[i];
+        if (value && value != null && value!='-') {
+            sum += 1;
+        }
+    }
+    return sum;
+};
+/**
  * Median aggregator.
  *
  * @example
@@ -1299,21 +1329,32 @@ jheatmap.actions.AggregationSort = function (heatmap) {
     this.heatmap = heatmap;
     this.shortCut = "A";
     this.keyCodes = [97, 65];
-    this.title = "Sort by aggregated values";
+    this.title = "Sort by value aggregation";
+    this.icon = "fa-sort";
 };
 
 jheatmap.actions.AggregationSort.prototype.rows = function() {
     var heatmap = this.heatmap;
-    heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
-    heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.cols.sorter.asc, heatmap.rows.selected.slice(0));
+    heatmap.cols.sorter.asc = !heatmap.cols.sorter.asc;
+    if (heatmap.rows.selected.length == 0) {
+        indices = heatmap.rows.order.slice(0);
+    } else {
+        indices = heatmap.rows.selected.slice(0);
+    }
+    heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter(heatmap.cells.selectedValue, heatmap.cols.sorter.asc, true, indices);
     heatmap.cols.sorter.sort(heatmap, "columns");
     heatmap.drawer.paint();
 };
 
 jheatmap.actions.AggregationSort.prototype.columns = function() {
     var heatmap = this.heatmap;
-    heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
-    heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.rows.sorter.asc, heatmap.cols.selected.slice(0));
+    heatmap.rows.sorter.asc = !heatmap.rows.sorter.asc;
+    if (heatmap.cols.selected.length == 0) {
+        indices = heatmap.cols.order.slice(0);
+    } else {
+        indices = heatmap.cols.selected.slice(0);
+    }
+    heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter(heatmap.cells.selectedValue, heatmap.rows.sorter.asc, true, indices);
     heatmap.rows.sorter.sort(heatmap, "rows");
     heatmap.drawer.paint();
 };
@@ -1332,6 +1373,7 @@ jheatmap.actions.ClearSelection = function (heatmap) {
     this.shortCut = "C";
     this.keyCodes = [99, 67];
     this.title = "Clear selection";
+    this.icon = "fa-times";
 };
 
 /**
@@ -1352,6 +1394,51 @@ jheatmap.actions.ClearSelection.prototype.columns = function() {
 };
 
 /**
+ * Copy to clipboard selected labels.
+ *
+ * @example
+ * new jheatmap.actions.CopyToClipboard();
+ *
+ * @param heatmap   The target heatmap
+ * @class
+ */
+jheatmap.actions.CopyToClipboard = function (heatmap) {
+    this.heatmap = heatmap;
+    this.title = "Copy to clipboard";
+    this.icon = "fa-clipboard";
+};
+
+/**
+ * Execute the action. *
+ * @private
+ */
+jheatmap.actions.CopyToClipboard.prototype.run = function (dimension) {
+    if (dimension.selected.length > 0) {
+
+        text = "";
+        i = 0;
+        while (i < dimension.selected.length) {
+            var value = dimension.getValue(dimension.selected[i], dimension.selectedValue);
+            text = text + value;
+            i++;
+            if (i < dimension.selected.length) {
+               text = text + ", ";
+            }
+        }
+
+        window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
+    }
+};
+
+jheatmap.actions.CopyToClipboard.prototype.rows = function() {
+    this.run(this.heatmap.rows);
+};
+
+jheatmap.actions.CopyToClipboard.prototype.columns = function() {
+    this.run(this.heatmap.cols);
+};
+
+/**
  * Hide selected action.
  *
  * @example
@@ -1365,6 +1452,7 @@ jheatmap.actions.HideSelected = function (heatmap) {
     this.shortCut = "H";
     this.keyCodes = [72, 104];
     this.title = "Hide selected";
+    this.icon = "fa-eye-slash";
 };
 
 /**
@@ -1389,6 +1477,45 @@ jheatmap.actions.HideSelected.prototype.columns = function() {
 };
 
 /**
+ * Invert selection action.
+ *
+ * @example
+ * new jheatmap.actions.InvertSelection(heatmap);
+ *
+ * @param heatmap   The target heatmap
+ * @class
+ */
+jheatmap.actions.InvertSelection = function (heatmap) {
+    this.heatmap = heatmap;
+    this.shortCut = "H";
+    this.keyCodes = [72, 104];
+    this.title = "Invert selection";
+    this.icon = "fa-exchange";
+};
+
+/**
+ * Execute the action.
+ * @private
+ */
+jheatmap.actions.InvertSelection.prototype.run = function (dimension) {
+    if (dimension.selected.length > 0) {
+        newSelection = $.grep(dimension.order, function (value) {
+                return dimension.selected.indexOf(value) == -1;
+        });
+        dimension.selected = newSelection;
+        this.heatmap.drawer.paint();
+    }
+};
+
+jheatmap.actions.InvertSelection.prototype.rows = function() {
+    this.run(this.heatmap.rows);
+};
+
+jheatmap.actions.InvertSelection.prototype.columns = function() {
+    this.run(this.heatmap.cols);
+};
+
+/**
  *
  * Set mutual exclusive sorter as default
  *
@@ -1402,23 +1529,49 @@ jheatmap.actions.MutualExclusiveSort = function (heatmap) {
     this.heatmap = heatmap;
     this.shortCut = "M";
     this.keyCodes = [109, 77];
-    this.title = "Sort by mutual exclusive";
+    this.title = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by mutual exclusive";
 };
 
 jheatmap.actions.MutualExclusiveSort.prototype.rows = function() {
     var heatmap = this.heatmap;
-    heatmap.cols.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
-    heatmap.cols.sorter = new heatmap.cols.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.cols.sorter.asc, heatmap.rows.selected.slice(0));
+
+    heatmap.cols.sorter.asc = !heatmap.cols.sorter.asc;
+
+    if (heatmap.rows.selected.length == 0) {
+        indices = heatmap.rows.order.slice(0);
+    } else {
+        indices = heatmap.rows.selected.slice(0);
+    }
+
+    heatmap.cols.sorter = new jheatmap.sorters.MutualExclusiveSorter(heatmap.cells.selectedValue, heatmap.cols.sorter.asc, indices);
     heatmap.cols.sorter.sort(heatmap, "columns");
     heatmap.drawer.paint();
 };
 
 jheatmap.actions.MutualExclusiveSort.prototype.columns = function() {
     var heatmap = this.heatmap;
-    heatmap.rows.DefaultAggregationSorter = jheatmap.sorters.MutualExclusiveSorter;
-    heatmap.rows.sorter = new heatmap.rows.DefaultAggregationSorter(heatmap.cells.selectedValue, heatmap.rows.sorter.asc, heatmap.cols.selected.slice(0));
+    heatmap.rows.sorter.asc = !heatmap.rows.sorter.asc;
+
+    if (heatmap.cols.selected.length == 0) {
+        indices = heatmap.cols.order.slice(0);
+    } else {
+        indices = heatmap.cols.selected.slice(0);
+    }
+
+    heatmap.rows.sorter = new jheatmap.sorters.MutualExclusiveSorter(heatmap.cells.selectedValue, heatmap.rows.sorter.asc, indices);
     heatmap.rows.sorter.sort(heatmap, "rows");
     heatmap.drawer.paint();
+};
+
+/**
+ * Dummy action to create a menu separator
+ *
+ * @example
+ * new jheatmap.actions.Separator();
+ *
+ * @class
+ */
+jheatmap.actions.Separator = function () {
 };
 
 /**
@@ -1435,6 +1588,7 @@ jheatmap.actions.ShowHidden = function (heatmap) {
     this.shortCut = "S";
     this.keyCodes = [83, 115];
     this.title = "Show hidden";
+    this.icon = "fa-eye";
 };
 
 /**
@@ -1461,31 +1615,40 @@ jheatmap.actions.ShowHidden.prototype.columns = function() {
 };
 
 /**
- * Filter out rows or columns that all the values are outside [-maxValue, maxValue] range.
+ * Explicitly hide (or show) rows or columns that all the values are outside [-maxValue, maxValue] range.
  *
  * @example
  * new jheatmap.filters.NonExpressed({ maxValue: 4 });
  *
  * @class
  * @param {number}  [maxValue=3]    Absolute maximum and minimum value
+ * @param {boolean} [hide=true]     Hide 
  */
 jheatmap.filters.NonExpressed = function (options) {
     options = options || {};
     this.maxValue = options.maxValue || 3;
+    this.hide =  (typeof options.hide != 'undefined') ? options.hide : true;
 };
 
 /**
  *@param {Array}   values  All the row or column values
  * @returns Returns 'false' if at least one value is inside (-maxValue, maxValue) range,
- * otherwise returns 'true'.
+ * otherwise returns 'true'. If 'hide' is set to false, the contrary is the case.
  */
 jheatmap.filters.NonExpressed.prototype.filter = function (values) {
+    retbool = this.hide ? true : false;
     for (var i = 0; i < values.length; i++) {
-        if (Math.abs(parseFloat(values[i])) > this.maxValue) {
-            return false;
+        if (this.hide) {
+            if (Math.abs(parseFloat(values[i])) > this.maxValue) {
+               return false;
+            }
+        } else {
+            if (Math.abs(parseFloat(values[i])) > this.maxValue) {
+               return true;
+            }
         }
     }
-    return true;
+    return retbool;
 };
 /**
  * Filter rows or columns with all the values non-significant
@@ -1521,12 +1684,14 @@ jheatmap.filters.NonSignificance.prototype.filter = function (values) {
  * @class
  * @param {int}     field       Value field to aggregate
  * @param {boolean} asc         True to sort ascending, false to sort descending
+ * @param {boolean} nullsLast   True to sort null values always to the end. False to treat as zero.
  * @param {Array}   indices     Integer positions of the selected rows/columns to aggregate.
  */
-jheatmap.sorters.AggregationValueSorter = function (field, asc, indices) {
+jheatmap.sorters.AggregationValueSorter = function (field, asc, nullsLast, indices) {
     this.field = field;
     this.asc = asc;
     this.indices = indices;
+    this.nullsLast = nullsLast;
 };
 
 /**
@@ -1552,18 +1717,43 @@ jheatmap.sorters.AggregationValueSorter.prototype.sort = function(heatmap, sortT
             var pos = (rowsSort ? sortDimension.order[r] * cl + this.indices[i] : this.indices[i] * cl + sortDimension.order[r]);
             var value = cells.values[pos];
             if (value != null) {
-                values.push(value[this.field]);
+                  v1 = value[this.field];
+                  if (v1 != null && v1 != '-') {
+                    values.push(v1);
+                  }
             }
         }
-        aggregation[sortDimension.order[r]] = sum = cells.aggregators[this.field].accumulate(values);
+        if (values.length == 0) {
+            aggregation[sortDimension.order[r]] = undefined;
+        } else {
+            aggregation[sortDimension.order[r]] = cells.aggregators[this.field].accumulate(values);
+        }
     }
 
     var asc = this.asc;
+    var nullsLast = this.nullsLast;
 
     var compareFunction = function (o_a, o_b) {
         var v_a = aggregation[o_a];
         var v_b = aggregation[o_b];
         var val = (asc ? 1 : -1);
+
+        if (v_a == undefined) {
+           if (nullsLast) {
+               return 1;
+           } else {
+               v_a = 0;
+           }
+        }
+
+        if (v_b == undefined) {
+            if (nullsLast) {
+                return -1;
+            } else {
+                v_b = 0;
+            }
+        }
+
         return (v_a == v_b) ? 0 : (v_a > v_b ? val : -val);
     };
 
@@ -1680,8 +1870,10 @@ jheatmap.sorters.MutualExclusiveSorter.prototype.sort = function(heatmap, sortTy
     var otherType = (sortType == "rows" ? "columns" : "rows");
     var sortDimension = (sortType == "rows" ? heatmap.rows : heatmap.cols);
 
-    var sorter = new jheatmap.sorters.AggregationValueSorter(this.field, this.asc, this.indices);
+    var sorter = new jheatmap.sorters.AggregationValueSorter(this.field, false, false, this.indices);
     sorter.sort(heatmap, sortType);
+
+    sorter.asc = this.asc;
 
     sorter.indices = [ 0 ];
 
@@ -1699,79 +1891,6 @@ jheatmap.sorters.MutualExclusiveSorter.prototype.sort = function(heatmap, sortTy
     }
 
 };
-/**
- * Numeric sorter by value of a single row or column.
- *
- * @example
- * new jheatmap.sorters.ValueSorter(heatmap, "columns", 3, false, 1);
- *
- * @class
- * @param {int}     field       Value field to aggregate
- * @param {boolean} asc         True to sort ascending, false to sort descending
- * @param {Array}   index       Integer position of the row/column to sort.
- */
-jheatmap.sorters.ValueSorter = function (field, asc, index) {
-    this.indices = [ index ];
-    this.field = field;
-    this.asc = asc;    
-};
-
-/**
- * Sort the heatmap
- *
- * @param {jheatmap.Heatmap} heatmap     The heatmap to sort
- * @param {string}  sortType    "rows" or "columns"
- */
-jheatmap.sorters.ValueSorter.prototype.sort = function(heatmap, sortType) {
-
-    var cells = heatmap.cells;
-    var rowsSort = (sortType=="rows");
-    var sortDimension = (rowsSort ? heatmap.rows : heatmap.cols);
-    var index = this.indices[0];
-    var getPosition = (rowsSort ?
-        function(pos) {
-            return (pos * heatmap.cols.values.length) + index;
-        }
-        :
-        function(pos) {
-            return index * heatmap.cols.values.length + pos;
-        });
-
-    var field = this.field;
-    var asc = this.asc;
-    var values = cells.values;
-
-    sortDimension.order.stableSort(function (o_a, o_b) {
-
-        var value_a = values[getPosition(o_a)];
-        var value_b = values[getPosition(o_b)];
-
-        var v_a = (value_a == null ? null : parseFloat(value_a[field]));
-        var v_b = (value_b == null ? null : parseFloat(value_b[field]));
-
-
-        if (isNaN(v_a) && v_b == null) {
-            return -1;
-        }
-
-        if (isNaN(v_b) && v_a == null) {
-            return 1;
-        }
-
-        if (v_a == null || isNaN(v_a)) {
-            return 1;
-        }
-
-        if (v_b == null || isNaN(v_b)) {
-            return -1;
-        }
-
-        var val = (asc ? 1 : -1);
-
-        return (v_a == v_b) ? 0 : ((v_a > v_b) ? val : -val);
-    });
-
-}
 
 jheatmap.components.CellBodyPanel = function(drawer, heatmap) {
     this.heatmap = heatmap;
@@ -2042,7 +2161,7 @@ jheatmap.components.CellBodyPanel.prototype.paint = function() {
     if (heatmap.focus.col != undefined && heatmap.focus.row != undefined) {
 
         // Paint focus lines
-        cellCtx.fillStyle = "#DDDDDD";
+        cellCtx.fillStyle = "#777777";
         cellCtx.fillRect((heatmap.focus.col - startCol) * cz, 0, 1, (endRow - startRow) * rz);
         cellCtx.fillRect((heatmap.focus.col - startCol + 1) * cz, 0, 1, (endRow - startRow) * rz);
         cellCtx.fillRect(0, (heatmap.focus.row - startRow) * rz, (endCol - startCol) * cz, 1);
@@ -2261,10 +2380,14 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
           },
           items: {}
     }
-    for (var key in heatmap.actions) {
+    for (var key=0; key < heatmap.actions.length; key++) {
             var action = heatmap.actions[key];
             if (action.columns != undefined) {
-                menu.items[key] = { name: action.title };
+                menu.items[key] = { name: action.title, icon: action.icon };
+            }
+
+            if (action instanceof jheatmap.actions.Separator) {
+                menu.items[key] = "---------";
             }
     }
     this.markup.contextMenu(menu);
@@ -2278,7 +2401,7 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
 
     var onKeyPress = function (e) {
         var charCode = e.which || e.keyCode;
-        for (var key in heatmap.actions) {
+        for (var key=0; key < heatmap.actions.length; key++) {
             var action = heatmap.actions[key];
 
             if (action.columns != undefined && action.shortCut != undefined && action.keyCodes.indexOf(charCode) != -1) {
@@ -2391,10 +2514,10 @@ jheatmap.components.ColumnHeaderPanel = function(drawer, heatmap) {
          e.gesture.preventDefault();
 
         var center = getCenter(e);
-        if (center.y > 200)
+        if (center.y > (heatmap.cols.labelSize - 10))
         {
             // Sort the col
-            heatmap.rows.sorter = new jheatmap.sorters.ValueSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), heatmap.cols.order[center.col]);
+            heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter(heatmap.cells.selectedValue, !(heatmap.rows.sorter.asc), true, [ heatmap.cols.order[center.col] ]);
             heatmap.rows.sorter.sort(heatmap, "rows");
         }
         else if (!isSelected(center.col))
@@ -2943,10 +3066,14 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
           },
           items: {}
     }
-    for (var key in heatmap.actions) {
+    for (var key=0; key < heatmap.actions.length; key++) {
             var action = heatmap.actions[key];
             if (action.rows != undefined) {
-                menu.items[key] = { name: action.title };
+                menu.items[key] = { name: action.title, icon: action.icon };
+            }
+
+            if (action instanceof jheatmap.actions.Separator) {
+                menu.items[key] = "---------";
             }
     }
     this.markup.contextMenu(menu);
@@ -3063,10 +3190,10 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
         e.gesture.preventDefault();
 
        var center = getCenter(e);
-       if (center.x > 200)
+       if (center.x > (heatmap.rows.labelSize - 10))
        {
            // Sort the row
-           heatmap.cols.sorter = new jheatmap.sorters.ValueSorter(heatmap.cells.selectedValue, !(heatmap.cols.sorter.asc), heatmap.rows.order[center.row]);
+           heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter(heatmap.cells.selectedValue, !(heatmap.cols.sorter.asc), true, [heatmap.rows.order[center.row]])
            heatmap.cols.sorter.sort(heatmap, "columns");
        }
        else if (!isSelected(center.row))
@@ -3253,7 +3380,7 @@ jheatmap.components.RowSelector = function(drawer, heatmap, container) {
 jheatmap.components.ShortcutsPanel = function(heatmap, container) {
 
     var actionTips = "";
-    for (var key in heatmap.actions) {
+    for (var key=0; key < heatmap.actions.length; key++) {
         var action = heatmap.actions[key];
 
         if (action.shortCut != undefined) {
@@ -3262,7 +3389,7 @@ jheatmap.components.ShortcutsPanel = function(heatmap, container) {
     }
 
     container.append(
-        "<div class='shortcuts'><a href='#heatmap-details' data-toggle='details'>Keyboard shortcuts</a></div>" +
+        "<div class='shortcuts'><a href='#heatmap-details' data-toggle='details'><i class='fa fa-question-circle'></i></a></div>" +
         "<div class='details hide' id='heatmap-details' tabindex='-1' role='dialog'>" +
         "<div class='details-header'><button type='button' class='close' data-dismiss='details'>&times;</button>" +
         "<h3>Keyboard shortcuts</h3></div>" +
@@ -3396,23 +3523,27 @@ jheatmap.Heatmap = function (options) {
     /**
      * Sets the controls visibility.
      *
-     * @type {{shortcuts: boolean, filters: boolean, columnSelector: boolean, rowSelector: boolean, cellSelector: boolean}}
+     * @type {{shortcuts: boolean, filters: boolean, columnSelector: boolean, rowSelector: boolean, cellSelector: boolean, poweredByJHeatmap: boolean}}
      */
     this.controls = {
         "shortcuts" : true,
         "filters": true,
         "columnSelector": true,
         "rowSelector": true,
-        "cellSelector": true
+        "cellSelector": true,
+        "poweredByJHeatmap": true
     };
 
-    this.actions = {
-        HideSelected: new jheatmap.actions.HideSelected(this),
-        ShowHidden: new jheatmap.actions.ShowHidden(this),
-        ClearSelection: new jheatmap.actions.ClearSelection(this),
-        AggregationSort: new jheatmap.actions.AggregationSort(this),
-        MutualExclusiveSort: new jheatmap.actions.MutualExclusiveSort(this)
-    };
+    this.actions = [
+        new jheatmap.actions.HideSelected(this),
+        new jheatmap.actions.ShowHidden(this),
+        new jheatmap.actions.InvertSelection(this),
+        new jheatmap.actions.ClearSelection(this),
+        new jheatmap.actions.Separator(),
+        new jheatmap.actions.AggregationSort(this),
+        new jheatmap.actions.Separator(),
+        new jheatmap.actions.CopyToClipboard(this)
+    ];
 
     /**
      * Size of the cells panel
@@ -3755,11 +3886,6 @@ jheatmap.HeatmapDimension = function (heatmap) {
     this.sorter = new jheatmap.sorters.DefaultSorter();
 
     /**
-     * This is the default sorter to be used when sorting multiple selected items.
-     */
-    this.DefaultAggregationSorter = jheatmap.sorters.AggregationValueSorter;
-
-    /**
      * Active user filters on items
      * @type {jheatmap.HeatmapFilters}
      */
@@ -3822,6 +3948,7 @@ jheatmap.HeatmapDimension.prototype.reindex = function (heatmap) {
     }
 
     this.sorter.field = jheatmap.utils.reindexField(this.sorter.field, heatmap.cells.header);
+    this.selectedValue = jheatmap.utils.reindexField(this.selectedValue, this.header);
 
 };
 
@@ -3890,10 +4017,13 @@ jheatmap.HeatmapDrawer = function (heatmap) {
         tableRow.append("<td class='borderL'>&nbsp;</td>");
         table.append(tableRow);
 
+	    var poweredBy = "";
+	    if (heatmap.controls.poweredByJHeatmap) {
+	        poweredBy = "<span>powered by <a href='http://jheatmap.github.io/jheatmap' target='_blank'>jHeatmap</a></span>";
+	    }
+
         var scrollRow = $("<tr class='horizontalScroll'>");
-        scrollRow.append("<td class='border' style='font-size: 9px; vertical-align: right; padding-left: 10px; padding-top: 6px;'>" +
-            "<span>powered by <a href='http://jheatmap.github.io/jheatmap' target='_blank'>jHeatmap</a></span>" +
-            "</td>");
+        scrollRow.append("<td class='border' style='font-size: 9px; vertical-align: right; padding-left: 10px; padding-top: 6px;'>" + poweredBy + "</td>");
 
         scrollRow.append(horizontalScrollBar.markup);
         scrollRow.append("<td class='border'></td>");
@@ -7130,7 +7260,7 @@ var // currently active contextMenu trigger
                 
                     // add icons
                     if (item.icon) {
-                        $t.addClass("icon icon-" + item.icon);
+                        $t.addClass("icon " + item.icon);
                     }
                 }
                 

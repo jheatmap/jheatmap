@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>jHeatmap</title>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
     <link href="prettify.css" rel="stylesheet" type="text/css">
 
@@ -18,25 +19,37 @@
 
     <script>$(document).ready(function () {
         $('#heatmap').heatmap(
-                {
-                    data: {
-                        values: new jheatmap.readers.TableHeatmapReader({ url: "step1-data.tsv" })
-                    },
+        {
+            data: {
+                values: new jheatmap.readers.TableHeatmapReader({ url: "quickstart-data.tsv" })
+            },
 
-                    init: function (heatmap) {
-                        // Default cell value to show
-                        heatmap.cells.selectedValue = "left-p-value";
+            init: function (heatmap) {
+                heatmap.cells.decorators["Mutation"] = new jheatmap.decorators.Categorical({
+                                values: ["0","1"],
+                                colors : ["white","green"]
+                });
 
-                        heatmap.cells.decorators["observed"] = new jheatmap.decorators.Linear(
-                                {
-                                    ranges: [[0,100]],
-                                    colors: [[[255,255,255],[255,0,0]]]
-                                });
-                        heatmap.cells.decorators["left-p-value"] = new jheatmap.decorators.PValue();
-                        heatmap.cells.aggregators["left-p-value"] = new jheatmap.aggregators.PValue();
-                    }
-                }
-        );
+                heatmap.cells.decorators["CNA Status"] = new jheatmap.decorators.Categorical({
+                                values: ["-2","2"],
+                                colors : ["blue","red"]
+                });
+
+                heatmap.cells.decorators["Expression"] = new jheatmap.decorators.Heat({
+                                minValue: -2,
+                                midValue: 0,
+                                maxValue: 2,
+                                minColor: [85, 0, 136],
+                                nullColor: [255,255,255],
+                                maxColor: [255, 204, 0],
+                                midColor: [240,240,240]
+                });
+
+                heatmap.cells.aggregators["Mutation"] = new jheatmap.aggregators.AbsoluteAddition();
+                heatmap.cells.aggregators["CNA Status"] = new jheatmap.aggregators.AbsoluteAddition();
+                heatmap.cells.aggregators["Expression"] = new jheatmap.aggregators.Median();
+            }
+        });
     });</script>
 </head>
 <body>
@@ -93,7 +106,7 @@
     window.prettyPrint && prettyPrint();
 
     $('#source ol.linenums li').each(function(idx, li) {
-        if ($.inArray(idx, [8,9,17]) != -1) {
+        if (idx > 30 && idx < 34) {
             $(li).css("background-color", "#FFFFB3");
         }
     });
