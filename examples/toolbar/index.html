@@ -48,13 +48,13 @@
                                 action.columns();
                             });
 
-                            $('#clearHightlightBtn').click(function (e) {
+                            $('#clearHighlightBtn').click(function (e) {
                                 heatmap.search = null;
                                 heatmap.drawer.paint();
                             });
 
-                            $('#hightlightBtn').click(function (e) {
-                                heatmap.search = $('#hightlightText').val();
+                            $('#highlightBtn').click(function (e) {
+                                heatmap.search = $('#highlightText').val();
                                 heatmap.drawer.paint();
                             });
                         }
@@ -122,7 +122,7 @@
 <input type="button" id="hideSelectedBtn" value="Hide Selected Columns"/>
 <input type="button" id="showHiddenBtn" value="Show Hidden Columns"/>
 <input type="button" id="clearSelectionBtn" value="Clear rows and columns selection"/>
-<input type="text" id="hightlightText" /><input type="button" id="hightlightBtn" value="Highlight" /><input type="button" id="clearHightlightBtn" value="Clear Highlight" />
+<input type="text" id="highlightText" placeholder="text to highlight" /><input type="button" id="highlightBtn" value="Highlight" /><input type="button" id="clearHighlightBtn" value="Clear Highlight" />
 </body>
 </html>
 
