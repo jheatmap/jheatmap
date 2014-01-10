@@ -106,7 +106,7 @@ jheatmap.readers.TableHeatmapReader.prototype.read = function (heatmap, initiali
                         }
                     }
                     heatmap.cells.header[valuesColKey] = undefined;
-                                       
+
                 } else {
                     colKey = 0;
 

@@ -143,10 +143,10 @@ jheatmap.components.RowHeaderPanel = function(drawer, heatmap) {
         e.gesture.preventDefault();
 
        var center = getCenter(e);
-       if (center.x > 200)
+       if (center.x > (heatmap.rows.labelSize - 10))
        {
            // Sort the row
-           heatmap.cols.sorter = new jheatmap.sorters.ValueSorter(heatmap.cells.selectedValue, !(heatmap.cols.sorter.asc), heatmap.rows.order[center.row]);
+           heatmap.cols.sorter = new jheatmap.sorters.AggregationValueSorter(heatmap.cells.selectedValue, !(heatmap.cols.sorter.asc), true, [heatmap.rows.order[center.row]])
            heatmap.cols.sorter.sort(heatmap, "columns");
        }
        else if (!isSelected(center.row))
