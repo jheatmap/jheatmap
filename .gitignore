@@ -18,3 +18,6 @@ lib/jquery*.js
 # Site files
 site/
 .gh-pages
+
+# Temporary files
+*~
