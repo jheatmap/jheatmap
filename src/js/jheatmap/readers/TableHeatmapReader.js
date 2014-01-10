@@ -69,6 +69,8 @@ jheatmap.readers.TableHeatmapReader.prototype.read = function (heatmap, initiali
                             break;
                         }
                     }
+                    heatmap.cells.header[valuesRowKey] = undefined;
+
                 } else {
                     rowKey = 0;
 
@@ -103,6 +105,8 @@ jheatmap.readers.TableHeatmapReader.prototype.read = function (heatmap, initiali
                             }
                         }
                     }
+                    heatmap.cells.header[valuesColKey] = undefined;
+                                       
                 } else {
                     colKey = 0;
 
