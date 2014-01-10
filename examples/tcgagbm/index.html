@@ -36,7 +36,7 @@
 					// Configure decorators and aggregators
 					heatmap.cells.decorators["Genomic Alterations"] = new jheatmap.decorators.Categorical({
 						values: ["Mut","Gain","Loss", "Mut+Gain", "Mut+Loss"], colors : ["green","red","blue", "DarkRed", "DarkBlue"] });
-					heatmap.cells.aggregators["Genomic Alterations"] = new jheatmap.aggregators.AbsoluteAddition();
+					heatmap.cells.aggregators["Genomic Alterations"] = new jheatmap.aggregators.BinaryStringAddition();
 					heatmap.cells.decorators["Mutation"] = new jheatmap.decorators.Categorical({
 						values: ["0","1"], colors : ["white","green"] });
 					heatmap.cells.aggregators["Mutation"] = new
