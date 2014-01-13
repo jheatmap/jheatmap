@@ -21,10 +21,33 @@
         $('#heatmap').heatmap(
         {
             data: {
+                rows: new jheatmap.readers.AnnotationReader({ url: "quickstart-rows.tsv" }),
+                cols: new jheatmap.readers.AnnotationReader({ url: "quickstart-cols.tsv" }),
                 values: new jheatmap.readers.TableHeatmapReader({ url: "quickstart-data.tsv" })
             },
 
             init: function (heatmap) {
+
+                // Selected layer
+                heatmap.cells.selectedValue = "Expression";
+
+                // Label to show at rows header
+                heatmap.rows.selectedValue = "symbol";
+
+                // Row and columns zoom
+                heatmap.cols.zoom = 3;  // width in pixels (minimum = 3)
+                heatmap.rows.zoom = 15; // height in pixels (minimum = 3)
+
+                heatmap.cols.decorators["subtype"] = new jheatmap.decorators.CategoricalRandom();
+                heatmap.cols.annotations = ["subtype"];
+
+                heatmap.rows.decorators["fm-bias"] = new jheatmap.decorators.PValue({ cutoff: 0.05 });
+                heatmap.rows.annotations = ["fm-bias"];
+
+                heatmap.cells.aggregators["Mutation"] = new jheatmap.aggregators.AbsoluteAddition();
+                heatmap.cells.aggregators["CNA Status"] = new jheatmap.aggregators.AbsoluteAddition();
+                heatmap.cells.aggregators["Expression"] = new jheatmap.aggregators.Median();
+
                 heatmap.cells.decorators["Mutation"] = new jheatmap.decorators.Categorical({
                                 values: ["0","1"],
                                 colors : ["white","green"]
@@ -44,6 +67,7 @@
                                 maxColor: [255, 204, 0],
                                 midColor: [240,240,240]
                 });
+
             }
         });
     });</script>
@@ -55,15 +79,13 @@
         <ul class="nav nav-pills">
             <li><a href="step0.html">Step 0</a></li>
             <li><a href="step1.html">Step 1</a></li>
-            <li class="active"><a href="step2.html">Step 2</a></li>
+            <li><a href="step2.html">Step 2</a></li>
             <li><a href="step3.html">Step 3</a></li>
             <li><a href="step4.html">Step 4</a></li>
-            <li><a href="step5.html">Step 5</a></li>
+            <li class="active"><a href="step5.html">Step 5</a></li>
         </ul>
         <p>
-           A <strong>decorator</strong> is a function that define the color scale to use when painting the heatmap
-           cells. Define the decorators of your cell values as show below. Check
-           <a href="../../documentation/out/jheatmap.decorators.html">decorators</a> documentation for more details.
+           Change default heatmap status.
         </p>
     </div>
 
@@ -72,6 +94,8 @@
             <li class="active"><a href="#heatmapTab" data-toggle="tab">Heatmap</a></li>
             <li><a href="#javascriptTab" data-toggle="tab">Javascript</a></li>
             <li><a href="#dataTab" data-toggle="tab">quickstart-data.tsv</a></li>
+            <li><a href="#cdataTab" data-toggle="tab">quickstart-cols.tsv</a></li>
+            <li><a href="#rdataTab" data-toggle="tab">quickstart-rows.tsv</a></li>
         </ul>
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade in active" id="heatmapTab" style="">
@@ -89,6 +113,12 @@
             <div class="tab-pane fade" id="dataTab">
                 <pre id="data" class="prettyprint"></pre>
             </div>
+            <div class="tab-pane fade" id="cdataTab">
+                <pre id="cdata" class="prettyprint"></pre>
+            </div>
+            <div class="tab-pane fade" id="rdataTab">
+                <pre id="rdata" class="prettyprint"></pre>
+            </div>
         </div>
     </div>
 </div>
@@ -103,7 +133,7 @@
     window.prettyPrint && prettyPrint();
 
     $('#source ol.linenums li').each(function(idx, li) {
-        if (idx > 6 && idx < 28) {
+        if ((idx > 10 && idx < 20)) {
             $(li).css("background-color", "#FFFFB3");
         }
     });
@@ -116,7 +146,28 @@
 
         success: function (file) {
             $('#data').html(file);
-            var listItems = $("#productList li");
+        }
+    });
+
+    jQuery.ajax({
+
+        url: "quickstart-cols.tsv",
+
+        dataType: "text",
+
+        success: function (file) {
+            $('#cdata').html(file);
+        }
+    });
+
+    jQuery.ajax({
+
+        url: "quickstart-rows.tsv",
+
+        dataType: "text",
+
+        success: function (file) {
+            $('#rdata').html(file);
         }
     });
 

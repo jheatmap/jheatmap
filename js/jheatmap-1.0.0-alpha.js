@@ -609,7 +609,7 @@ jheatmap.readers.TableHeatmapReader.prototype.read = function (heatmap, initiali
 
         dataType: "text",
 
-        success: function (file) {
+        success: function loadCells(file) {
 
             var lines = file.replace('\r', '').split('\n');
             jQuery.each(lines, function (lineCount, line) {
@@ -1418,7 +1418,7 @@ jheatmap.actions.CopyToClipboard.prototype.run = function (dimension) {
         text = "";
         i = 0;
         while (i < dimension.selected.length) {
-            var value = dimension.getValue(dimension.selected[i], dimension.selectedValue);
+            var value = dimension.values[dimension.selected[i]][dimension.selectedValue];
             text = text + value;
             i++;
             if (i < dimension.selected.length) {
@@ -2704,7 +2704,7 @@ jheatmap.components.ControlsPanel = function(drawer, heatmap) {
     jheatmap.components.DetailsPanel(this.markup);
 
     if (heatmap.controls.shortcuts) {
-        jheatmap.components.ShortcutsPanel(heatmap, this.markup);
+        jheatmap.components.HelpPanel(heatmap, this.markup);
     }
 
     if (heatmap.controls.filters) {
@@ -2772,6 +2772,77 @@ jheatmap.components._FilterCheckBox = function(drawer, container, heatmap, dimen
 
         }
     }
+};
+
+jheatmap.components.HelpPanel = function(heatmap, container) {
+
+    var actionTips = "";
+    for (var key=0; key < heatmap.actions.length; key++) {
+        var action = heatmap.actions[key];
+
+        if (action.shortCut != undefined) {
+            actionTips += "<dt>"+action.shortCut+"</dt><dd>"+action.title+"</dd>";
+        }
+    }
+
+    var touchActive = "";
+    var compActive = "active"
+
+    container.append(
+
+        "<div class='shortcuts'><a href='#heatmap-details' data-toggle='details'><i style='font-size: 18px;' class='fa fa-question-circle'></i></a></div>" +
+        "<div class='details hide' id='heatmap-details' tabindex='-1' role='dialog'>" +
+        "<div class='details-header'><button type='button' class='close' data-dismiss='details'>&times;</button>" +
+        "<h3>Heatmap controls</h3></div>" +
+        "<div class='details-body'>" +
+
+            "<ul class='nav nav-tabs'>" +
+              "<li class='active'>" +
+                "<a href='#comp' data-toggle='tab'>Computer</a>" +
+              "</li>" +
+              "<li><a href='#touch' data-toggle='tab'>Tablet</a></li>" +
+            "</ul>" +
+
+            "<div class='tab-content'> " +
+                "<div id='comp' class='tab-pane " + compActive + "'>" +     
+                    "<dl class='dl-horizontal'>" +
+                    "<dd><strong>Controls:</strong></dd>" +
+                        "<dt>Contextual menu</dt><dd>Left click on rows/columns</dd>" +
+                        "<dt>Move heatmap</dt><dd>Mouse drag over cells or use mouse wheel</dd>" +
+                        "<dt>Select rows/columns</dt><dd>Mouse drag over rows/columns</dd>" +
+                        "<dt>Move selection</dt><dd>Mouse drag selected rows/columns</dd>" +
+                        "<dt>Clear selection</dt><dd>Double click selection</dd>" +
+                        "<dt>Zoom heatmap</dt><dd>Shift + mouse wheel over heatmap</dd>" +
+                        "<dt>Zoom rows/columns</dt><dd>Shift + mouse wheel rows/columns</dd>" +
+                    "</dl>" +   
+                    "<dl class='dl-horizontal'>" +
+                    "<dd><strong>Actions (place the mouse over rows or columns)</strong></dd>" +
+                    actionTips +
+                    "</dl>" +
+                "</div>" +
+
+                "<div id='touch' class='tab-pane " + touchActive + "'>" +        
+                    "<dl class='dl-horizontal'>" +
+                            "<dd><strong>Controls:</strong></dd>" +
+                                "<dt>Contextual menu</dt><dd>Long tap rows/columns</dd>" +
+                                "<dt>Move heatmap</dt><dd>Drag heatmap (one finger)</dd>" +
+                                "<dt>Select rows/columns</dt><dd>Drag over rows/columns</dd>" +
+                                "<dt>Move selection</dt><dd>Drag selected rows/columns</dd>" +
+                                "<dt>Clear selection</dt><dd>Double tap selection</dd>" +
+                                "<dt>Zoom heatmap</dt><dd>Pinch heatmap</dd>" +
+                                "<dt>Zoom rows/columns</dt><dd>Pinch rows/columns</dd>" +
+                            "</dl>" +   
+                "</div>" +
+            "</div>" +
+
+        "</div>" +
+        "<div class='details-footer'>" +
+        "<button class='btn' data-dismiss='details'>Close</button>" +
+        "</div>" +
+        "</div>" 
+        
+    );
+
 };
 
 jheatmap.components.HorizontalScrollBar = function(drawer, heatmap) {
@@ -3374,36 +3445,6 @@ jheatmap.components.RowSelector = function(drawer, heatmap, container) {
         selectRow.append(new Option(heatmap.rows.header[o], o, o == heatmap.rows.selectedValue));
     }
     selectRow.val(heatmap.rows.selectedValue);
-
-};
-
-jheatmap.components.ShortcutsPanel = function(heatmap, container) {
-
-    var actionTips = "";
-    for (var key=0; key < heatmap.actions.length; key++) {
-        var action = heatmap.actions[key];
-
-        if (action.shortCut != undefined) {
-            actionTips += "<dt>"+action.shortCut+"</dt><dd>"+action.title+"</dd>";
-        }
-    }
-
-    container.append(
-        "<div class='shortcuts'><a href='#heatmap-details' data-toggle='details'><i class='fa fa-question-circle'></i></a></div>" +
-        "<div class='details hide' id='heatmap-details' tabindex='-1' role='dialog'>" +
-        "<div class='details-header'><button type='button' class='close' data-dismiss='details'>&times;</button>" +
-        "<h3>Keyboard shortcuts</h3></div>" +
-        "<div class='details-body'>" +
-        "<dl class='dl-horizontal'>" +
-        "<dd><strong>Place the mouse over rows or columns and press the key:</strong></dd>" +
-        actionTips +
-        "</dl>" +
-        "</div>" +
-        "<div class='details-footer'>" +
-        "<button class='btn' data-dismiss='details'>Close</button>" +
-        "</div>" +
-        "</div>"
-        );
 
 };
 
@@ -4536,6 +4577,177 @@ jheatmap.HeatmapSize.prototype.init = function () {
   })
 
 }(window.jQuery);
+
+
+!function ($) {
+
+  "use strict"; // jshint ;_;
+
+
+  /* CSS TRANSITION SUPPORT (http://www.modernizr.com/)
+   * ======================================================= */
+
+  $(function () {
+
+    $.support.transition = (function () {
+
+      var transitionEnd = (function () {
+
+        var el = document.createElement('bootstrap')
+          , transEndEventNames = {
+               'WebkitTransition' : 'webkitTransitionEnd'
+            ,  'MozTransition'    : 'transitionend'
+            ,  'OTransition'      : 'oTransitionEnd otransitionend'
+            ,  'transition'       : 'transitionend'
+            }
+          , name
+
+        for (name in transEndEventNames){
+          if (el.style[name] !== undefined) {
+            return transEndEventNames[name]
+          }
+        }
+
+      }())
+
+      return transitionEnd && {
+        end: transitionEnd
+      }
+
+    })()
+
+  })
+
+}(window.jQuery);
+
+
+
+!function ($) {
+
+  "use strict"; // jshint ;_;
+
+
+ /* TAB CLASS DEFINITION
+  * ==================== */
+
+  var Tab = function (element) {
+    this.element = $(element)
+  }
+
+  Tab.prototype = {
+
+    constructor: Tab
+
+  , show: function () {
+      var $this = this.element
+        , $ul = $this.closest('ul:not(.dropdown-menu)')
+        , selector = $this.attr('data-target')
+        , previous
+        , $target
+        , e
+
+      if (!selector) {
+        selector = $this.attr('href')
+        selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
+      }
+
+      if ( $this.parent('li').hasClass('active') ) return
+
+      previous = $ul.find('.active:last a')[0]
+
+      e = $.Event('show', {
+        relatedTarget: previous
+      })
+
+      $this.trigger(e)
+
+      if (e.isDefaultPrevented()) return
+
+      $target = $(selector)
+
+      this.activate($this.parent('li'), $ul)
+      this.activate($target, $target.parent(), function () {
+        $this.trigger({
+          type: 'shown'
+        , relatedTarget: previous
+        })
+      })
+    }
+
+  , activate: function ( element, container, callback) {
+      var $active = container.find('> .active')
+        , transition = callback
+            && $.support.transition
+            && $active.hasClass('fade')
+
+      function next() {
+        $active
+          .removeClass('active')
+          .find('> .dropdown-menu > .active')
+          .removeClass('active')
+
+        element.addClass('active')
+
+        if (transition) {
+          element[0].offsetWidth // reflow for transition
+          element.addClass('in')
+        } else {
+          element.removeClass('fade')
+        }
+
+        if ( element.parent('.dropdown-menu') ) {
+          element.closest('li.dropdown').addClass('active')
+        }
+
+        callback && callback()
+      }
+
+      transition ?
+        $active.one($.support.transition.end, next) :
+        next()
+
+      $active.removeClass('in')
+    }
+  }
+
+
+ /* TAB PLUGIN DEFINITION
+  * ===================== */
+
+  var old = $.fn.tab
+
+  $.fn.tab = function ( option ) {
+    return this.each(function () {
+      var $this = $(this)
+        , data = $this.data('tab')
+      if (!data) $this.data('tab', (data = new Tab(this)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  $.fn.tab.Constructor = Tab
+
+
+ /* TAB NO CONFLICT
+  * =============== */
+
+  $.fn.tab.noConflict = function () {
+    $.fn.tab = old
+    return this
+  }
+
+
+ /* TAB DATA-API
+  * ============ */
+
+  $(document).on('click.tab.data-api', '[data-toggle="tab"], [data-toggle="pill"]', function (e) {
+    e.preventDefault()
+    $(this).tab('show')
+  })
+
+}(window.jQuery);
+
+
 /*! Copyright (c) 2013 Brandon Aaron (http://brandonaaron.net)
  * Licensed under the MIT License (LICENSE.txt).
  *
@@ -7894,12 +8106,12 @@ var console = console || {"log":function () {
                     return;
                 }
 
-                if (options.data.values != undefined && heatmap.cells.ready == undefined) {
-                    return;
+                if (options.data.values != undefined) {
+                     options.data.values.read(heatmap, function() {
+                         // Initialize heatmap
+                         heatmap.init();
+                     });
                 }
-
-                // Initialize heatmap
-                heatmap.init();
 
             };
 
@@ -7911,9 +8123,10 @@ var console = console || {"log":function () {
                 options.data.cols.read(heatmap.cols, initialize);
             }
 
-            if (options.data.values != undefined) {
-                options.data.values.read(heatmap, initialize);
+            if (options.data.rows == undefined && options.data.cols == undefined) {
+                initialize.call(this);
             }
+
         });
     };
 
