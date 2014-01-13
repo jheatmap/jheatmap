@@ -23,7 +23,7 @@ jheatmap.actions.CopyToClipboard.prototype.run = function (dimension) {
         text = "";
         i = 0;
         while (i < dimension.selected.length) {
-            var value = dimension.getValue(dimension.selected[i], dimension.selectedValue);
+            var value = dimension.values[dimension.selected[i]][dimension.selectedValue];
             text = text + value;
             i++;
             if (i < dimension.selected.length) {
