@@ -1,5 +1,5 @@
 
-jheatmap.components.ShortcutsPanel = function(heatmap, container) {
+jheatmap.components.HelpPanel = function(heatmap, container) {
 
     var actionTips = "";
     for (var key=0; key < heatmap.actions.length; key++) {
@@ -25,15 +25,15 @@ jheatmap.components.ShortcutsPanel = function(heatmap, container) {
               "<li class='active'>" +
                 "<a href='#comp' data-toggle='tab'>Computer</a>" +
               "</li>" +
-              "<li><a href='#touch' data-toggle='tab'>Touch device</a></li>" +
+              "<li><a href='#touch' data-toggle='tab'>Tablet</a></li>" +
             "</ul>" +
 
             "<div class='tab-content'> " +
                 "<div id='comp' class='tab-pane " + compActive + "'>" +     
                     "<dl class='dl-horizontal'>" +
                     "<dd><strong>Controls:</strong></dd>" +
-                        "<dt>Contextual menu</dt><dd>Long click on rows/columns</dd>" +
-                        "<dt>Move heatmap</dt><dd>Mouse drag</dd>" +
+                        "<dt>Contextual menu</dt><dd>Left click on rows/columns</dd>" +
+                        "<dt>Move heatmap</dt><dd>Mouse drag over cells or use mouse wheel</dd>" +
                         "<dt>Select rows/columns</dt><dd>Mouse drag over rows/columns</dd>" +
                         "<dt>Move selection</dt><dd>Mouse drag selected rows/columns</dd>" +
                         "<dt>Clear selection</dt><dd>Double click selection</dd>" +

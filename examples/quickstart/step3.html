@@ -25,6 +25,11 @@
             },
 
             init: function (heatmap) {
+
+                heatmap.cells.aggregators["Mutation"] = new jheatmap.aggregators.AbsoluteAddition();
+                heatmap.cells.aggregators["CNA Status"] = new jheatmap.aggregators.AbsoluteAddition();
+                heatmap.cells.aggregators["Expression"] = new jheatmap.aggregators.Median();
+
                 heatmap.cells.decorators["Mutation"] = new jheatmap.decorators.Categorical({
                                 values: ["0","1"],
                                 colors : ["white","green"]
@@ -45,9 +50,6 @@
                                 midColor: [240,240,240]
                 });
 
-                heatmap.cells.aggregators["Mutation"] = new jheatmap.aggregators.AbsoluteAddition();
-                heatmap.cells.aggregators["CNA Status"] = new jheatmap.aggregators.AbsoluteAddition();
-                heatmap.cells.aggregators["Expression"] = new jheatmap.aggregators.Median();
             }
         });
     });</script>
@@ -61,6 +63,8 @@
             <li><a href="step1.html">Step 1</a></li>
             <li><a href="step2.html">Step 2</a></li>
             <li class="active"><a href="step3.html">Step 3</a></li>
+            <li><a href="step4.html">Step 4</a></li>
+            <li><a href="step5.html">Step 5</a></li>
         </ul>
         <p>
            An <strong>aggregator</strong> is a function that given an array of numbers returns a single number that
@@ -74,7 +78,7 @@
         <ul id="myTab" class="nav nav-tabs">
             <li class="active"><a href="#heatmapTab" data-toggle="tab">Heatmap</a></li>
             <li><a href="#javascriptTab" data-toggle="tab">Javascript</a></li>
-            <li><a href="#dataTab" data-toggle="tab">Data</a></li>
+            <li><a href="#dataTab" data-toggle="tab">quickstart-data.tsv</a></li>
         </ul>
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade in active" id="heatmapTab" style="">
@@ -106,14 +110,14 @@
     window.prettyPrint && prettyPrint();
 
     $('#source ol.linenums li').each(function(idx, li) {
-        if (idx > 30 && idx < 34) {
+        if (idx > 8 && idx < 12) {
             $(li).css("background-color", "#FFFFB3");
         }
     });
 
     jQuery.ajax({
 
-        url: "step1-data.tsv",
+        url: "quickstart-data.tsv",
 
         dataType: "text",
 

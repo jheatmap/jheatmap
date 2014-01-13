@@ -24,12 +24,12 @@ var console = console || {"log":function () {
                     return;
                 }
 
-                if (options.data.values != undefined && heatmap.cells.ready == undefined) {
-                    return;
+                if (options.data.values != undefined) {
+                     options.data.values.read(heatmap, function() {
+                         // Initialize heatmap
+                         heatmap.init();
+                     });
                 }
-
-                // Initialize heatmap
-                heatmap.init();
 
             };
 
@@ -41,9 +41,10 @@ var console = console || {"log":function () {
                 options.data.cols.read(heatmap.cols, initialize);
             }
 
-            if (options.data.values != undefined) {
-                options.data.values.read(heatmap, initialize);
+            if (options.data.rows == undefined && options.data.cols == undefined) {
+                initialize.call(this);
             }
+
         });
     };
 

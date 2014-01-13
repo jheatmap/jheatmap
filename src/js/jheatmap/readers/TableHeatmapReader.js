@@ -41,7 +41,7 @@ jheatmap.readers.TableHeatmapReader.prototype.read = function (heatmap, initiali
 
         dataType: "text",
 
-        success: function (file) {
+        success: function loadCells(file) {
 
             var lines = file.replace('\r', '').split('\n');
             jQuery.each(lines, function (lineCount, line) {
