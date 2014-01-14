@@ -36,7 +36,7 @@ jheatmap.components.VerticalScrollBar = function(drawer, heatmap) {
 		var iniY = Math.round(maxHeight * (heatmap.offset.top / heatmap.rows.order.length));
 		var endY = Math.round(maxHeight * (heatmap.offset.bottom / heatmap.rows.order.length));
 
-        vScrollDownOffset = ((endY - iniY) / 2) - (e.pageY - scrollTarget.offset().top);
+        vScrollDownOffset = scrollTarget.offset().top + iniY + ((endY - iniY) / 2) - e.pageY;
 
     }
 

@@ -33,7 +33,7 @@ jheatmap.components.HorizontalScrollBar = function(drawer, heatmap) {
         var iniX = Math.round(maxWidth * (heatmap.offset.left / heatmap.cols.order.length));
         var endX = Math.round(maxWidth * (heatmap.offset.right / heatmap.cols.order.length));
 
-        vScrollDownOffset = ((endX - iniX) / 2) - (e.pageX - scrollTarget.offset().left);
+        vScrollDownOffset = scrollTarget.offset().left + iniX + ((endX - iniX) / 2) - e.pageX;
 
         hScrollMouseDown = true;
     };
