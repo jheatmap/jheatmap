@@ -1811,8 +1811,8 @@ jheatmap.sorters.AnnotationSorter.prototype.sort = function(heatmap, sortType) {
 
     heatmapDimension.order.stableSort(function (a, b) {
 
-        var v_a = values[a][field].toLowerCase();
-        var v_b = values[b][field].toLowerCase();
+        var v_a = values[a][field];
+        var v_b = values[b][field];
 
         if (!isNaN(v_a)) {
             v_a = parseFloat(v_a);

@@ -25,6 +25,8 @@
             },
 
             init: function (heatmap) {
+
+                // Decorators
                 heatmap.cells.decorators["Mutation"] = new jheatmap.decorators.Categorical({
                                 values: ["0","1"],
                                 colors : ["white","green"]
@@ -103,7 +105,7 @@
     window.prettyPrint && prettyPrint();
 
     $('#source ol.linenums li').each(function(idx, li) {
-        if (idx > 6 && idx < 28) {
+        if (idx > 6 && idx < 30) {
             $(li).css("background-color", "#FFFFB3");
         }
     });
