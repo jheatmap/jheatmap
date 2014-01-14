@@ -2879,7 +2879,7 @@ jheatmap.components.HorizontalScrollBar = function(drawer, heatmap) {
         var iniX = Math.round(maxWidth * (heatmap.offset.left / heatmap.cols.order.length));
         var endX = Math.round(maxWidth * (heatmap.offset.right / heatmap.cols.order.length));
 
-        vScrollDownOffset = ((endX - iniX) / 2) - (e.pageX - scrollTarget.offset().left);
+        vScrollDownOffset = scrollTarget.offset().left + iniX + ((endX - iniX) / 2) - e.pageX;
 
         hScrollMouseDown = true;
     };
@@ -3485,7 +3485,7 @@ jheatmap.components.VerticalScrollBar = function(drawer, heatmap) {
 		var iniY = Math.round(maxHeight * (heatmap.offset.top / heatmap.rows.order.length));
 		var endY = Math.round(maxHeight * (heatmap.offset.bottom / heatmap.rows.order.length));
 
-        vScrollDownOffset = ((endY - iniY) / 2) - (e.pageY - scrollTarget.offset().top);
+        vScrollDownOffset = scrollTarget.offset().top + iniY + ((endY - iniY) / 2) - e.pageY;
 
     }
 
