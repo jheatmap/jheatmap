@@ -26,10 +26,12 @@
 
             init: function (heatmap) {
 
+                // Aggregators
                 heatmap.cells.aggregators["Mutation"] = new jheatmap.aggregators.AbsoluteAddition();
                 heatmap.cells.aggregators["CNA Status"] = new jheatmap.aggregators.AbsoluteAddition();
                 heatmap.cells.aggregators["Expression"] = new jheatmap.aggregators.Median();
 
+                // Decorators
                 heatmap.cells.decorators["Mutation"] = new jheatmap.decorators.Categorical({
                                 values: ["0","1"],
                                 colors : ["white","green"]
@@ -110,7 +112,7 @@
     window.prettyPrint && prettyPrint();
 
     $('#source ol.linenums li').each(function(idx, li) {
-        if (idx > 8 && idx < 12) {
+        if (idx > 8 && idx < 13) {
             $(li).css("background-color", "#FFFFB3");
         }
     });

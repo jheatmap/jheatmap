@@ -38,16 +38,26 @@
                 heatmap.cols.zoom = 3;  // width in pixels (minimum = 3)
                 heatmap.rows.zoom = 15; // height in pixels (minimum = 3)
 
+                // Sort columns by subtype annotation
+                heatmap.cols.sorter = new jheatmap.sorters.AnnotationSorter("subtype", true);
+
+                // Sort rows aggregating all the "Expression" values
+                heatmap.rows.sorter = new jheatmap.sorters.AggregationValueSorter("Expression", false, true);
+
+                // Column annotations
                 heatmap.cols.decorators["subtype"] = new jheatmap.decorators.CategoricalRandom();
                 heatmap.cols.annotations = ["subtype"];
 
+                // Rows annotations
                 heatmap.rows.decorators["fm-bias"] = new jheatmap.decorators.PValue({ cutoff: 0.05 });
                 heatmap.rows.annotations = ["fm-bias"];
 
+                // Aggregators
                 heatmap.cells.aggregators["Mutation"] = new jheatmap.aggregators.AbsoluteAddition();
                 heatmap.cells.aggregators["CNA Status"] = new jheatmap.aggregators.AbsoluteAddition();
                 heatmap.cells.aggregators["Expression"] = new jheatmap.aggregators.Median();
 
+                // Decorators
                 heatmap.cells.decorators["Mutation"] = new jheatmap.decorators.Categorical({
                                 values: ["0","1"],
                                 colors : ["white","green"]
@@ -85,7 +95,10 @@
             <li class="active"><a href="step5.html">Step 5</a></li>
         </ul>
         <p>
-           Change default heatmap status.
+           Change default heatmap status. Check all the customizable parameters at the classes
+             <a href="../../documentation/out/jheatmap.Heatmap.html">Heatmap</a> and
+              <a href="../../documentation/out/jheatmap.HeatmapDimension.html">HeatmapDimension</a> documentation.
+            Also it's possible to set the initial sorter of rows and columns. Check all the available sorters <a href="../../documentation/out/jheatmap.sorters.html">here</a>.
         </p>
     </div>
 
@@ -133,7 +146,7 @@
     window.prettyPrint && prettyPrint();
 
     $('#source ol.linenums li').each(function(idx, li) {
-        if ((idx > 10 && idx < 20)) {
+        if ((idx > 10 && idx < 26)) {
             $(li).css("background-color", "#FFFFB3");
         }
     });

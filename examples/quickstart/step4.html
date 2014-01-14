@@ -28,16 +28,20 @@
 
             init: function (heatmap) {
 
+                // Column annotations
                 heatmap.cols.decorators["subtype"] = new jheatmap.decorators.CategoricalRandom();
                 heatmap.cols.annotations = ["subtype"];
 
+                // Rows annotations
                 heatmap.rows.decorators["fm-bias"] = new jheatmap.decorators.PValue({ cutoff: 0.05 });
                 heatmap.rows.annotations = ["fm-bias"];
 
+                // Aggregators
                 heatmap.cells.aggregators["Mutation"] = new jheatmap.aggregators.AbsoluteAddition();
                 heatmap.cells.aggregators["CNA Status"] = new jheatmap.aggregators.AbsoluteAddition();
                 heatmap.cells.aggregators["Expression"] = new jheatmap.aggregators.Median();
 
+                // Decorators
                 heatmap.cells.decorators["Mutation"] = new jheatmap.decorators.Categorical({
                                 values: ["0","1"],
                                 colors : ["white","green"]
@@ -123,7 +127,7 @@
     window.prettyPrint && prettyPrint();
 
     $('#source ol.linenums li').each(function(idx, li) {
-        if ((idx > 3 && idx < 6) || (idx > 10 && idx < 16)) {
+        if ((idx > 3 && idx < 6) || (idx > 10 && idx < 18)) {
             $(li).css("background-color", "#FFFFB3");
         }
     });
