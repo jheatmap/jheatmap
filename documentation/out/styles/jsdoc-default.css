@@ -1,15 +1,8 @@
-html
-{
-    overflow: auto;
-    background-color: #fff;
-}
-
 body
 {
 	font: 14px "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans serif;
 	line-height: 130%;
 	color: #000;
-	background-color: #fff;
 }
 
 a {
@@ -35,8 +28,6 @@ header
 	font-family: Palatino, 'Palatino Linotype', serif;
 	font-size: 130%;
 	line-height: 140%;
-	margin-bottom: 1em;
-	margin-top: 1em;
 }
 
 #main {
@@ -84,11 +75,6 @@ nav ul {
     padding:0;
     margin:0;
     list-style-type:none;
-}
-
-nav h2 a, nav h2 a:visited {
-    color: #A35A00;
-    text-decoration: none;
 }
 
 nav h3 {
@@ -202,11 +188,7 @@ h6
 .details ul { list-style-type: none; }
 .details li { margin-left: 30px; padding-top: 6px; }
 
-.description {
-	margin-bottom: 1em;
-	margin-left: -16px;
-	margin-top: 1em;
-}
+.description { margin-left: -16px; }
 
 .code-caption
 {
@@ -216,18 +198,13 @@ h6
 	margin: 0;
 }
 
-.prettyprint
+.sh_sourceCode
 {
 	border: 1px solid #ddd;
 	width: 80%;
-    overflow: auto;
 }
 
-.prettyprint.source {
-    width: inherit;
-}
-
-.prettyprint code
+.sh_sourceCode code
 {
 	font-family: Consolas, 'Lucida Console', Monaco, monospace;
 	font-size: 100%;

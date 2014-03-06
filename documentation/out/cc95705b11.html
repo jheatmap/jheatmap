@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>JSDoc: Class: CategoricalRandom</title>
+	<title>JSDoc: Class: Instance</title>
 	
 	<script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -15,21 +15,21 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: CategoricalRandom</h1>
+    <h1 class="page-title">Class: Instance</h1>
     
     
     
     <section>
      
     <header>
-        <h2><span class="ancestors"><a href="jheatmap.html">jheatmap</a><a href="jheatmap.decorators.html">.decorators</a>.</span>CategoricalRandom</h2>
+        <h2>Instance</h2>
         
     </header>  
     
     <article>
         <div class="container-overview">
         <dt>
-    <h4 class="name" id="CategoricalRandom"><span class="type-signature"></span>new CategoricalRandom</h4>
+    <h4 class="name" id="Instance"><span class="type-signature"></span>new Instance</h4>
     
     
 </dt>
@@ -37,7 +37,8 @@
     
     
     <p class="description">
-        Random Categorical decorator, randomly generates colors for a category.
+        create new hammer instance
+all methods should return the instance itself, so it is chainable.
     </p>
     
     
@@ -71,11 +72,37 @@
 	
         <tr>
             
-                <td class="name"><code>p.unknown</code></td>
+                <td class="name"><code>element</code></td>
             
             
             <td class="type">
-            string
+            HTMLElement
+            </td>
+            
+            
+                <td class="attributes">
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            Object
             </td>
             
             
@@ -86,11 +113,11 @@
             
             
                 <td class="default">
-                "#FFFFFF"
+                {}
                 </td>
             
             
-            <td class="description last">Color for null or undefined values</td>
+            <td class="description last"></td>
         </tr>
 	
 	
@@ -107,11 +134,6 @@
 	
 	
 	
-	<dt class="tag-author">Author:</dt>
-	<dd class="tag-author">
-        <ul><li>Ted Liefeld</li></ul>
-	</dd>
-	
 	
 	
 	
@@ -121,7 +143,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0.js, line 838</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0.js, line 4981</li></ul></dd>
 	
     
     
@@ -137,10 +159,24 @@
     
     
     
+    <h5>Returns:</h5>
     
-    <h5>Example</h5>
-    <pre class="sh_javascript"><code>new jheatmap.decorators.CategoricalRandom();</code></pre>
 
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+		<span class="param-type">Hammer.Instance</span> 
+		
+	</dd>
+</dl>
+
+    
+    
 
 </dd>
 
@@ -163,7 +199,7 @@
             <h3 class="subsection-title">Methods</h3>
             
             <dl><dt>
-    <h4 class="name" id="toColor"><span class="type-signature"></span>toColor</h4>
+    <h4 class="name" id="enable"><span class="type-signature"></span>enable</h4>
     
     
 </dt>
@@ -171,7 +207,7 @@
     
     
     <p class="description">
-        Convert a value to a color
+        enable of disable hammer.js detection
     </p>
     
     
@@ -201,18 +237,18 @@
 	
         <tr>
             
-                <td class="name"><code>value</code></td>
+                <td class="name"><code>state</code></td>
             
             
             <td class="type">
-            string
+            Boolean
             </td>
             
             
             
             
             
-            <td class="description last">The cell value</td>
+            <td class="description last"></td>
         </tr>
 	
 	
@@ -238,7 +274,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0.js, line 849</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0.js, line 5075</li></ul></dd>
 	
     
     
@@ -256,10 +292,6 @@
     
     <h5>Returns:</h5>
     
-<div class="param-desc">
-    The corresponding color string definition.
-</div>
-
 
 
 
@@ -269,7 +301,397 @@
 	</dt>
 	<dd>
 		
-		<span class="param-type">string</span> 
+		<span class="param-type">Hammer.Instance</span> 
+		
+	</dd>
+</dl>
+
+    
+    
+
+</dd>
+<dt>
+    <h4 class="name" id="off"><span class="type-signature"></span>off</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <p class="description">
+        unbind events to the instance
+    </p>
+    
+    
+    
+    
+    <h5>Parameters:</h5>
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>gesture</code></td>
+            
+            
+            <td class="type">
+            String
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>handler</code></td>
+            
+            
+            <td class="type">
+            Function
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    <dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0.js, line 5037</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+		<span class="param-type">Hammer.Instance</span> 
+		
+	</dd>
+</dl>
+
+    
+    
+
+</dd>
+<dt>
+    <h4 class="name" id="on"><span class="type-signature"></span>on</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <p class="description">
+        bind events to the instance
+    </p>
+    
+    
+    
+    
+    <h5>Parameters:</h5>
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>gesture</code></td>
+            
+            
+            <td class="type">
+            String
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>handler</code></td>
+            
+            
+            <td class="type">
+            Function
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    <dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0.js, line 5022</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+		<span class="param-type">Hammer.Instance</span> 
+		
+	</dd>
+</dl>
+
+    
+    
+
+</dd>
+<dt>
+    <h4 class="name" id="trigger"><span class="type-signature"></span>trigger</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <p class="description">
+        trigger gesture event
+    </p>
+    
+    
+    
+    
+    <h5>Parameters:</h5>
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>gesture</code></td>
+            
+            
+            <td class="type">
+            String
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>eventData</code></td>
+            
+            
+            <td class="type">
+            Object
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    <dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/jheatmap-1.0.0.js, line 5052</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+		<span class="param-type">Hammer.Instance</span> 
 		
 	</dd>
 </dl>
