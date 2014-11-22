@@ -19,5 +19,11 @@ lib/jquery*.js
 site/
 .gh-pages
 
+# build folder
+build
+
+# npm
+node_modules
+
 # Temporary files
 *~
