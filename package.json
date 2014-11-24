@@ -18,7 +18,8 @@
   "keywords": [
     "biojs",
     "jheatmap",
-    "heatmap"
+    "heatmap",
+    "interactive heatmap"
   ],
   "devDependencies": {
     "biojs-sniper": "^0.1.1",
@@ -42,7 +43,7 @@
       "https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css",
       "https://jheatmap.github.io/jheatmap/css/jheatmap-1.0.0-min.css"
     ],
-    "first": "simple_example"
+    "first": "tcgagbm"
   },
   "dependencies": {
     "jquery": "^2.1.1"
