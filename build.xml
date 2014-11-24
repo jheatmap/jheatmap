@@ -73,6 +73,9 @@
             <fileset dir="." includes="src/js/jquery.contextMenu.js"/>
             <fileset dir="." includes="src/js/jquery.jheatmap.js"/>
 
+			<!-- node export -->
+            <fileset dir="." includes="src/js/jheatmap/_exports.js"/>
+
         </concat>
 
         <!-- concatenation of cascading stylesheets -->

@@ -1,0 +1,50 @@
+{
+  "name": "jheatmap",
+  "version": "1.0.0",
+  "description": "Javascript Heatmap viewer",
+  "homepage": "http://jheatmap.github.io/jheatmap",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "prepublish": "ant reset-site concat yuicompressor && gulp build-browser",
+    "sniper": "biojs-sniper ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jheatmap/jheatmap"
+  },
+  "keywords": [
+    "biojs",
+    "jheatmap",
+    "heatmap"
+  ],
+  "devDependencies": {
+    "biojs-sniper": "^0.1.1",
+    "browserify": "5.x",
+    "del": "^0.1.3",
+    "gulp": "^3.8.8",
+    "gulp-chmod": "^1.2.0",
+    "mkdirp": "^0.5.0",
+    "vinyl-source-stream": "^1.0.0"
+  },
+  "author": "Jordi Deu-Pons",
+  "license": "Apache 2",
+  "bugs": {
+    "url": "https://github.com/jheatmap/jheatmap/issues"
+  },
+  "sniper": {
+    "js": [
+      "/build/jheatmap.js"
+    ],
+    "css": [
+      "https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css",
+      "https://jheatmap.github.io/jheatmap/css/jheatmap-1.0.0-min.css"
+    ],
+    "first": "simple_example"
+  },
+  "dependencies": {
+    "jquery": "^2.1.1"
+  }
+}

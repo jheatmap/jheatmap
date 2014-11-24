@@ -4,7 +4,7 @@
  * Copyright (c) 2013 Jorik Tangelder <j.tangelder@gmail.com>;
  * Licensed under the MIT license */
 
-(function(window, undefined) {
+(function() {
     'use strict';
 
 /**
@@ -1420,7 +1420,7 @@ else {
 }
 })(this);
 
-(function($, undefined) {
+(function($, Hammer) {
     'use strict';
 
     // no jQuery or Zepto!
@@ -1526,4 +1526,4 @@ else {
         });
     };
 
-})(window.jQuery || window.Zepto);
+})(window.jQuery || window.Zepto, window.Hammer);
