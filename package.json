@@ -1,7 +1,7 @@
 {
   "name": "jheatmap",
   "version": "1.0.0",
-  "description": "Javascript Heatmap viewer",
+  "description": "Interactive web heatmap viewer built with JavaScript",
   "homepage": "http://jheatmap.github.io/jheatmap",
   "main": "index.js",
   "directories": {
