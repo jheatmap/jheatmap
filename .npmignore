@@ -1,0 +1,27 @@
+
+examples
+
+# Intellij IDEA files
+.idea
+*.iml
+*.ipr
+*.iws
+
+# Eclipse files
+.buildpath
+.classpath
+.project
+.settings/
+.externalToolBuilders/
+
+# Ignore jquery
+lib/jquery*.js
+
+# Site files
+.gh-pages
+
+# npm
+node_modules
+
+# Temporary files
+*~
