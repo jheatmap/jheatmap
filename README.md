@@ -8,6 +8,16 @@ Check the documentation and online examples here:
 
 http://jheatmap.github.io/jheatmap
 
+- **Youtube video**: A showcase of jHeatmap https://www.youtube.com/watch?v=9bO1fCJhJyo
+
+![Image of a jHeatmap](jheatmap-screenshot.png)
+
+
+Citation
+--------------
+
+jHeatmap has been publishend in [Bioinformatics: Deu-Pons J, Schroeder MP, Lopez-Bigas N. jHeatmap: an interactive heatmap viewer for the web. Bioinformatics. 2014 Feb 23. doi:10.1093/bioinformatics/btu094](http://bioinformatics.oxfordjournals.org/content/30/12/1757.full).
+
 Bug tracker
 -----------
 
