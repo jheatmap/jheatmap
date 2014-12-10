@@ -18,7 +18,7 @@ Citation
 
 jHeatmap has been publishend in *Bioinformatics*: 
 
-    [Deu-Pons J, Schroeder MP, Lopez-Bigas N. jHeatmap: an interactive heatmap viewer for the web. Bioinformatics. 2014 Feb 23. doi:10.1093/bioinformatics/btu094](http://bioinformatics.oxfordjournals.org/content/30/12/1757.full).
+ > [Deu-Pons J, Schroeder MP, Lopez-Bigas N. jHeatmap: an interactive heatmap viewer for the web. Bioinformatics. 2014 Feb 23. doi:10.1093/bioinformatics/btu094](http://bioinformatics.oxfordjournals.org/content/30/12/1757.full).
 
 Bug tracker
 -----------
